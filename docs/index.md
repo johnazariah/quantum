@@ -23,25 +23,25 @@ We teach quantum computing **problem-down**: start with something you want to co
 
     [:octicons-arrow-right-24: Companion notebooks](bottleneck/index.md)
 
--   :material-silverware-fork-knife:{ .lg .middle } **The Quokka Cookbook**
+-   :material-memory:{ .lg .middle } **The Circuit Bench**
 
     ---
 
-    Twelve self-contained quantum computing recipes. Each one explains a concept from the ground up, builds a circuit step by step, and gives you a working program.
+    Self-contained quantum circuit notes. Each note explains a concept from the ground up, builds a circuit step by step, and gives you a working OpenQASM program.
 
-    [:octicons-arrow-right-24: Browse recipes](recipes/index.md)
+    [:octicons-arrow-right-24: Browse circuits](recipes/index.md)
 
 </div>
 
 ## Latest posts
 
-Check the [blog](blog/index.md) for the latest writeups — problem-first walkthroughs of quantum algorithms, new recipes, and companion notebook guides.
+Check the [blog](blog/index.md) for the latest writeups: problem-first walkthroughs of quantum algorithms, new circuit notes, and companion notebook guides.
 
 ## What connects them
 
-The Cookbook teaches **how** — gates, circuits, measurement, the mechanics of quantum computation. The Bottleneck teaches **why** — which real problems quantum computers could solve, and which ones they can't yet. Together, they cover quantum computing from first circuit to industrial application.
+The Circuit Bench teaches **how**: gates, circuits, measurement, and the mechanics of quantum computation. The Bottleneck teaches **why**: which real problems quantum computers could solve, and which ones they cannot yet. Together, they cover quantum computing from first circuit to industrial application.
 
-Every recipe and every notebook is:
+Every circuit note and every notebook is:
 
 - **Problem-first.** The problem comes before the formalism.
 - **Runnable.** Code you can execute, not pseudocode you squint at.

@@ -3,9 +3,9 @@
 ## What you need
 
 1. **Access to a Quokka** — you have two options:
-    - **Own a Quokka puck?** Use the [iOS app](https://apps.apple.com/au/app/quokka-quantum/id6754873585) to connect to your puck and load circuits
-    - **Don't have one?** [Sign up at quokkacomputing.com](https://www.quokkacomputing.com/get-started) — you'll get access to a Google Colab notebook ("Quokka Start Here") that connects to one of six cloud Quokkas. No hardware needed.
-2. **This repo** — for the recipes and explanations
+    - **Own a Quokka puck?** Use the [iOS app](https://apps.apple.com/au/app/quokka-quantum/id6754873585) to connect to your puck and load circuits.
+    - **Don't have one?** [Sign up at quokkacomputing.com](https://www.quokkacomputing.com/get-started) to access a Google Colab notebook ("Quokka Start Here") that connects to one of six cloud Quokkas. No hardware needed.
+2. **This project** — for the circuit notes and explanations.
 
 ## Set up
 
@@ -25,14 +25,16 @@ They may occasionally go offline due to power or network conditions — if one i
 
 ```bash
 git clone https://github.com/johnazariah/quantum-workbooks
-cd quantum-workbooks/cookbook
+cd quantum-workbooks
 ```
 
-Browse the recipes, read the explanations, and copy the `.qasm` code into your Quokka Colab notebook or iOS app when you're ready to run.
+Browse the Circuit Bench notes, read the explanations, and copy the `.qasm` code into your Quokka Colab notebook or iOS app when you're ready to run.
 
-## Run your first recipe
+## Run your first circuit note
 
-The Quokka "Start Here" notebook introduces you to QASM with a simple one-qubit "quantum coin" program. Once you're comfortable with that, come back here and try something more interesting.
+The Quokka "Start Here" notebook introduces you to QASM with a simple one-qubit "quantum coin" program. If words like gate, basis, or measurement still feel slippery, read [Circuit Bench 00: Reading a Quantum Circuit](recipes/00-reading-a-quantum-circuit/README.md) before moving on.
+
+Once you're comfortable with that, try something more interesting.
 
 Open `recipes/01-bell-state/bell.qasm` — you'll see:
 
@@ -50,11 +52,11 @@ measure q[0] -> c[0];
 measure q[1] -> c[1];
 ```
 
-Paste this into a code cell in your Quokka Colab notebook (or load it via the iOS app if you have a puck). Run it. You should see outcomes `00` and `11` with roughly equal probability — never `01` or `10`.
+Paste this into a code cell in your Quokka Colab notebook (or load it via the iOS app if you have a puck). Run it. You should see outcomes `00` and `11` with roughly equal probability; in an ideal noiseless run, `01` and `10` are absent.
 
-Congratulations, you just created an entangled pair of qubits. Now read the [full recipe](recipes/01-bell-state/README.md) to understand *why*.
+Congratulations, you just created an entangled pair of qubits. Now read the [full Circuit Bench note](recipes/01-bell-state/README.md) to understand *why*.
 
-## How recipes are organized
+## How circuit notes are organized
 
 ```
 recipes/01-bell-state/
@@ -82,5 +84,5 @@ It's human-readable, platform-independent, and every quantum computing tool unde
 ## Next steps
 
 - **Structured learning?** Follow the [Learning Path](learning-path.md)
-- **Just browsing?** Pick any recipe from the [Recipes](recipes/index.md) page
+- **Just browsing?** Pick any note from the [Circuit Bench](recipes/index.md)
 - **Want context?** Check the [References](references.md) for textbooks and courses

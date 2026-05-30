@@ -21,7 +21,7 @@ Curated recommendations for going deeper. These are the resources we actually us
 |------|---------|---------------------|
 | *Quantum Chemistry in the Age of Quantum Computing* | Babbush et al. | The bridge between chemistry and quantum algorithms |
 | *Modern Quantum Chemistry* | Szabo & Ostlund | Classical comp-chem foundations; essential if you want to understand VQE deeply |
-| *Qubit-Efficient Encodings for Binary Optimisation Problems* | Azariah et al. | Shameless plug — our book on encoding fermions onto qubits. Companion to this cookbook for quantum simulation recipes |
+| *Qubit-Efficient Encodings for Binary Optimisation Problems* | Azariah et al. | A practical reference on encoding fermions onto qubits. A good companion to the Circuit Bench quantum simulation notes |
 
 ### For the mathematically inclined
 
@@ -45,9 +45,9 @@ Curated recommendations for going deeper. These are the resources we actually us
 
 ## Key papers
 
-These are the papers behind the recipes. Each recipe references the relevant paper directly; this is the collected list.
+These are the papers behind the circuit notes. Each note references the relevant paper directly; this is the collected list.
 
-| Paper | Year | Relevant recipe |
+| Paper | Year | Relevant note |
 |-------|------|-----------------|
 | Einstein, Podolsky, Rosen — "Can Quantum-Mechanical Description of Physical Reality Be Considered Complete?" | 1935 | Bell State |
 | Bell — "On the Einstein Podolsky Rosen Paradox" | 1964 | Bell State |
@@ -64,8 +64,8 @@ These are the papers behind the recipes. Each recipe references the relevant pap
 
 | Resource | What it is |
 |----------|------------|
-| [Quokka](https://www.quokkacomputing.com/) | The 30-qubit quantum computing platform these recipes are built for |
-| [OpenQASM 2.0 spec](https://openqasm.com/) | The language every recipe is written in |
+| [Quokka](https://www.quokkacomputing.com/) | The 30-qubit quantum computing platform these circuits are built for |
+| [OpenQASM 2.0 spec](https://openqasm.com/) | The language every circuit note uses |
 | [Qiskit](https://qiskit.org/) | IBM's full-stack quantum SDK — if you want to go beyond QASM |
 | [Quirk](https://algassert.com/quirk) | Drag-and-drop quantum circuit simulator in the browser — great for visual intuition |
 | [Quantum Computing Stack Exchange](https://quantumcomputing.stackexchange.com/) | The best Q&A site for quantum computing questions |
@@ -74,7 +74,7 @@ These are the papers behind the recipes. Each recipe references the relevant pap
 
 ## Notation guide
 
-We use standard Dirac notation throughout the cookbook:
+We use standard Dirac notation throughout the Circuit Bench:
 
 | Symbol | Meaning |
 |--------|---------|
@@ -85,4 +85,4 @@ We use standard Dirac notation throughout the cookbook:
 | $\otimes$ | Tensor product (combining systems) |
 | $\langle \psi \| \phi \rangle$ | Inner product / overlap |
 
-If the notation in a recipe ever feels unfamiliar, check back here or follow the links in the recipe's "Ingredients" section.
+If the notation in a circuit note ever feels unfamiliar, check back here or follow the links in the note's "What you need" section.
