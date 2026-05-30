@@ -34,7 +34,7 @@ When a notebook uses a toy example, you will see that called out clearly. When a
 
 ## Where the Circuit Bench fits
 
-The [Circuit Bench](../recipes/index.md) is the side path for circuit literacy and circuit machinery: gates, Bloch-sphere intuition, measurement bases, Bell states, teleportation, Grover search, the Quantum Fourier Transform, phase estimation, VQE, QAOA, quantum counting, and error mitigation.
+The [Circuit Bench](../circuit-bench/index.md) is the side path for circuit literacy and circuit machinery: gates, Bloch-sphere intuition, measurement bases, Bell states, teleportation, Grover search, the Quantum Fourier Transform, phase estimation, VQE, QAOA, quantum counting, and error mitigation.
 
 You do not need to read the Circuit Bench before reading the Bottleneck posts. The main path here is application-first. But when a post meets a circuit primitive that deserves a closer look, it will point to the relevant circuit note.
 

@@ -1,97 +1,107 @@
 ---
-date: 2026-07-22
+date: 2026-06-26
+notebook: "https://github.com/johnazariah/quantum-workbooks/blob/main/bottleneck/notebooks/05-finance.ipynb"
 categories:
   - The Quantum Bottleneck
   - Finance
 tags:
-  - amplitude estimation
   - Monte Carlo
-  - derivative pricing
-  - Grover
+  - quantum amplitude estimation
+  - option pricing
+  - phase estimation
 authors:
   - John Azariah
 ---
 
 # The Convergence Wall
 
-**Banks price derivatives via Monte Carlo simulation. The uncertainty shrinks as $1/\sqrt{N}$ — painfully slowly. One more digit of accuracy costs 100× more samples.**
+**Finance often asks for an average over possible futures. Classical Monte Carlo is the workhorse for that job, but every extra digit of accuracy is expensive.**
 
 <!-- more -->
 
-In 2008, mispriced derivatives helped trigger a global financial crisis. At the heart of it: exotic options — financial contracts with complex conditions that determine their payoff. Unlike a simple stock trade, pricing an exotic derivative means answering a hard question: what is the expected payoff across all possible future market scenarios?
+An option price, a value-at-risk estimate, a stress test, and an exposure calculation all have the same basic shape: define a model for uncertain market moves, run many scenarios, compute the payoff or loss in each scenario, and average.
 
-For simple contracts, there are closed-form formulas. Black-Scholes (1973) handles a European call option in a single equation. But for path-dependent, multi-asset, early-exercise derivatives — the instruments that dominate real trading books — there is no formula. The industry standard is **Monte Carlo simulation**: generate millions of random market scenarios, compute the payoff for each, and average them.
+That is a good reason Monte Carlo is everywhere in finance. It is flexible, model-agnostic, and embarrassingly parallel. If the payoff has path dependence, early exercise, barriers, correlations, or a messy book of instruments, Monte Carlo usually still has a way in.
 
-Monte Carlo works. But it converges slowly. The statistical error in the price estimate shrinks as $1/\sqrt{N}$, where $N$ is the number of samples. To halve the error, you need four times as many samples. To gain one more decimal digit of accuracy, you need one hundred times more.
+The catch is convergence.
 
-This isn't a software problem. It's a mathematical fact about generic random sampling — for estimating the mean of an arbitrary distribution from independent samples, $1/\sqrt{N}$ is a hard floor. Structured techniques like variance reduction and quasi-Monte Carlo can improve constants for specific problems, but they don't change the fundamental scaling.
+## The bottleneck: square-root accuracy
 
-For a major bank pricing a portfolio of thousands of derivatives overnight, the convergence wall translates directly into compute budgets, electricity bills, and time pressure. Faster convergence would mean tighter risk estimates, more accurate hedging, and lower capital requirements.
+For a European call option, the quantity of interest is an expectation:
 
-## The bottleneck: the $1/\sqrt{N}$ wall
+$$
+V = e^{-rT}\mathbb{E}[\max(S_T - K, 0)].
+$$
 
-Strip away the finance. You have a random variable $X$ with expected value $\mu = \mathbb{E}[X]$, and you want to estimate $\mu$. Draw $N$ independent samples and compute the average. The error scales as:
+The Black-Scholes formula gives a closed-form answer under its assumptions, which makes it a useful benchmark. But the Monte Carlo version is the more general pattern:
 
-$$|\bar{X} - \mu| \sim \frac{\sigma}{\sqrt{N}}$$
+1. sample possible terminal prices $S_T$;
+2. compute the payoff $\max(S_T - K, 0)$;
+3. average the discounted payoff.
 
-where $\sigma$ is the standard deviation. For a normalised problem targeting additive precision of $10^{-6}$ with $\sigma \sim 1$, you need $N \sim 10^{12}$ samples. At a microsecond per sample, that's about twelve days.
+If the payoff samples have standard deviation $\sigma$, then the Monte Carlo standard error scales like
 
-The mathematics is merciless. No classical sampling scheme based on independent draws from an arbitrary distribution can beat $1/\sqrt{N}$. The wall isn't in the software or the hardware. It's in the statistics.
+$$
+\frac{\sigma}{\sqrt{N}},
+$$
 
-## Quantum Amplitude Estimation: the quantum angle
+where $N$ is the number of sampled scenarios. To halve the error, you need roughly four times as many paths. To gain another decimal digit, you need roughly one hundred times as many paths.
 
-The quantum approach exploits a tool called **amplitude amplification** — Grover's search algorithm, generalised.
+That is the convergence wall. It is not that Monte Carlo is bad. It is that the last bit of accuracy gets brutally expensive.
 
-Picture a bag of $N$ balls, $M$ of which are gold. Classically, finding a gold ball takes $O(N/M)$ draws on average. Grover's algorithm does it in $O(\sqrt{N/M})$ — a quadratic speedup. It works not by checking balls faster, but by *rotating* the quantum state: each Grover iteration tilts the state vector toward the "gold" subspace by a fixed angle. After roughly $\pi/(4\theta)$ rotations (where $\sin\theta = \sqrt{M/N}$), the state points almost entirely at "gold." Measure, and you get a gold ball with near-certainty.
+## The quantum idea: estimate an amplitude
 
-Now the key insight: the rotation angle $\theta$ itself encodes the fraction of gold balls. If you could measure $\theta$ precisely, you'd know $M/N$ — without ever finding a specific gold ball.
+Quantum Amplitude Estimation, or QAE, attacks the square-root law. In its ideal form, if a quantum circuit prepares a probability amplitude $a$ encoding the quantity of interest, QAE can estimate $a$ with error scaling like $1/N$ rather than $1/\sqrt{N}$.
 
-**Quantum Amplitude Estimation** (QAE) measures $\theta$. It applies quantum phase estimation (the same QFT-based machinery from Shor's algorithm in Unit 2) to the Grover rotation operator and extracts $\theta$ with precision $O(1/N_{\text{queries}})$. That's $1/N$, not $1/\sqrt{N}$.
+That is the famous quadratic improvement.
 
-For derivative pricing, the "fraction of gold" generalises to the expected payoff:
+The word "if" is doing real work. A finance problem does not arrive already encoded as a clean quantum amplitude. A useful QAE pipeline needs circuits for the uncertainty model, payoff function, comparison threshold, and controlled amplification operator. Those circuits have to be accurate enough that the asymptotic improvement is not eaten by encoding cost.
 
-1. **Encode** the probability distribution of market scenarios as a quantum state: $\sum_x \sqrt{p(x)}|x\rangle$
-2. **Encode the payoff** into an ancilla qubit's amplitude, so the probability of measuring $|1\rangle$ equals the normalised expected payoff
-3. **Run QAE** to estimate that probability with precision $\epsilon$ using $O(1/\epsilon)$ queries
+The companion notebook therefore narrows the scope. It does not build a production option-pricing oracle. It shows the convergence issue classically, then uses a compiled toy phase-readout circuit to make the QAE mechanism visible.
 
-Classical: $O(1/\epsilon^2)$ samples. Quantum: $O(1/\epsilon)$ queries. Same accuracy, quadratically fewer evaluations. For the back-of-the-envelope example above, $10^{12}$ classical samples becomes roughly $10^6$ quantum oracle calls.
+If the phase-readout part is the unfamiliar piece, [Circuit Bench 10: Quantum Phase Estimation](../../circuit-bench/10-quantum-phase-estimation/README.md) gives the gate-level pattern: controlled powers, inverse QFT, and a binary phase estimate.
 
 ## The companion notebook
 
-The companion notebook prices a European call option ($S_0 = 100$, strike $K = 105$, volatility 20%, maturity 1 year) two ways:
+The notebook has two deliberately separate halves.
 
-- **Classical Monte Carlo**: generates random price paths, computes the payoff for each, and tracks how the price estimate converges as $1/\sqrt{N}$
-- **Toy QAE phase readout**: implements a compiled, heavily discretised amplitude estimation circuit to illustrate the $1/N$ convergence pattern
+First, it prices a simple Black-Scholes call option both analytically and by classical Monte Carlo. This gives you the baseline and the convergence picture:
 
 ```python
-# Classical Monte Carlo convergence:
-for N in sample_counts:
-    paths = simulate_gbm(S0, K, sigma, T, N)
-    price = np.mean(np.maximum(paths - K, 0)) * discount
-    errors.append(abs(price - analytical_price))
-# errors shrink as 1/sqrt(N) — the wall.
+for n_paths in path_counts:
+    estimate = monte_carlo_call_price(n_paths)
+    error = abs(estimate - black_scholes_price)
 ```
 
-The notebook makes the comparison visual: plot both convergence curves on a log-log scale and watch the quantum line fall twice as steeply.
+Second, it switches to a toy quantum proxy. Instead of encoding the full payoff distribution, it discretises the terminal-price model into a binary exercise-probability question: is the option in the money or not? That probability is mapped onto a three-bit phase grid, and a compiled amplitude-estimation-style circuit reads out the corresponding phase.
+
+That scope is important:
+
+- the notebook uses Black-Scholes and Monte Carlo for the actual option-pricing baseline;
+- the quantum circuit estimates a discretised exercise-probability proxy, not the full discounted payoff;
+- the amplitude-estimation circuit is compiled from the known proxy value;
+- the state-preparation, payoff, and controlled-Grover oracles are not constructed.
+
+So the notebook is not claiming to quantum-price an option. It is showing why Monte Carlo convergence hurts, and what kind of phase-estimation readout sits inside QAE once the hard oracle-building work has been done.
 
 ## Reality check
 
-The quadratic speedup is mathematically proven. The engineering challenge is enormous.
+The finance story is tempting to oversell because the asymptotic improvement is real and easy to state. Quadratic speedups are valuable in a domain that spends huge resources on Monte Carlo.
 
-**What's been demonstrated.** Goldman Sachs and IBM published a series of papers (2019–2021) on QAE for derivative pricing, including simulator studies for European, basket, and barrier options. Hardware demonstrations remain toy-scale — a handful of qubits with heavy discretisation and error mitigation.
+But useful quantum finance has to pay for the whole pipeline.
 
-**The depth problem.** QAE requires quantum phase estimation, which means deep circuits: $O(1/\epsilon)$ sequential applications of the full pricing oracle. For useful precision ($\epsilon \sim 10^{-3}$), that's thousands of coherent operations through the entire oracle. On noisy near-term devices with short coherence times, this is currently infeasible.
+First, the probability distribution must be loaded or generated coherently. If preparing the market model costs too much, the algorithm loses before estimation starts.
 
-**Approximate QAE variants.** Iterative and maximum-likelihood QAE reduce circuit depth at the cost of more measurements. These improve implementability and can preserve the quadratic query advantage, but they do not by themselves settle whether full-stack quantum pricing beats the best classical finance infrastructure.
+Second, the payoff must be encoded reversibly. Real derivatives can have path dependence, discontinuities, early exercise logic, and book-level netting rules. Turning those into quantum circuits is engineering, not notation.
 
-**The quadratic ceiling.** A quadratic speedup means quantum advantage only kicks in above a crossover problem size where improved scaling overcomes fault-tolerance overhead. That crossover point is not yet settled for real pricing workloads.
+Third, amplitude estimation usually needs deeper controlled circuits than near-term hardware can run reliably. The cleanest version is a fault-tolerant algorithm, not a shallow demonstration circuit.
 
-**What's real today:** The algorithm is sound. The circuits are too deep for current hardware. Whether amplitude estimation beats classical finance after full fault-tolerant overhead is an open engineering question, not a mathematical one.
+The honest claim is therefore narrow but worth understanding: QAE changes the scaling of expectation estimation once a suitable quantum encoding exists. The notebook shows the convergence wall and the phase-readout mechanism in miniature. The bottleneck is building the full financial oracle cheaply enough for that scaling to matter.
 
 ## Want more?
 
-This post covers the convergence wall and QAE's quadratic answer to it. The [companion notebook](../../notebooks/05-finance.ipynb) lets you see both convergence rates side by side. For the gate-level construction of the pricing oracle, the geometry of Grover rotations, and the approximate QAE literature, see *The Quantum Bottleneck*, currently being prepared for publication.
+The [companion notebook](https://github.com/johnazariah/quantum-workbooks/blob/main/bottleneck/notebooks/05-finance.ipynb) lets you compare Black-Scholes, Monte Carlo convergence, and a compiled three-bit amplitude-estimation proxy. For the phase-estimation circuit pattern underneath the proxy, see [Circuit Bench 10 — Quantum Phase Estimation](../../circuit-bench/10-quantum-phase-estimation/README.md).
 
 ---
 
-*This is Unit 5 of The Quantum Bottleneck series. Next up: [The Scheduling Nightmare](bottleneck-06-supply-chains.md) — when 10,000 nurses need rosters and the constraints multiply faster than the solutions.*
+*This is Unit 5 of The Quantum Bottleneck series. Next up: [The Scheduling Nightmare](bottleneck-06-supply-chains.md) — when optimisation means finding a good discrete assignment under competing constraints.*

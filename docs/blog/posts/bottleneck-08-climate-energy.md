@@ -1,99 +1,102 @@
 ---
-date: 2026-09-02
+date: 2026-06-29
+notebook: "https://github.com/johnazariah/quantum-workbooks/blob/main/bottleneck/notebooks/08-climate-energy.ipynb"
 categories:
   - The Quantum Bottleneck
   - Climate & Energy
 tags:
   - quantum embedding
-  - catalyst design
-  - carbon capture
-  - active space
+  - VQE
+  - catalysis
+  - active spaces
+  - climate tech
 authors:
   - John Azariah
 ---
 
-# The Better Catalyst
+# The Catalyst Bottleneck
 
-**Carbon capture at scale needs better catalysts. Designing them is a quantum chemistry problem that demands accuracy for the active site embedded in a much larger environment.**
+**Climate technology is full of chemistry problems. Better catalysts could change the cost of clean fuels, fertiliser, carbon utilisation, and industrial heat, but catalyst design is an electronic-structure problem in disguise.**
 
 <!-- more -->
 
-In 2024, atmospheric CO₂ passed 427 parts per million — the highest concentration in at least four million years. To limit warming to 1.5°C, we need to remove approximately 10 gigatonnes of CO₂ per year by 2050, on top of drastic emissions reductions. Current direct air capture technology removes about 10,000 tonnes per year. The gap is six orders of magnitude.
+The energy transition is not only about deploying known technologies. It is also about finding materials that make difficult reactions cheap, selective, and durable.
 
-The bottleneck isn't engineering. It's chemistry. Every direct air capture process depends on a catalyst or sorbent that grabs CO₂ molecules from air. The best current sorbents are expensive, degrade quickly, and need too much energy to regenerate. Better catalysts exist in principle — the chemical space of possible materials is vast — but finding them requires predicting how molecules bind to surfaces, through what transition states, and with what activation energies.
+Split water. Reduce carbon dioxide. Fix nitrogen. Store energy in chemical bonds. Move ions through a battery. In each case, the practical question is not just "does the reaction happen?" It is "does it happen fast enough, selectively enough, and at a cost we can tolerate?"
 
-This is a quantum chemistry problem, and a particularly difficult one. The catalyst's active site — the few atoms where CO₂ actually binds and reacts — involves strongly correlated electrons (the same physics from Unit 7), but the active site is embedded in a much larger environment: the metal surface, the solvent, the substrate. You need quantum-level accuracy for the active site and classical efficiency for everything else.
+Catalysts answer those questions through electronic structure. The active site has to bind intermediates neither too weakly nor too strongly, move charge at the right time, and survive the operating environment. That is precisely the regime where classical modelling can become uncertain.
 
-No single classical method handles both scales reliably. DFT is fast but often unreliable for strongly correlated active sites. CCSD(T), the classical "gold standard" from Unit 3, breaks down for multireference states — systems where several electron configurations contribute with comparable weight. Full CI is exact but exponentially expensive. The problem demands a multi-scale approach.
+## The bottleneck: the active site is not the whole system
 
-## The bottleneck: the accuracy-size tradeoff
+A catalyst is not an isolated molecule floating in a vacuum. The chemically important active site sits inside an environment: a surface, a support, a solvent, an electrolyte, a protein scaffold, or a larger material.
 
-A realistic catalyst simulation involves three scales:
+Classical methods handle much of that environment well. The difficulty is the strongly correlated fragment where bond breaking, charge transfer, spin state changes, or transition-metal orbitals dominate the answer.
 
-1. **The active site** (~10–50 atoms): transition metals with partially filled d-orbitals, strongly correlated, requiring quantum accuracy
-2. **The local environment** (~50–200 atoms): support material and solvent, weakly correlated, treatable classically
-3. **The bulk**: the rest of the material, describable by mean-field or continuum models
+A brute-force quantum calculation of the whole system is impossible. A tiny active-site calculation without the environment is often too crude.
 
-The difficulty is that these scales are coupled. The active site's electronic structure depends on the environment, and the environment's response depends on the active site. Classical multi-scale methods (like QM/MM) handle both pieces, but the "QM" part is typically DFT — which fails precisely where accuracy matters most, at the strongly correlated active site.
+That is the embedding problem: keep the large environment classical enough to be tractable, but solve the hard active space accurately enough that the chemistry is meaningful.
 
-What we need: a method that gives quantum-accurate results for the correlated fragment while scaling efficiently with total system size. This is the problem quantum embedding methods are designed to solve.
+## The quantum idea: embed first, solve the hard fragment
 
-## Quantum embedding: the quantum angle
+Quantum embedding turns the workflow into pieces:
 
-The strategy is **quantum embedding**: use a quantum computer for the hard part (the strongly correlated active site) and a classical computer for the rest (the weakly correlated environment). This isn't a compromise — it's the natural division of labour. Expensive quantum resources are reserved for the orbitals where they actually matter.
+1. use classical computation to choose an active space;
+2. compress the environment into an effective Hamiltonian for that active space;
+3. solve the active-space Hamiltonian with a stronger quantum or classical method;
+4. feed the result back into the larger calculation if the embedding scheme requires self-consistency.
 
-The pipeline:
+The quantum computer is not asked to solve the whole catalyst. It is asked to solve the part where the electronic structure is hardest.
 
-1. **Define the active space**: identify the 20–50 orbitals where strong correlation lives — the partially filled d-orbitals of the transition metal, the π-orbitals of the reacting molecule
-2. **Embed**: run a classical method (DFT or Hartree-Fock) on the full system to compute an effective Hamiltonian for the active space — one that includes the environment's influence as a potential
-3. **Solve the active space quantumly**: run VQE (Unit 3) or QPE (Unit 7) on the effective Hamiltonian — a much smaller problem than the full system
-4. **Self-consistently update**: the quantum solution modifies the environment model, which modifies the effective Hamiltonian — iterate until convergence
-
-This framework goes by several names. **DMET** (Density Matrix Embedding Theory) is one formal version. **Active-space VQE/QPE** is the broader idea. The mathematical details vary, but the principle is the same: solve the correlated fragment accurately, treat everything else cheaply, and iterate.
-
-As a rough scale estimate: a CO₂-capture active site on a metal oxide surface might involve 16 spatial orbitals (32 spin-orbitals). After Jordan-Wigner encoding, that's 32 qubits. After symmetry reduction, perhaps 20–24 qubits. The quantum register tracks the fragment, not the whole surface.
-
-This is the capstone of the book. Every concept from earlier units converges here: qubits as binary variables (Unit 1), the QFT and phase estimation (Units 2, 7), fermion-to-qubit encodings and VQE (Unit 3), and the Hubbard model and Trotterisation (Unit 7).
+In a near-term teaching setting, that solve step is naturally illustrated with VQE: prepare a parameterised state, measure Pauli terms, combine the measurements into an energy, and let a classical loop search over the parameter. [Circuit Bench 08: VQE for H2](../../circuit-bench/08-vqe-h2/README.md) shows that measurement pattern in its smallest chemistry form.
 
 ## The companion notebook
 
-The companion notebook illustrates the embedding pipeline on a toy system:
+The notebook is a pipeline illustration, not a catalyst simulation package.
 
-- Starts from a precomputed 2-qubit embedded Hamiltonian representing a simplified catalyst active site
-- Runs a classical embedding baseline
-- Inserts one active-space VQE solve step into the embedding loop
-- Compares the quantum-embedded energy with the purely classical result
+It starts after the classical embedding work has already happened. The active-space Hamiltonian is precomputed as a two-qubit toy model with Pauli terms such as $Z_0$, $Z_1$, $Z_0Z_1$, $X_0X_1$, and $Y_0Y_1$.
+
+Then the notebook executes one embedded solve step:
+
+- compare a classical embedding baseline with an exact benchmark for the reduced model;
+- prepare a one-parameter entangling ansatz;
+- measure the Pauli terms in the required bases;
+- combine the measurements into an energy estimate;
+- compare the VQE result with the exact embedded benchmark.
+
+In code, the shape is:
 
 ```python
-# Embedding pipeline (toy version):
-# 1. Classical environment calculation
-env_potential = run_dft(full_system)
-# 2. Build effective Hamiltonian for the active space
-H_active = embed(env_potential, active_orbitals)
-# 3. Solve the active space with VQE
-E_active = run_vqe(H_active, ansatz, optimiser)
-# 4. Update environment and iterate
-env_potential = update_environment(E_active)
+coeffs = embedded_active_space_coeffs()
+E_exact = exact_diagonalisation_energy(coeffs)
+E_vqe = compute_active_energy(theta, coeffs, shots=1024)
 ```
 
-The notebook is deliberately small — a precomputed Hamiltonian on 2 qubits — because the point is to show the *pipeline*, not to claim a chemically meaningful result. Honest pedagogy means being explicit about what's a toy and what's real.
+The important absences are just as important as the code:
+
+- the notebook does not run DFT;
+- it does not construct a DMET bath;
+- it does not choose the active space dynamically;
+- it does not run a self-consistent embedding loop;
+- it does not compute a real catalyst binding trend.
+
+It shows where the quantum subroutine would sit once those surrounding classical pieces have supplied the reduced Hamiltonian.
 
 ## Reality check
 
-Catalyst design is one of the most compelling long-term targets for quantum computing. It is also one of the furthest from practical demonstration.
+Embedding is attractive because it gives quantum hardware a focused job. That is also what makes it difficult. The interface between the classical environment and the quantum active space has to be accurate, stable, and scientifically interpretable.
 
-**Resource estimates remain large.** Published fault-tolerant estimates for strongly correlated chemistry benchmarks like FeMo-co (the nitrogen fixation active site) range from about 1 million to 200 million physical qubits, depending on the algorithm and error-correction assumptions. These are nitrogen-fixation benchmarks rather than carbon-capture calculations, but they indicate the right scale. No catalyst system has been simulated quantumly at a size that produces new chemistry.
+The active space must include the orbitals that actually drive the chemistry. The effective Hamiltonian must preserve the relevant environmental effects. The quantum solver must reach chemical accuracy for the reduced problem. The final workflow must turn energy differences into useful catalyst trends rather than isolated numbers.
 
-**The classical competition is strong.** DMRG and tensor-network methods have made real progress on strongly correlated active spaces, including metalloenzyme complexes with active spaces above 70 spin-orbitals. There is a sweet spot around 100–200 spin-orbitals where no classical method is uniformly reliable — this is where quantum embedding could provide unique value.
+And the hardware still matters. VQE-style solve steps face measurement cost, optimiser noise, ansatz limitations, and device errors. Phase-estimation-style solve steps are cleaner in principle but need fault tolerance.
 
-**The pipeline exists in pieces.** Active-space selection, integral generation, fermion-to-qubit encoding, and classical embedding loops are mature workflows. Toy quantum subroutines can be inserted into the stack today. What's missing is an end-to-end quantum solve at scientifically useful catalyst scale.
+So the honest claim is not that quantum computers will "solve climate." The claim is more precise: some climate and energy technologies depend on hard electronic-structure calculations, and embedding is one plausible way to place a quantum solver exactly where that hardness lives.
 
-**What's real today:** The multi-scale approach — embedding a quantum-solved fragment in a classically-solved environment — is the most credible path to useful quantum chemistry on limited hardware. The framework is sound, the toy demonstrations work, and the algorithmic roadmap is clear. The fault-tolerant machines to run it at meaningful scale do not yet exist.
+The notebook shows that placement in miniature.
 
 ## Want more?
 
-This post covers quantum embedding and the catalyst design pipeline. The [companion notebook](../../notebooks/08-climate-energy.ipynb) lets you step through a toy embedding loop. For the full DMET framework, resource estimates for industrial catalyst screening, and the connection to every algorithm introduced in earlier units, see *The Quantum Bottleneck*, currently being prepared for publication.
+The [companion notebook](https://github.com/johnazariah/quantum-workbooks/blob/main/bottleneck/notebooks/08-climate-energy.ipynb) lets you run the precomputed embedded active-space VQE solve step. For the circuit-level VQE measurement pattern, see [Circuit Bench 08 — VQE for H2](../../circuit-bench/08-vqe-h2/README.md).
 
 ---
 
-*This is Unit 8 of The Quantum Bottleneck series — the final unit. For all eight posts and companion notebooks, see the [series overview](../../index.md).*
+*This is Unit 8 of The Quantum Bottleneck series. Return to the [series overview](../index.md) for the full companion path.*

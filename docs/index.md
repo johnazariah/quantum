@@ -29,7 +29,7 @@ We teach quantum computing **problem-down**: start with something you want to co
 
     Self-contained quantum circuit notes. Each note explains a concept from the ground up, builds a circuit step by step, and gives you a working OpenQASM program.
 
-    [:octicons-arrow-right-24: Browse circuits](recipes/index.md)
+    [:octicons-arrow-right-24: Browse circuits](circuit-bench/index.md)
 
 </div>
 
