@@ -132,6 +132,10 @@ $$H\ (\text{Hermitian})\ \longmapsto\ U=e^{-iH}\ (\text{unitary})$$
 
 is the operator version of the scalar fact $x\ (\text{real})\mapsto e^{ix}\ (\text{on the unit circle})$. Real numbers generate the unit circle; Hermitian operators generate the unitaries (the rotations). The reason is the spectral story: $H$ Hermitian has real eigenvalues on an orthonormal basis, so $e^{-iH}$ has the *same* orthonormal eigenbasis but eigenvalues $e^{-iE_n}$, which are pure phases (modulus 1) precisely because the $E_n$ are real. Same orthonormal basis plus all eigenvalues of modulus 1 equals a rotation, that is, a unitary. Hermitian is the steering-wheel angle; unitary is the resulting turn.
 
+!!! note "Pedantry corner: a unitary is not always a rotation"
+
+    A reader who has now set the new bar for our own pedantry (hello, Stephen) points out that "rotation" already has a technical meaning: it is a unitary with determinant $+1$ (the special unitary group). A generic unitary can include reflections. For example, $\begin{pmatrix}1&0\\0&-1\end{pmatrix}$ is unitary but has determinant $-1$; it is a reflection, not a rotation. The propagator $e^{-iHt}$ happens to have determinant $e^{-i\,\mathrm{tr}(H)\,t}$, which has modulus 1 but is not necessarily $+1$, so it is not always a rotation in the strict sense. Throughout this post, "rotation" is used loosely to mean "norm-preserving linear map," that is, a unitary transformation. The geometric intuition is sound; the nomenclature is, technically, a slight overstatement. We stand corrected, and leave the informal usage in place because "the propagator unitarily transforms state space" would put the reader to sleep.
+
 ---
 
 ## 3. Spectral decomposition and projectors: the shadow picture
@@ -338,6 +342,10 @@ A common place for intuition to break: one pictures the stretch happening in the
 
 A complex number $c=x+iy=r\,e^{i\theta}$ is an arrow in the Argand plane (horizontal axis real part, vertical axis imaginary part), with length $r=\lvert c\rvert$ and angle $\theta$ measured from the positive real axis about the origin $0$. Multiplying by a phase,
 
+!!! tip "What is an Argand plane?"
+
+    Named after Jean-Robert Argand (1806), the Argand plane is simply the complex number plane: the horizontal axis is the real part, the vertical axis is the imaginary part, and every complex number $c = x + iy$ sits at the point $(x, y)$. It is the same idea as a 2D coordinate plane, except the axes are labelled Re and Im instead of $x$ and $y$. Drawing a line from the origin to the point gives an arrow whose length is $|c|$ and whose angle from the positive real axis is the phase $\theta$. When we say "the amplitude turns in its Argand plane," we mean that arrow is rotating around the origin, keeping its length fixed.
+
 $$e^{i\theta_0}\cdot re^{i\theta}=re^{i(\theta+\theta_0)},$$
 
 leaves the length untouched and advances the angle. That answers the three natural questions at once: rotating means turning this arrow about $0$; the origin is the number $0$ in that coordinate's own plane; the angle for coordinate $n$ at time $t$ is $-E_n t$.
@@ -361,6 +369,10 @@ Writing the state in the eigenbasis,
 $$\lvert\psi(t)\rangle=\sum_n c_n\,e^{-iE_n t}\lvert n\rangle,\qquad c_n=\langle n\vert\psi_0\rangle,$$
 
 each coefficient $c_n e^{-iE_n t}$ lives in its own complex plane attached to its own eigendirection. Picture one clock per eigendirection; clock $n$ ticks at rate $E_n$. Clock $+$ spins at rate 3, clock $-$ at rate 1, with no conflict because they are different clocks on different walls.
+
+!!! tip "Why clocks?"
+
+    The clock metaphor is literal, not decorative. A clock hand turns at a fixed rate and returns to where it started after one full revolution. That is exactly what a phase $e^{-iE_n t}$ does: it sweeps the unit circle in the Argand plane at angular rate $E_n$, completing one full cycle every $2\pi/E_n$ time units. A fast eigenvalue is a fast clock; a slow one is a slow clock. The interesting physics happens because different clocks run at different speeds, and when you look at the system from a basis that is not aligned with the clocks, you see interference: the hands add up constructively at some times and destructively at others.
 
 ### 7.4 What rotating a vector means, at two levels
 
