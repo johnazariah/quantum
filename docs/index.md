@@ -3,7 +3,7 @@ hide:
   - navigation
 ---
 
-# Quantum Workbooks
+# Quantum
 
 **Quantum computing — explained through problems, built as circuits, run for real.**
 
@@ -37,6 +37,10 @@ We teach quantum computing **problem-down**: start with something you want to co
 
 Check the [blog](blog/index.md) for the latest writeups: problem-first walkthroughs of quantum algorithms, new circuit notes, and companion notebook guides.
 
+## From the main blog
+
+This is the quantum computing companion to [John Azariah's blog](https://johnazariah.github.io), which covers functional programming, software engineering, and language design. The [From Saturday to Co-Author](https://johnazariah.github.io/tags/from-saturday-to-coauthor/) series there documents the author's path from learning QAOA on a Saturday morning to co-authoring a quantum computing paper.
+
 ## What connects them
 
 The Circuit Bench teaches **how**: gates, circuits, measurement, and the mechanics of quantum computation. The Bottleneck teaches **why**: which real problems quantum computers could solve, and which ones they cannot yet. Together, they cover quantum computing from first circuit to industrial application.
@@ -49,4 +53,4 @@ Every circuit note and every notebook is:
 
 ## About the author
 
-**John Azariah** is a PhD candidate at the Centre for Quantum Software & Information, University of Technology Sydney. He designed Microsoft's Q# quantum programming language, co-authored research with Google Quantum AI, and has delivered 30+ talks on quantum computing at conferences worldwide. He believes the best way to learn quantum computing is to run quantum circuits, not to stare at axioms.
+**John Azariah** is a software engineer and student. He believes the best way to learn quantum computing is to run quantum circuits, not to stare at axioms.
