@@ -1,6 +1,6 @@
 ---
 date: 2026-08-25
-notebook: "https://github.com/johnazariah/quantum-workbooks/blob/main/bottleneck/notebooks/05-finance.ipynb"
+notebook: "https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/05-finance.ipynb"
 categories:
   - The Quantum Bottleneck
   - Finance
@@ -100,7 +100,7 @@ The honest claim is therefore narrow but worth understanding: QAE changes the sc
 
 ## Want more?
 
-The [companion notebook](https://github.com/johnazariah/quantum-workbooks/blob/main/bottleneck/notebooks/05-finance.ipynb) lets you compare Black-Scholes, Monte Carlo convergence, and a compiled three-bit amplitude-estimation proxy. For the phase-estimation circuit pattern underneath the proxy, see [Circuit Bench 10 — Quantum Phase Estimation](../../circuit-bench/10-quantum-phase-estimation/README.md).
+The [companion notebook](https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/05-finance.ipynb) lets you compare Black-Scholes, Monte Carlo convergence, and a compiled three-bit amplitude-estimation proxy. For the phase-estimation circuit pattern underneath the proxy, see [Circuit Bench 10 — Quantum Phase Estimation](../../circuit-bench/10-quantum-phase-estimation/README.md).
 
 ---
 

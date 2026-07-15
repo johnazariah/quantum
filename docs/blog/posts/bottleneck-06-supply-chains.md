@@ -1,6 +1,6 @@
 ---
 date: 2026-09-01
-notebook: "https://github.com/johnazariah/quantum-workbooks/blob/main/bottleneck/notebooks/06-supply-chains.ipynb"
+notebook: "https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/06-supply-chains.ipynb"
 categories:
   - The Quantum Bottleneck
   - Supply Chains
@@ -96,7 +96,7 @@ The honest claim is this: QUBO and Ising formulations give a clean bridge from d
 
 ## Want more?
 
-The [companion notebook](https://github.com/johnazariah/quantum-workbooks/blob/main/bottleneck/notebooks/06-supply-chains.ipynb) lets you build the scheduling QUBO, derive the Ising form, and run a one-layer QAOA instance. For the circuit pattern in isolation, see [Circuit Bench 07 — QAOA for MaxCut](../../circuit-bench/07-qaoa-maxcut/README.md).
+The [companion notebook](https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/06-supply-chains.ipynb) lets you build the scheduling QUBO, derive the Ising form, and run a one-layer QAOA instance. For the circuit pattern in isolation, see [Circuit Bench 07 — QAOA for MaxCut](../../circuit-bench/07-qaoa-maxcut/README.md).
 
 ---
 

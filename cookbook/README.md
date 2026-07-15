@@ -3,8 +3,8 @@
 **Quantum circuit notes you can actually run.**
 
 ```bash
-git clone https://github.com/johnazariah/quantum-workbooks
-cd quantum-workbooks/cookbook
+git clone https://github.com/johnazariah/quantum
+cd quantum/cookbook
 ```
 
 Pick a circuit note. Read why it matters. Run it on your [Quokka](https://www.quokkacomputing.com/).

@@ -1,6 +1,6 @@
 ---
 name: bottleneck-circuit-bench
-description: Use when writing, revising, or reviewing Bottleneck companion posts, companion notebooks, or linked Circuit Bench/Cookbook material in quantum-workbooks. Ensures each Bottleneck post is application-first and every linked circuit side path is audited before publication.
+description: Use when writing, revising, or reviewing Bottleneck companion posts, companion notebooks, or linked Circuit Bench/Cookbook material in quantum. Ensures each Bottleneck post is application-first and every linked circuit side path is audited before publication.
 ---
 
 # Bottleneck + Circuit Bench workflow

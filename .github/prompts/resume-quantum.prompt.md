@@ -1,6 +1,6 @@
 ---
-description: "Resume work in quantum-workbooks after the cookbook/bottleneck repo reorg"
-name: "Resume Quantum Workbooks"
+description: "Resume work in quantum after the cookbook/bottleneck repo reorg"
+name: "Resume Quantum"
 argument-hint: "What should we work on next?"
 agent: "agent"
 model: "GPT-5 (copilot)"
@@ -17,7 +17,7 @@ Start by reading these files:
 - [deploy workflow](../workflows/deploy.yml)
 
 Assume the following is already true unless the repository has changed since the last push:
-- The GitHub repository was renamed from `johnazariah/quokka-cookbook` to `johnazariah/quantum-workbooks`.
+- The GitHub repository was renamed from `johnazariah/quokka-cookbook` to `johnazariah/quantum`.
 - The public repo was reorganized at commit `24aa408` into two top-level surfaces:
   - `cookbook/` for the existing Quokka recipe material
   - `bottleneck/` for runnable companions exported from *The Quantum Bottleneck*

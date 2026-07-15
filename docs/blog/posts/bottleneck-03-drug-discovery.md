@@ -1,6 +1,6 @@
 ---
 date: 2026-08-11
-notebook: "https://github.com/johnazariah/quantum-workbooks/blob/main/bottleneck/notebooks/03-drug-discovery.ipynb"
+notebook: "https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/03-drug-discovery.ipynb"
 categories:
   - The Quantum Bottleneck
   - Drug Discovery
@@ -104,7 +104,7 @@ So the honest claim is narrow but important: VQE is a concrete way to turn molec
 
 ## Want more?
 
-The [companion notebook](https://github.com/johnazariah/quantum-workbooks/blob/main/bottleneck/notebooks/03-drug-discovery.ipynb) lets you run the single-geometry $\mathrm{H}_2$ VQE anatomy demo. For the gate-level side path, see [Circuit Bench 08 — VQE for H2](../../circuit-bench/08-vqe-h2/README.md).
+The [companion notebook](https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/03-drug-discovery.ipynb) lets you run the single-geometry $\mathrm{H}_2$ VQE anatomy demo. For the gate-level side path, see [Circuit Bench 08 — VQE for H2](../../circuit-bench/08-vqe-h2/README.md).
 
 ---
 

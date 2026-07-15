@@ -1,10 +1,10 @@
-site_name: Quantum Workbooks
+site_name: John Azariah · Quantum
 site_description: Quantum computing — explained through problems, built as circuits, run for real
 site_author: John Azariah
-site_url: https://johnazariah.github.io/quantum-workbooks
+site_url: https://johnazariah.github.io/quantum
 
-repo_name: johnazariah/quantum-workbooks
-repo_url: https://github.com/johnazariah/quantum-workbooks
+repo_name: johnazariah/quantum
+repo_url: https://github.com/johnazariah/quantum
 docs_dir: docs
 
 theme:
@@ -106,6 +106,6 @@ extra_javascript:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/johnazariah/quantum-workbooks
+      link: https://github.com/johnazariah/quantum
 
 copyright: Copyright &copy; 2026 John Azariah

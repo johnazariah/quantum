@@ -2,7 +2,7 @@
 
 All circuit notes in one place. Each one is self-contained: pick whatever interests you, or follow the [Learning Path](../learning-path.md) for a structured progression.
 
-New notes will appear as the workbooks need them. [Watch the repo](https://github.com/johnazariah/quantum-workbooks) to get notified.
+New notes will appear as the workbooks need them. [Watch the repo](https://github.com/johnazariah/quantum) to get notified.
 
 ---
 

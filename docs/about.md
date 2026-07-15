@@ -34,9 +34,9 @@ Quokka is built by [Eigensystems](https://www.quokkacomputing.com/) in Australia
 
 This is an open-source project. If you find a bug, want to improve an explanation, or have an idea for a new circuit note:
 
-- **Bug or typo?** Open an [issue](https://github.com/johnazariah/quantum-workbooks/issues)
-- **New circuit note?** Open a [pull request](https://github.com/johnazariah/quantum-workbooks/pulls)
-- **Question?** Start a [discussion](https://github.com/johnazariah/quantum-workbooks/discussions)
+- **Bug or typo?** Open an [issue](https://github.com/johnazariah/quantum/issues)
+- **New circuit note?** Open a [pull request](https://github.com/johnazariah/quantum/pulls)
+- **Question?** Start a [discussion](https://github.com/johnazariah/quantum/discussions)
 
 ## License
 

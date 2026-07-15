@@ -1,8 +1,8 @@
-# Quantum Workbooks — Agent Handoff
+# Quantum — Agent Handoff
 
-> **Project:** Quantum Workbooks — public companion site, notebooks, blog support, and circuit notes
+> **Project:** Quantum — public companion site, notebooks, blog support, and circuit notes
 > **Owner:** John Azariah (johnazariah)
-> **Repo:** https://github.com/johnazariah/quantum-workbooks
+> **Repo:** https://github.com/johnazariah/quantum
 > **Site:** GitHub Pages via mkdocs-material — `python3 -m mkdocs build` from the repo root builds the site from `docs/`
 
 ---

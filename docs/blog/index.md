@@ -45,3 +45,20 @@ Think of it this way:
 - **The Circuit Bench** lets you slow down and inspect the circuit machinery.
 
 That is the promise of this space: problem-first, runnable, and honest.
+
+## Related: From Saturday to Co-Author
+
+Before this quantum sub-blog existed, a ten-part series on the [main blog](https://johnazariah.github.io) documented the journey from learning QAOA on a Saturday morning to co-authoring a quantum computing paper. The series covers Julia, QAOA, MaxCut, XORSAT, and the practical reality of turning a weekend experiment into a research contribution.
+
+The posts live on the main blog: [From Saturday to Co-Author — all ten posts](https://johnazariah.github.io/tags/from-saturday-to-coauthor/).
+
+1. [Saturday](https://johnazariah.github.io/2026/05/29/saturday-to-coauthor-01-saturday.html)
+2. [The Fold Under the Tree](https://johnazariah.github.io/2026/06/01/saturday-to-coauthor-02-the-fold-under-the-tree.html)
+3. [Three Gradients in One Codebase](https://johnazariah.github.io/2026/06/04/saturday-to-coauthor-03-three-gradients-in-one-codebase.html)
+4. [The Walls](https://johnazariah.github.io/2026/06/08/saturday-to-coauthor-04-the-walls.html)
+5. [The Algebra That Runs Itself](https://johnazariah.github.io/2026/06/11/saturday-to-coauthor-05-the-algebra-that-runs-itself.html)
+6. [Eighteen Hundred Reasons](https://johnazariah.github.io/2026/06/15/saturday-to-coauthor-06-eighteen-hundred-reasons.html)
+7. [Learning from the Masters](https://johnazariah.github.io/2026/06/18/saturday-to-coauthor-07-learning-from-the-masters.html)
+8. [Fourteen](https://johnazariah.github.io/2026/06/22/saturday-to-coauthor-08-fourteen.html)
+9. [The Collaborator That Never Sleeps](https://johnazariah.github.io/2026/06/25/saturday-to-coauthor-09-the-collaborator-that-never-sleeps.html)
+10. [What Language Taught Us About Mathematics](https://johnazariah.github.io/2026/06/29/saturday-to-coauthor-10-what-language-taught-us-about-mathematics.html)

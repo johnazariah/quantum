@@ -1,6 +1,6 @@
 ---
 date: 2026-07-28
-notebook: "https://github.com/johnazariah/quantum-workbooks/blob/main/bottleneck/notebooks/01-logistics.ipynb"
+notebook: "https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/01-logistics.ipynb"
 categories:
   - The Quantum Bottleneck
   - Optimisation
@@ -236,7 +236,7 @@ For the same circuit viewed directly on the Circuit Bench, see [QAOA for MaxCut]
 
 Open the notebook here:
 
-[Unit 1 notebook: QAOA for MaxCut](https://github.com/johnazariah/quantum-workbooks/blob/main/bottleneck/notebooks/01-logistics.ipynb)
+[Unit 1 notebook: QAOA for MaxCut](https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/01-logistics.ipynb)
 
 The notebook is deliberately small and explicit. That is not a lack of sophistication; it is the teaching choice. You should be able to see every moving part.
 

@@ -1,6 +1,6 @@
 ---
 date: 2026-09-15
-notebook: "https://github.com/johnazariah/quantum-workbooks/blob/main/bottleneck/notebooks/08-climate-energy.ipynb"
+notebook: "https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/08-climate-energy.ipynb"
 categories:
   - The Quantum Bottleneck
   - Climate & Energy
@@ -95,7 +95,7 @@ The notebook shows that placement in miniature.
 
 ## Want more?
 
-The [companion notebook](https://github.com/johnazariah/quantum-workbooks/blob/main/bottleneck/notebooks/08-climate-energy.ipynb) lets you run the precomputed embedded active-space VQE solve step. For the circuit-level VQE measurement pattern, see [Circuit Bench 08 — VQE for H2](../../circuit-bench/08-vqe-h2/README.md).
+The [companion notebook](https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/08-climate-energy.ipynb) lets you run the precomputed embedded active-space VQE solve step. For the circuit-level VQE measurement pattern, see [Circuit Bench 08 — VQE for H2](../../circuit-bench/08-vqe-h2/README.md).
 
 ---
 

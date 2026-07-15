@@ -1,6 +1,6 @@
 ---
 date: 2026-08-18
-notebook: "https://github.com/johnazariah/quantum-workbooks/blob/main/bottleneck/notebooks/04-machine-learning.ipynb"
+notebook: "https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/04-machine-learning.ipynb"
 categories:
   - The Quantum Bottleneck
   - Machine Learning
@@ -101,7 +101,7 @@ So the honest claim is this: quantum kernels are a clean way to ask whether a qu
 
 ## Want more?
 
-The [companion notebook](https://github.com/johnazariah/quantum-workbooks/blob/main/bottleneck/notebooks/04-machine-learning.ipynb) lets you compare a two-qubit quantum kernel with a classical RBF kernel on the same toy dataset.
+The [companion notebook](https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/04-machine-learning.ipynb) lets you compare a two-qubit quantum kernel with a classical RBF kernel on the same toy dataset.
 
 ---
 

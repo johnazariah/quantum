@@ -1,6 +1,6 @@
 ---
 date: 2026-09-08
-notebook: "https://github.com/johnazariah/quantum-workbooks/blob/main/bottleneck/notebooks/07-materials-science.ipynb"
+notebook: "https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/07-materials-science.ipynb"
 categories:
   - The Quantum Bottleneck
   - Materials Science
@@ -95,7 +95,7 @@ The honest claim is this: materials simulation is one of the most natural places
 
 ## Want more?
 
-The [companion notebook](https://github.com/johnazariah/quantum-workbooks/blob/main/bottleneck/notebooks/07-materials-science.ipynb) lets you diagonalise the two-site Hubbard benchmark and run the compiled three-bit QPE toy. For the gate-level phase-readout pattern, see [Circuit Bench 10 — Quantum Phase Estimation](../../circuit-bench/10-quantum-phase-estimation/README.md).
+The [companion notebook](https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/07-materials-science.ipynb) lets you diagonalise the two-site Hubbard benchmark and run the compiled three-bit QPE toy. For the gate-level phase-readout pattern, see [Circuit Bench 10 — Quantum Phase Estimation](../../circuit-bench/10-quantum-phase-estimation/README.md).
 
 ---
 

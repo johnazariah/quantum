@@ -88,7 +88,7 @@ For a post that derives, from first principles, why quantum time evolution is a 
 >
 > The reward is a clean geometric picture. A Hermitian operator stretches space along its eigenvectors; the same operator inside an exponential with an imaginary exponent rotates instead, which is exactly why total probability is conserved.
 >
-> Full post: https://johnazariah.github.io/quantum-workbooks/blog/2026/07/14/how-to-raise-e-to-a-matrix-and-why-youd-want-to/
+> Full post: https://johnazariah.github.io/quantum/blog/2026/07/14/how-to-raise-e-to-a-matrix-and-why-youd-want-to/
 
 That post leads with the idea before the fold, develops it in three measured paragraphs, has no em-dash or emoji, and does not tease.
 

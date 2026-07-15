@@ -1,6 +1,6 @@
 ---
 date: 2026-08-04
-notebook: "https://github.com/johnazariah/quantum-workbooks/blob/main/bottleneck/notebooks/02-cryptography.ipynb"
+notebook: "https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/02-cryptography.ipynb"
 categories:
   - The Quantum Bottleneck
   - Cryptography
@@ -173,7 +173,7 @@ The quantum computer does the period-finding step. The final extraction of facto
 
 Open the notebook here:
 
-[Unit 2 notebook: compiled period-finding for $N = 15$](https://github.com/johnazariah/quantum-workbooks/blob/main/bottleneck/notebooks/02-cryptography.ipynb)
+[Unit 2 notebook: compiled period-finding for $N = 15$](https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/02-cryptography.ipynb)
 
 The notebook is deliberately honest about its size.
 
