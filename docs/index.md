@@ -7,7 +7,7 @@ hide:
 
 *I'm **John Azariah** — a lifelong student interested in mathematics, physics, and quantum computing, bringing three decades of software engineering and functional programming to get a better understanding of what makes the universe tick.*
 
-**Quantum computing — explained through problems, built as circuits, run for real.**
+**Making quantum leaps in understanding.**
 
 ---
 
