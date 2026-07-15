@@ -47,10 +47,6 @@ plugins:
       post_date_format: long
       draft_if_future_date: true
 
-nav:
-  - Home: index.md
-  - About: about.md
-
 markdown_extensions:
   - admonition
   - pymdownx.details
