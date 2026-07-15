@@ -1,5 +1,5 @@
 ---
-date: 2026-07-21
+date: 2026-07-17
 categories:
   - Linear Algebra for Fun and Profit
 tags:
@@ -18,6 +18,10 @@ authors:
 
 !!! note "Part 2 of *Linear Algebra for Fun and Profit*"
     Part 1, **How to Raise `e` to a Matrix**, builds the machinery this post spends: the matrix exponential, the spectral theorem, and why $e^{-iHt}$ is a rotation. Read that first if $\lvert n\rangle\langle n\rvert$ or "functions of $H$" are unfamiliar.
+
+!!! quote "Dedication"
+
+    For Dave Probert, whose humour and friendship have been valuable to me since our time at QuArC, and who continues to mentor, inspire and refine my views on work, life and computing.
 
 ## The one idea
 
