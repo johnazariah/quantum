@@ -1,5 +1,5 @@
 ---
-date: 2026-06-27
+date: 2026-09-01
 notebook: "https://github.com/johnazariah/quantum-workbooks/blob/main/bottleneck/notebooks/06-supply-chains.ipynb"
 categories:
   - The Quantum Bottleneck

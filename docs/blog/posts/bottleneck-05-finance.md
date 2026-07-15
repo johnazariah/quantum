@@ -1,5 +1,5 @@
 ---
-date: 2026-06-26
+date: 2026-08-25
 notebook: "https://github.com/johnazariah/quantum-workbooks/blob/main/bottleneck/notebooks/05-finance.ipynb"
 categories:
   - The Quantum Bottleneck

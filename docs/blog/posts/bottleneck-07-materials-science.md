@@ -1,5 +1,5 @@
 ---
-date: 2026-06-28
+date: 2026-09-08
 notebook: "https://github.com/johnazariah/quantum-workbooks/blob/main/bottleneck/notebooks/07-materials-science.ipynb"
 categories:
   - The Quantum Bottleneck
