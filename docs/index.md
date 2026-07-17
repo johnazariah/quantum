@@ -20,6 +20,7 @@ hide:
 The linear algebra behind quantum computing and machine learning. Each post builds from first principles with a single running example you can check by hand.
 
 - [How to Raise *e* to a Matrix (and Why You'd Want To)](blog/2026/07/14/how-to-raise-e-to-a-matrix-and-why-youd-want-to/) — the matrix exponential solves the Schrödinger equation, and the result is a rotation rather than a stretch.
+- [What a Difference *i* Makes](blog/2026/07/17/machine-learning-and-quantum-computing-what-a-difference-i-makes/) — power iteration, imaginary time, and phase estimation are one move; the only difference is a factor of *i*.
 
 ### From Saturday to Co-Author
 
