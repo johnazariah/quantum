@@ -149,9 +149,9 @@ None — each is standalone.
 
 ## Publishing cadence
 
-- Current active series: **Linear Algebra for Fun and Profit** (2 parts, both live
-  by 2026-07-17), then **The Quantum Bottleneck** (8 parts, 2026-07-28 through
-  2026-08-22, twice weekly on Tuesdays and Fridays).
+- Current active series: **Linear Algebra for Fun and Profit** (4 parts: Parts 1-3
+  live by 2026-07-21, Part 4 scheduled 2026-07-24), then **The Quantum Bottleneck**
+  (8 parts, 2026-07-28 through 2026-08-22, twice weekly on Tuesdays and Fridays).
 - After Bottleneck completes (late August 2026), begin the next series.
 - Recommended order: **QAOA from Scratch** first (strongest original contribution,
   most material ready), then **Hidden Structure**, then **Quantum Foundations**.
@@ -174,7 +174,7 @@ For each series, the assigned agent should:
 
 | Series | Status | Next action |
 |---|---|---|
-| Linear Algebra for Fun and Profit | Parts 1-3 live (Part 3 scheduled Jul 21) | Complete |
+| Linear Algebra for Fun and Profit | Parts 1-4 (refactored from 3 to 4 posts; Part 4 scheduled Jul 24) | Complete |
 | The Quantum Bottleneck | 8 parts scheduled (Jul 28 – Aug 22, Tue+Fri) | Auto-publishes |
 | QAOA from Scratch | Spec written | Agent: read sources, propose abstracts |
 | Hidden Structure | Spec written | Agent: read sources, propose abstracts |

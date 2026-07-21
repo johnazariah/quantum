@@ -1,24 +1,27 @@
 ---
-date: 2026-07-21
+date: 2026-07-17
 categories:
   - Linear Algebra for Fun and Profit
 tags:
   - eigenvalues
-  - quantum computing
   - machine learning
   - applications
 authors:
   - John Azariah
 ---
 
-# The Profit
+# Where Eigenvalues Pay Rent
 
-*Parts 1 and 2 built the machinery: the spectral theorem, the matrix exponential, and the single factor of $i$ that separates stretch from rotation. This post spends it. Three industries, three eigenproblems, three ways the same linear algebra pays rent.*
+*Part 1 built the spectral theorem. Before we survey the tools that compute eigenvalues, here is why you would want to: three industries, three matrices, three ways the same linear algebra pays rent.*
 
 <!-- more -->
 
-!!! note "Part 3 of *Linear Algebra for Fun and Profit*"
-    Part 1, **How to Raise `e` to a Matrix**, builds the spectral theorem and the propagator. Part 2, **What a Difference `i` Makes**, surveys the classical and quantum eigensolvers. This post assumes both and shows where the machinery lands.
+!!! note "Part 2 of *Linear Algebra for Fun and Profit*"
+    Part 1, **How to Raise `e` to a Matrix**, builds the spectral theorem and the matrix exponential. This post shows where that machinery lands; Parts 3 and 4 survey the classical and quantum tools that compute the eigenvalues.
+
+!!! quote "Dedication"
+
+    For Dave Probert, whose humour and friendship have been valuable to me since our time at QuArC, and who continues to mentor, inspire and refine my views on work, life and computing.
 
 ## The same theorem, three pay cheques
 
@@ -26,7 +29,7 @@ Every application in this post reduces to one question: *what are the eigenvalue
 
 ---
 
-## 1. Ranking the web: \$100B from a dominant eigenvector
+## 1. Ranking the web: $100B from a dominant eigenvector
 
 ### The problem
 
@@ -48,7 +51,7 @@ Power iteration. Start with uniform scores, repeatedly compute $\mathbf{x} \left
 
 ### The profit
 
-PageRank was the algorithmic foundation of Google Search. The company was valued at \$23B at its 2004 IPO and reached \$1T in 2020. The dominant eigenvector of a sparse matrix, found by the simplest eigensolver in existence, underpinned a substantial fraction of that value. The linear algebra is Part 2's power iteration, applied to a matrix with billions of rows.
+PageRank was the algorithmic foundation of Google Search. The company was valued at \$23B at its 2004 IPO and reached \$1T in 2020. The dominant eigenvector of a sparse matrix, found by the simplest eigensolver in existence, underpinned a substantial fraction of that value. The linear algebra is power iteration applied to a matrix with billions of rows.
 
 ### The honest caveat
 
@@ -106,7 +109,7 @@ Mapped to qubits (via Jordan-Wigner or Bravyi-Kitaev encoding), this becomes a s
 
 On a classical computer: full configuration interaction (exact diagonalisation, exponential cost), coupled cluster (approximate, polynomial cost, gold standard for weakly correlated systems), density functional theory (mean-field, fast, less accurate for strongly correlated systems). These are all eigensolvers or approximations to eigensolvers, and they all hit the memory wall at some molecule size.
 
-On a quantum computer: VQE for near-term devices (shallow circuits, classical optimiser loop, variational upper bound) or QPE for fault-tolerant devices (deep circuits, Heisenberg-limited precision). VQE finds the ground energy by minimising the Rayleigh quotient over a parameterised circuit ansatz, exactly the variational eigensolver of Part 2. QPE reads the eigenphase $e^{-iE_0 t}$ off the propagator, the rotation side of the $i$-factor table.
+On a quantum computer: VQE for near-term devices (shallow circuits, classical optimiser loop, variational upper bound) or QPE for fault-tolerant devices (deep circuits, Heisenberg-limited precision). Parts 3 and 4 survey these tools in detail.
 
 ### The profit
 
@@ -128,21 +131,13 @@ No quantum computer has yet computed a molecular energy that a classical compute
 | risk management | covariance $\Sigma$ | hidden risk factor | variance explained | SVD / PCA | hedge 500 stocks with 10 trades |
 | drug discovery | Hamiltonian $H$ | ground state $\ket{0}$ | binding energy $E_0$ | VQE / QPE | reach intractable molecules |
 
-Three different matrices, three different industries, three different scales. The spectral theorem is the same in every row. The eigenvalues are always real because the matrices are always Hermitian (or symmetric, the real case). The eigenvectors always form an orthonormal basis that reveals hidden structure: importance, risk factors, quantum states. The tools are all functions of the operator applied to filter the spectrum, exactly the landscape table from Part 2.
+Three different matrices, three different industries, three different scales. The spectral theorem is the same in every row. The eigenvalues are always real because the matrices are always Hermitian (or symmetric, the real case). The eigenvectors always form an orthonormal basis that reveals hidden structure: importance, risk factors, quantum states. The tools are all functions of the operator applied to filter the spectrum.
 
-## Where the $i$ sits
+## What comes next
 
-Two of the three applications live on the stretch side of the $i$-factor divide: PageRank uses real power iteration ($H^k$), and PCA uses the real spectral decomposition of a symmetric matrix. Neither involves complex numbers or unitary evolution. The third, molecular ground-state energy, uses both sides: classical methods apply the stretch (imaginary time, Lanczos), while quantum methods apply the rotation ($e^{-iHt}$ for QPE) or minimise the Rayleigh quotient over unitary circuits (VQE).
+Two of these three applications live on the stretch side of the $i$-factor divide: PageRank uses real power iteration ($H^k$), and PCA uses the real spectral decomposition of a symmetric matrix. Neither involves complex numbers or unitary evolution. The third, molecular ground-state energy, uses both sides: classical methods apply the stretch (imaginary time, Lanczos), while quantum methods apply the rotation ($e^{-iHt}$ for QPE) or minimise the Rayleigh quotient over unitary circuits (VQE).
 
-The profit on the classical side is proven and enormous. The profit on the quantum side is, for now, a promissory note backed by the spectral theorem and the exponential dimension of Hilbert space. Whether that note pays depends on hardware, error correction, and the race between quantum and classical algorithms. The linear algebra does not care; it works on both sides of the $i$.
-
----
-
-## What this series built
-
-Three posts, one idea. A Hermitian matrix has real eigenvalues on an orthonormal basis. Functions of the matrix act eigenvalue-by-eigenvalue. The real exponential stretches and the imaginary exponential rotates, and that single factor of $i$ separates classical machine learning from quantum mechanics. The spectral theorem is not a textbook curiosity; it is the load-bearing structure under web search, portfolio risk, molecular simulation, and every eigensolver classical or quantum.
-
-That is the linear algebra. The fun was building it; the profit is what it computes.
+Part 3 surveys the classical tools (the stretch), and Part 4 crosses to the quantum side (the rotation), where the only difference is a single factor of $i$.
 
 [^pagerank1999]: L. Page, S. Brin, R. Motwani, and T. Winograd, "The PageRank Citation Ranking: Bringing Order to the Web," Stanford InfoLab Technical Report (1999).
 [^jolliffe2002]: I. T. Jolliffe, *Principal Component Analysis*, 2nd ed., Springer (2002).
