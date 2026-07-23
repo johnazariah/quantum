@@ -5,8 +5,8 @@ on:
     branches: [main]
   workflow_dispatch:
   schedule:
-    # Weekly Tuesday 08:00 UTC rebuild so future-dated posts publish on schedule
-    - cron: '0 8 * * 2'
+    # Daily 08:00 UTC rebuild so future-dated posts publish on their date
+    - cron: '0 8 * * *'
 
 permissions:
   contents: read
