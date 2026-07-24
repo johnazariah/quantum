@@ -1,0 +1,126 @@
+name: Bluesky Fix
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action to perform'
+        required: true
+        type: choice
+        options:
+          - repost-part1
+          - delete-duplicates
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ github.token }}
+
+      - name: Fix Bluesky posts
+        env:
+          BLUESKY_HANDLE: ${{ secrets.BLUESKY_HANDLE }}
+          BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
+          ACTION: ${{ github.event.inputs.action }}
+        run: |
+          pip install pyyaml -q
+          python3 << 'SCRIPT'
+          import json, os, urllib.request, yaml, re
+          from datetime import datetime, timezone
+
+          handle = os.environ["BLUESKY_HANDLE"]
+          password = os.environ["BLUESKY_APP_PASSWORD"]
+          action = os.environ["ACTION"]
+
+          # Auth
+          auth_data = json.dumps({"identifier": handle, "password": password}).encode()
+          req = urllib.request.Request(
+              "https://bsky.social/xrpc/com.atproto.server.createSession",
+              data=auth_data, headers={"Content-Type": "application/json"}, method="POST"
+          )
+          resp = urllib.request.urlopen(req)
+          session = json.loads(resp.read())
+          token = session["accessJwt"]
+          did = session["did"]
+
+          def delete_record(rkey):
+              data = json.dumps({"repo": did, "collection": "app.bsky.feed.post", "rkey": rkey}).encode()
+              req = urllib.request.Request(
+                  "https://bsky.social/xrpc/com.atproto.repo.deleteRecord",
+                  data=data, headers={"Content-Type": "application/json", "Authorization": f"Bearer {token}"}, method="POST"
+              )
+              urllib.request.urlopen(req)
+              print(f"  Deleted: {rkey}")
+
+          def create_post(text, url, title):
+              full_text = f"{text}\n\n{url}"
+              url_start = len(full_text.encode("utf-8")) - len(url.encode("utf-8"))
+              url_end = len(full_text.encode("utf-8"))
+              now_iso = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+              record = {
+                  "$type": "app.bsky.feed.post",
+                  "text": full_text,
+                  "createdAt": now_iso,
+                  "facets": [{"index": {"byteStart": url_start, "byteEnd": url_end},
+                              "features": [{"$type": "app.bsky.richtext.facet#link", "uri": url}]}],
+                  "embed": {"$type": "app.bsky.embed.external",
+                            "external": {"uri": url, "title": title, "description": text[:200]}}
+              }
+              data = json.dumps({"repo": did, "collection": "app.bsky.feed.post", "record": record}).encode()
+              req = urllib.request.Request(
+                  "https://bsky.social/xrpc/com.atproto.repo.createRecord",
+                  data=data, headers={"Content-Type": "application/json", "Authorization": f"Bearer {token}"}, method="POST"
+              )
+              resp = urllib.request.urlopen(req)
+              result = json.loads(resp.read())
+              print(f"  Created: {result['uri']}")
+              return result
+
+          if action == "delete-duplicates":
+              # Delete the two ghost Part 1 posts
+              print("Deleting ghost Part 1 posts...")
+              delete_record("3mregp2yeq42t")
+              delete_record("3mrefuc6vf42n")
+              print("Done")
+
+          elif action == "repost-part1":
+              # Delete ghosts first
+              print("Deleting ghost Part 1 posts...")
+              for rkey in ["3mregp2yeq42t", "3mrefuc6vf42n"]:
+                  try:
+                      delete_record(rkey)
+                  except Exception as e:
+                      print(f"  Skip {rkey}: {e}")
+
+              # Create fresh Part 1
+              print("Creating fresh Part 1...")
+              hook = "New series: Linear Algebra for Fun and Profit. Part 1 builds the matrix exponential from scratch and shows why e^{-iHt} is a rotation. One running example, first principles, no prerequisites beyond linear algebra."
+              url = "https://johnazariah.github.io/quantum/blog/2026/07/14/how-to-raise-e-to-a-matrix/"
+              title = "How to Raise e to a Matrix (and Why Youd Want To)"
+              result = create_post(hook, url, title)
+
+              # Update thread state
+              threads_file = ".github/.bsky-threads.json"
+              threads = {}
+              if os.path.exists(threads_file):
+                  threads = json.loads(open(threads_file).read())
+              threads["Linear Algebra for Fun and Profit"]["root"] = {
+                  "uri": result["uri"], "cid": result["cid"]
+              }
+              with open(threads_file, "w") as f:
+                  json.dump(threads, f, indent=2)
+              print(f"Thread root updated: {result['uri']}")
+          SCRIPT
+
+      - name: Commit state
+        if: ${{ github.event.inputs.action == 'repost-part1' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .github/.bsky-threads.json 2>/dev/null || true
+          git diff --cached --quiet || (git commit -m "chore: update bsky thread root [skip ci]" && git push)
+
+permissions:
+  contents: write
