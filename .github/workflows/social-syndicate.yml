@@ -49,6 +49,15 @@ jobs:
           import yaml, json, os, urllib.request, re, sys, glob
           from datetime import timezone, datetime
 
+          def escape_linkedin(t):
+              # LinkedIn Posts API 'commentary' silently truncates at the first
+              # UNESCAPED reserved char. Escape them all EXCEPT '#', kept bare so
+              # intended hashtags stay clickable. chr(92) is the backslash.
+              bs = chr(92)
+              for ch in bs + '|{}[]()<>@*_~':
+                  t = t.replace(ch, bs + ch)
+              return t
+
           backfill = os.environ.get("BACKFILL_DATE", "").strip()
           platform = os.environ.get("PLATFORM", "both").strip()
           today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
@@ -147,7 +156,7 @@ jobs:
 
                   payload = {
                       "author": li_urn,
-                      "commentary": hook,
+                      "commentary": escape_linkedin(hook),
                       "visibility": "PUBLIC",
                       "distribution": {
                           "feedDistribution": "MAIN_FEED",
