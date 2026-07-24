@@ -20,6 +20,8 @@ social:
 
 # The $50M Delivery Route
 
+*Dedicated to my friend, mentor and a boss who stood up for me when no one else would, Dave Fellows. You encouraged me when I told you I was writing a book on quantum computing, and this is a step in that direction.*
+
 The notebook starts with a triangle.
 
 The problem starts with trucks.
