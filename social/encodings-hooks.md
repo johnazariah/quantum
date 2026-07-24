@@ -33,3 +33,15 @@ The Seeley-Richard-Love paper (2012) presents a unified framework where Jordan-W
 
 ### Bluesky
 Post 3 in the encodings series. The SRL framework looks like one construction but is actually two formulas in a trenchcoat. The wrong one fails by a single qubit, verified against all 120 anticommutators.
+
+---
+
+## Post 4: The Star-Tree Theorem (Oct 27)
+
+### LinkedIn
+The SRL framework (2012) derives fermionic encodings by reading index sets off a tree. The star-tree theorem proves this recipe satisfies the canonical anticommutation relations if and only if the tree has depth at most 1 (a star). The proof identifies a single mechanism: on any depth-2 path, the intermediate node cancels in a symmetric difference, creating an identity gap that flips the anticommutation parity from odd to even. Verified exhaustively on all 701 labelled rooted trees for n=1 through 5: exactly n trees pass for each n, and they are exactly the n stars.
+
+#QuantumComputing #QuantumChemistry
+
+### Bluesky
+Post 4 completes the encodings series. The star-tree theorem proves the SRL index-set recipe works only for depth-1 trees. A single cancellation mechanism breaks everything deeper. Verified exhaustively on all 701 trees for n=1..5.
