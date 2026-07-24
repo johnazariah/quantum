@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
   schedule:
     # Daily 08:00 UTC rebuild so future-dated posts publish on their date
-    - cron: '0 8 * * *'
+    - cron: '0 14 * * *'
 
 permissions:
   contents: read
