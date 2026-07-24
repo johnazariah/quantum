@@ -1,5 +1,5 @@
 ---
-date: 2026-08-01
+date: 2026-07-29
 notebook: https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/02-cryptography.ipynb
 categories:
 - The Quantum Bottleneck

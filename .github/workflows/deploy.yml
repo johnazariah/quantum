@@ -5,8 +5,9 @@ on:
     branches: [main]
   workflow_dispatch:
   schedule:
-    # Daily 08:00 UTC rebuild so future-dated posts publish on their date
-    - cron: '0 14 * * *'
+    # Daily 15:00 UTC rebuild (= 11:00 US Eastern, start of LinkedIn peak) so
+    # future-dated posts publish, and syndicate, on their date during US business hours
+    - cron: '0 15 * * *'
 
 permissions:
   contents: read

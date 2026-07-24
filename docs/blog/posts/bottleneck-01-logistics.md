@@ -1,5 +1,5 @@
 ---
-date: 2026-07-28
+date: 2026-07-27
 notebook: https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/01-logistics.ipynb
 categories:
 - The Quantum Bottleneck
