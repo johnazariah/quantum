@@ -21,3 +21,15 @@ The Jordan-Wigner transform encodes fermions on qubits with a parity chain that 
 
 ### Bluesky
 Post 2 in the encodings series builds the Bravyi-Kitaev encoding from the Fenwick tree. A data structure from competitive programming gives O(log n) operator weight where Jordan-Wigner needs O(n). All operators verified against the full anticommutation algebra.
+
+---
+
+## Post 3: Three Constructions in a Trenchcoat (Oct 20)
+
+### LinkedIn
+The Seeley-Richard-Love paper (2012) presents a unified framework where Jordan-Wigner, Bravyi-Kitaev, and Parity encodings are all derived from trees using the same recipe. This post shows that the unification is illusory. The framework contains two different operator formulas wearing the same notation, and the formula that works for stars (JW, Parity) fails for the Fenwick tree by exactly one qubit at exactly the wrong place. Verified computationally against all 120 anticommutation relations for 8 modes.
+
+#QuantumComputing #QuantumChemistry
+
+### Bluesky
+Post 3 in the encodings series. The SRL framework looks like one construction but is actually two formulas in a trenchcoat. The wrong one fails by a single qubit, verified against all 120 anticommutators.
