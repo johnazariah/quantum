@@ -77,6 +77,18 @@ Run every check below against the post body before it ships. Each check lists th
 
 ---
 
+## Check 6 — Real code, real outputs (never fabricate)
+
+**Rule.** Every code block that shows an output, and every quantitative claim drawn from code, must be the genuine result of actually executing that code. Run it, paste exactly what it prints. Never hand-write plausible-looking numbers, sample outputs, or "you'll get something like…" results. If a snippet is illustrative and not meant to be run, show the code only — do not attach a fabricated output block.
+
+**Why.** This is the single fastest way to destroy a technical blog's credibility. A reference reader will copy the code and run it. If the printed autocorrelation, the transition table, or the timing number does not match, every other claim in the post is now suspect. Worse, fabricated outputs are usually invented to fit the narrative the author *wants* — so they quietly encode and "confirm" claims that the real data contradicts. A wrong number is a bug; a wrong number that props up a false thesis is a trap.
+
+**How to find it.** For each code block with a shown result: actually run the code (same seed, same inputs) and diff its output against what the post prints — character for character for text, and to the stated precision for numbers. Confirm the output block would even *appear* (e.g. a dict/Counter with no key for a case does not print a line for it). Then sanity-check the result against theory: does the number match a hand calculation or a known closed form? If code output and narrative disagree, fix whichever is wrong — do not paper over it.
+
+**Real example (the one that created this rule).** A Hidden Structure draft printed autocorrelation values for the Golden Mean process — lag 1 = −0.3340, lag 2 ≈ 0 ("the signal has essentially vanished") — and built its thesis on "autocorrelation is blind to this sequence." Running the actual code gave lag 1 = −0.4917 (≈ the theoretical −0.5) and lag 2 = **+0.2492**: a pronounced decaying oscillation. The outputs were fabricated, and the fabrication concealed that the claim was false — the Golden Mean is first-order Markov, so autocorrelation and bigrams both *do* see its structure. The example itself had to be reframed. None of this survives a reader who runs the code; all of it is caught the moment the author does.
+
+---
+
 ## Mechanical pass (fast, run these)
 
 ```bash
