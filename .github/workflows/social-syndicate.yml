@@ -46,7 +46,7 @@ jobs:
           PLATFORM: ${{ github.event.inputs.platform || 'both' }}
         run: |
           python3 << 'SCRIPT'
-          import yaml, json, os, urllib.request, re, sys, glob
+          import yaml, json, os, urllib.request, re, sys, glob, time
           from datetime import timezone, datetime
 
           def escape_linkedin(t):
@@ -122,6 +122,34 @@ jobs:
           if os.path.exists(state_file):
               syndicated = set(line.strip() for line in open(state_file) if line.strip())
 
+          _sitemap = {"text": None}
+          def _fetch_sitemap():
+              for _a in range(3):
+                  try:
+                      return urllib.request.urlopen("https://johnazariah.github.io/quantum/sitemap.xml", timeout=20).read().decode()
+                  except Exception as _e:
+                      print(f"  sitemap fetch attempt {_a+1} failed: {_e}")
+                      time.sleep(3)
+              return ""
+          def real_url(year, month, day, fallback, _retried=False):
+              # MkDocs derives the post slug from the TITLE, not the filename, so the
+              # only reliable link is the one actually deployed. Read it from the live
+              # sitemap by date (one post per date on our schedule); fall back to the
+              # constructed URL only if the sitemap has no entry after a retry.
+              if _sitemap["text"] is None:
+                  _sitemap["text"] = _fetch_sitemap()
+              pat = re.compile(r"https://johnazariah\.github\.io/quantum/blog/%s/%s/%s/[a-z0-9-]+/" % (year, month, day))
+              hits = sorted(set(pat.findall(_sitemap["text"] or "")))
+              if len(hits) == 1:
+                  return hits[0]
+              if len(hits) == 0 and not _retried:
+                  print(f"  no sitemap URL for {year}/{month}/{day} yet; retrying in 10s")
+                  _sitemap["text"] = None
+                  time.sleep(10)
+                  return real_url(year, month, day, fallback, _retried=True)
+              print(f"  WARN sitemap gave {len(hits)} URLs for {year}/{month}/{day}; using fallback {fallback}")
+              return fallback
+
           def get_post_meta(post_path, fm, body):
               """Extract slug, title, and URL from a post."""
               filename = os.path.basename(post_path).replace(".md", "")
@@ -137,7 +165,8 @@ jobs:
                   year, month, day = post_date.strftime("%Y"), post_date.strftime("%m"), post_date.strftime("%d")
               else:
                   year, month, day = str(post_date).split("-")
-              url = f"https://johnazariah.github.io/quantum/blog/{year}/{month}/{day}/{slug}/"
+              fallback = f"https://johnazariah.github.io/quantum/blog/{year}/{month}/{day}/{slug}/"
+              url = real_url(year, month, day, fallback)
               return slug, title, url
 
           # --- LinkedIn ---
