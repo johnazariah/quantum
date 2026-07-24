@@ -5,13 +5,27 @@ on:
     workflows: ["Deploy to GitHub Pages"]
     types: [completed]
     branches: [main]
-  workflow_dispatch: # manual trigger for testing
+  workflow_dispatch:
+    inputs:
+      backfill_date:
+        description: 'Post date to backfill (YYYY-MM-DD), or "all-past" for all published'
+        required: false
+        type: string
+      platform:
+        description: 'Platform to post to'
+        required: false
+        default: 'both'
+        type: choice
+        options:
+          - both
+          - linkedin
+          - bluesky
 
 permissions:
   contents: write
 
 jobs:
-  linkedin:
+  syndicate:
     if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     steps:
@@ -22,28 +36,47 @@ jobs:
       - name: Install dependencies
         run: pip install pyyaml -q
 
-      - name: Find and syndicate today's posts
+      - name: Syndicate posts
         env:
           LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
           LINKEDIN_PERSON_URN: ${{ secrets.LINKEDIN_PERSON_URN }}
           BLUESKY_HANDLE: ${{ secrets.BLUESKY_HANDLE }}
           BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
+          BACKFILL_DATE: ${{ github.event.inputs.backfill_date || '' }}
+          PLATFORM: ${{ github.event.inputs.platform || 'both' }}
         run: |
           python3 << 'SCRIPT'
           import yaml, json, os, urllib.request, re, sys, glob
-          from datetime import date, timezone, datetime
+          from datetime import timezone, datetime
 
+          backfill = os.environ.get("BACKFILL_DATE", "").strip()
+          platform = os.environ.get("PLATFORM", "both").strip()
           today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-          print(f"Looking for posts dated: {today}")
 
-          token = os.environ.get("LINKEDIN_ACCESS_TOKEN", "")
-          person_urn = os.environ.get("LINKEDIN_PERSON_URN", "")
+          if backfill == "all-past":
+              target_dates = None
+              print(f"Backfill mode: all published posts up to {today}")
+          elif backfill:
+              target_dates = [backfill]
+              print(f"Backfill mode: date {backfill}")
+          else:
+              target_dates = [today]
+              print(f"Normal mode: posts dated {today}")
 
-          if not token or not person_urn:
-              print("❌ LinkedIn credentials not configured")
-              sys.exit(1)
+          # Credentials
+          li_token = os.environ.get("LINKEDIN_ACCESS_TOKEN", "")
+          li_urn = os.environ.get("LINKEDIN_PERSON_URN", "")
+          bsky_handle = os.environ.get("BLUESKY_HANDLE", "")
+          bsky_pass = os.environ.get("BLUESKY_APP_PASSWORD", "")
 
-          # Find all posts with today's date in front matter
+          do_linkedin = platform in ("both", "linkedin") and li_token and li_urn
+          do_bluesky = platform in ("both", "bluesky") and bsky_handle and bsky_pass
+
+          if not do_linkedin and not do_bluesky:
+              print("No platforms configured or selected")
+              sys.exit(0)
+
+          # Find matching posts
           posts_to_syndicate = []
           for post_path in sorted(glob.glob("docs/blog/posts/*.md")):
               with open(post_path) as f:
@@ -62,206 +95,179 @@ jobs:
                   post_date = post_date.strftime("%Y-%m-%d")
               else:
                   post_date = str(post_date)
-              if post_date == today:
+              if target_dates is None:
+                  if post_date <= today:
+                      posts_to_syndicate.append((post_path, fm, parts[2]))
+              elif post_date in target_dates:
                   posts_to_syndicate.append((post_path, fm, parts[2]))
 
           if not posts_to_syndicate:
-              print(f"No posts for today ({today})")
+              print("No posts to syndicate")
               sys.exit(0)
 
-          print(f"Found {len(posts_to_syndicate)} post(s) for today")
+          print(f"Found {len(posts_to_syndicate)} post(s)")
 
-          # Load syndication cache
-          cache_file = "/tmp/syndicated.txt"
-          # Use GitHub Actions cache via environment
+          # Load syndication state
           state_file = ".github/.syndicated"
           syndicated = set()
           if os.path.exists(state_file):
-              syndicated = set(open(state_file).read().strip().split("\n"))
+              syndicated = set(line.strip() for line in open(state_file) if line.strip())
 
-          for post_path, fm, body in posts_to_syndicate:
-              # Get LinkedIn hook
-              social = fm.get("social", {}) or {}
-              linkedin_hook = social.get("linkedin", "").strip()
-              if not linkedin_hook:
-                  print(f"⚠️  No social.linkedin in {post_path}, skipping")
-                  continue
-
-              # Derive slug from filename
+          def get_post_meta(post_path, fm, body):
+              """Extract slug, title, and URL from a post."""
               filename = os.path.basename(post_path).replace(".md", "")
-              # Strip date prefix if present (e.g., 2026-07-24-slug -> slug)
               if re.match(r"\d{4}-\d{2}-\d{2}-", filename):
                   slug = filename[11:]
               else:
                   slug = filename
-
-              if slug in syndicated:
-                  print(f"⏭️  Already syndicated: {slug}")
-                  continue
-
-              # Extract title from first H1
               title_match = re.search(r"^#\s+(.+)$", body, re.MULTILINE)
               title = title_match.group(1).strip() if title_match else slug.replace("-", " ").title()
               title = re.sub(r"[`*_]", "", title)
-
-              # Build URL
               post_date = fm.get("date", "")
               if hasattr(post_date, "strftime"):
-                  year = post_date.strftime("%Y")
-                  month = post_date.strftime("%m")
-                  day = post_date.strftime("%d")
+                  year, month, day = post_date.strftime("%Y"), post_date.strftime("%m"), post_date.strftime("%d")
               else:
                   year, month, day = str(post_date).split("-")
               url = f"https://johnazariah.github.io/quantum/blog/{year}/{month}/{day}/{slug}/"
+              return slug, title, url
 
-              # Build LinkedIn post payload
-              payload = {
-                  "author": person_urn,
-                  "commentary": linkedin_hook,
-                  "visibility": "PUBLIC",
-                  "distribution": {
-                      "feedDistribution": "MAIN_FEED",
-                      "targetEntities": [],
-                      "thirdPartyDistributionChannels": []
-                  },
-                  "content": {
-                      "article": {
-                          "source": url,
-                          "title": title
-                      }
-                  },
-                  "lifecycleState": "PUBLISHED",
-                  "isReshareDisabledByAuthor": False
-              }
+          # --- LinkedIn ---
+          if do_linkedin:
+              print("\n--- LinkedIn ---")
+              for post_path, fm, body in posts_to_syndicate:
+                  social = fm.get("social", {}) or {}
+                  hook = social.get("linkedin", "").strip()
+                  if not hook:
+                      continue
+                  slug, title, url = get_post_meta(post_path, fm, body)
+                  key = f"li:{slug}"
+                  if key in syndicated:
+                      print(f"⏭️  Already posted: {slug}")
+                      continue
 
-              data = json.dumps(payload).encode()
-              req = urllib.request.Request(
-                  "https://api.linkedin.com/rest/posts",
-                  data=data,
-                  headers={
-                      "Authorization": f"Bearer {token}",
-                      "Content-Type": "application/json",
-                      "LinkedIn-Version": "202601",
-                      "X-Restli-Protocol-Version": "2.0.0",
-                  },
-                  method="POST"
-              )
-              try:
-                  resp = urllib.request.urlopen(req)
-                  print(f"✅ LinkedIn posted: {title}")
-                  print(f"   URL: {url}")
-                  syndicated.add(slug)
-              except urllib.error.HTTPError as e:
-                  err_body = e.read().decode()
-                  print(f"❌ LinkedIn failed for {slug}: {e.code}")
-                  print(f"   {err_body}")
-                  # Don't exit on failure — try remaining posts
-                  continue
+                  payload = {
+                      "author": li_urn,
+                      "commentary": hook,
+                      "visibility": "PUBLIC",
+                      "distribution": {
+                          "feedDistribution": "MAIN_FEED",
+                          "targetEntities": [],
+                          "thirdPartyDistributionChannels": []
+                      },
+                      "content": {
+                          "article": {
+                              "source": url,
+                              "title": title
+                          }
+                      },
+                      "lifecycleState": "PUBLISHED",
+                      "isReshareDisabledByAuthor": False
+                  }
+                  data = json.dumps(payload).encode()
+                  req = urllib.request.Request(
+                      "https://api.linkedin.com/rest/posts",
+                      data=data,
+                      headers={
+                          "Authorization": f"Bearer {li_token}",
+                          "Content-Type": "application/json",
+                          "LinkedIn-Version": "202601",
+                          "X-Restli-Protocol-Version": "2.0.0",
+                      },
+                      method="POST"
+                  )
+                  try:
+                      urllib.request.urlopen(req)
+                      print(f"✅ {title}")
+                      syndicated.add(key)
+                  except urllib.error.HTTPError as e:
+                      print(f"❌ {slug}: {e.code} {e.read().decode()}")
 
-          # Save syndication state
-          os.makedirs(os.path.dirname(state_file), exist_ok=True)
-          with open(state_file, "w") as f:
-              f.write("\n".join(sorted(s for s in syndicated if s)))
-
-          # --- Bluesky syndication ---
-          bsky_handle = os.environ.get("BLUESKY_HANDLE", "")
-          bsky_pass = os.environ.get("BLUESKY_APP_PASSWORD", "")
-          if bsky_handle and bsky_pass:
+          # --- Bluesky ---
+          if do_bluesky:
               print("\n--- Bluesky ---")
               # Authenticate
-              auth_payload = json.dumps({
+              auth_data = json.dumps({
                   "identifier": bsky_handle,
                   "password": bsky_pass
               }).encode()
               auth_req = urllib.request.Request(
                   "https://bsky.social/xrpc/com.atproto.server.createSession",
-                  data=auth_payload,
+                  data=auth_data,
                   headers={"Content-Type": "application/json"},
                   method="POST"
               )
               try:
                   auth_resp = urllib.request.urlopen(auth_req)
-                  auth_data = json.loads(auth_resp.read())
-                  bsky_token = auth_data["accessJwt"]
-                  bsky_did = auth_data["did"]
+                  session = json.loads(auth_resp.read())
+                  bsky_token = session["accessJwt"]
+                  bsky_did = session["did"]
               except urllib.error.HTTPError as e:
-                  print(f"❌ Bluesky auth failed: {e.code} {e.read().decode()}")
-                  sys.exit(0)  # Don't fail the workflow for Bluesky issues
+                  print(f"❌ Auth failed: {e.code} {e.read().decode()}")
+                  bsky_token = None
 
-              for post_path, fm, body in posts_to_syndicate:
-                  social = fm.get("social", {}) or {}
-                  bsky_text = social.get("bluesky", "").strip()
-                  if not bsky_text:
-                      continue
+              if bsky_token:
+                  for post_path, fm, body in posts_to_syndicate:
+                      social = fm.get("social", {}) or {}
+                      hook = social.get("bluesky", "").strip()
+                      if not hook:
+                          continue
+                      slug, title, url = get_post_meta(post_path, fm, body)
+                      key = f"bs:{slug}"
+                      if key in syndicated:
+                          print(f"⏭️  Already posted: {slug}")
+                          continue
 
-                  filename = os.path.basename(post_path).replace(".md", "")
-                  if re.match(r"\d{4}-\d{2}-\d{2}-", filename):
-                      slug = filename[11:]
-                  else:
-                      slug = filename
+                      full_text = f"{hook}\n\n{url}"
+                      url_start = len(full_text.encode("utf-8")) - len(url.encode("utf-8"))
+                      url_end = len(full_text.encode("utf-8"))
+                      now_iso = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.000Z")
 
-                  # Build URL
-                  post_date = fm.get("date", "")
-                  if hasattr(post_date, "strftime"):
-                      year, month, day = post_date.strftime("%Y"), post_date.strftime("%m"), post_date.strftime("%d")
-                  else:
-                      year, month, day = str(post_date).split("-")
-                  url = f"https://johnazariah.github.io/quantum/blog/{year}/{month}/{day}/{slug}/"
-
-                  # Append link to text
-                  full_text = f"{bsky_text}\n\n{url}"
-
-                  # Detect URL facet for rich link
-                  url_start = len(full_text.encode("utf-8")) - len(url.encode("utf-8"))
-                  url_end = len(full_text.encode("utf-8"))
-
-                  # Build Bluesky post record
-                  now_iso = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.000Z")
-                  record = {
-                      "$type": "app.bsky.feed.post",
-                      "text": full_text,
-                      "createdAt": now_iso,
-                      "facets": [{
-                          "index": {"byteStart": url_start, "byteEnd": url_end},
-                          "features": [{
-                              "$type": "app.bsky.richtext.facet#link",
-                              "uri": url
-                          }]
-                      }],
-                      "embed": {
-                          "$type": "app.bsky.embed.external",
-                          "external": {
-                              "uri": url,
-                              "title": re.sub(r"[`*_]", "", (re.search(r"^#\s+(.+)$", body, re.MULTILINE) or type("",(),{"group":lambda s,n:slug})()).group(1)),
-                              "description": bsky_text[:200]
+                      record = {
+                          "$type": "app.bsky.feed.post",
+                          "text": full_text,
+                          "createdAt": now_iso,
+                          "facets": [{
+                              "index": {"byteStart": url_start, "byteEnd": url_end},
+                              "features": [{
+                                  "$type": "app.bsky.richtext.facet#link",
+                                  "uri": url
+                              }]
+                          }],
+                          "embed": {
+                              "$type": "app.bsky.embed.external",
+                              "external": {
+                                  "uri": url,
+                                  "title": title,
+                                  "description": hook[:200]
+                              }
                           }
                       }
-                  }
 
-                  bsky_payload = json.dumps({
-                      "repo": bsky_did,
-                      "collection": "app.bsky.feed.post",
-                      "record": record
-                  }).encode()
-                  bsky_req = urllib.request.Request(
-                      "https://bsky.social/xrpc/com.atproto.repo.createRecord",
-                      data=bsky_payload,
-                      headers={
-                          "Content-Type": "application/json",
-                          "Authorization": f"Bearer {bsky_token}",
-                      },
-                      method="POST"
-                  )
-                  try:
-                      bsky_resp = urllib.request.urlopen(bsky_req)
-                      print(f"✅ Bluesky posted: {slug}")
-                  except urllib.error.HTTPError as e:
-                      err_body = e.read().decode()
-                      print(f"❌ Bluesky failed for {slug}: {e.code}")
-                      print(f"   {err_body}")
-          else:
-              if not bsky_handle or not bsky_pass:
-                  print("\n⚠️  Bluesky credentials not configured, skipping")
+                      bsky_payload = json.dumps({
+                          "repo": bsky_did,
+                          "collection": "app.bsky.feed.post",
+                          "record": record
+                      }).encode()
+                      req = urllib.request.Request(
+                          "https://bsky.social/xrpc/com.atproto.repo.createRecord",
+                          data=bsky_payload,
+                          headers={
+                              "Content-Type": "application/json",
+                              "Authorization": f"Bearer {bsky_token}",
+                          },
+                          method="POST"
+                      )
+                      try:
+                          urllib.request.urlopen(req)
+                          print(f"✅ {slug}")
+                          syndicated.add(key)
+                      except urllib.error.HTTPError as e:
+                          print(f"❌ {slug}: {e.code} {e.read().decode()}")
+
+          # Save state
+          os.makedirs(os.path.dirname(state_file), exist_ok=True)
+          with open(state_file, "w") as f:
+              f.write("\n".join(sorted(s for s in syndicated if s)) + "\n")
           SCRIPT
 
       - name: Commit syndication state
@@ -270,5 +276,5 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
             git add .github/.syndicated
-            git diff --cached --quiet || git commit -m "chore: update syndication state [skip ci]" && git push
+            git diff --cached --quiet || (git commit -m "chore: update syndication state [skip ci]" && git push)
           fi

@@ -8,6 +8,12 @@ tags:
   - applications
 authors:
   - John Azariah
+social:
+  linkedin: |
+    Last week I showed how to raise e to a matrix. This week: where that machinery earns its keep. Google's PageRank is the dominant eigenvector of the web's link matrix, found by the simplest eigensolver in existence. Portfolio risk management decomposes a covariance matrix to hedge 500 stocks with 10 trades. Molecular simulation seeks the ground-state eigenvalue of a Hamiltonian that grows exponentially with molecule size. Three industries, three matrices, same spectral theorem. The tools come in Parts 3 and 4.
+
+    #LinearAlgebra #MachineLearning
+  bluesky: "Part 2 is up. PageRank, portfolio risk, molecular simulation: three industries, three matrices, same spectral theorem. The tools come next."
 ---
 
 # Where Eigenvalues Pay Rent

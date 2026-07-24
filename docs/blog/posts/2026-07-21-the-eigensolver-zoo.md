@@ -7,6 +7,12 @@ tags:
   - linear algebra
 authors:
   - John Azariah
+social:
+  linkedin: |
+    Part 2 showed where eigenvalues pay rent. Part 3 shows how you compute them. Power iteration applies the matrix repeatedly and lets the dominant eigenvector win. Lanczos builds a small subspace and extracts the extremes in a handful of matrix-vector products. Imaginary time replaces the i in the propagator with a real exponent and lets the ground state float to the top. Every classical eigensolver is a function of the operator applied to stretch the spectrum. Part 4 drops Thursday, where stretch becomes rotation and a single factor of i separates classical from quantum.
+
+    #LinearAlgebra #QuantumComputing
+  bluesky: "Part 3: the classical eigensolver zoo. Power iteration, Lanczos, imaginary time. Every one stretches the spectrum to amplify an extremal eigenvector. Part 4 crosses to quantum, where stretch becomes rotation."
 ---
 
 # The Eigensolver Zoo

@@ -8,6 +8,12 @@ tags:
   - eigenvalues
 authors:
   - John Azariah
+social:
+  linkedin: |
+    How do you raise e to a matrix, and why would you want to? The matrix exponential solves the Schrödinger equation, powers quantum time evolution, and hides a geometric insight: when the matrix is Hermitian, the result is a rotation of state space. This post builds the whole story from scratch with one running example, a 2x2 matrix you can check by hand. The spectral theorem, projectors, phase geometry, and interference, all from first principles.
+
+    #LinearAlgebra #QuantumComputing
+  bluesky: "New series: Linear Algebra for Fun and Profit. Part 1 builds the matrix exponential from scratch and shows why e^{-iHt} is a rotation. One running example, first principles, no prerequisites beyond linear algebra."
 ---
 
 # How to Raise `e` to a Matrix (and Why You'd Want To)
