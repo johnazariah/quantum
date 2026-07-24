@@ -35,11 +35,11 @@ You want to flip switches until as many rules as possible are satisfied.
 
 How hard is that? A random configuration satisfies about half the rules — because each three-way XOR (exclusive-or: the parity check "is the count odd?") is equally likely to land on 0 or 1 for a random assignment. That fifty percent is your baseline. Can you do better?
 
-A good classical heuristic called *simulated annealing* — accept random flips that improve the score, occasionally accept bad flips to escape dead ends — pushes to about 94%. A recent quantum algorithm called DQI (Decoded Quantum Interferometry), which combines quantum interference with classical error-correction decoding, reaches about 87%.
+A good classical heuristic called *simulated annealing* — accept random flips that improve the score, occasionally accept bad flips to escape dead ends — pushes to about 94%. That is a strong classical baseline, and it is not going anywhere. A recent quantum algorithm called DQI (Decoded Quantum Interferometry, with belief-propagation decoding), which combines quantum interference with classical error-correction, reaches about 87%.
 
 And then there is QAOA.
 
-**QAOA** — the Quantum Approximate Optimisation Algorithm — alternates two operations in a quantum circuit, and at sufficient depth it crosses that 87% line and keeps climbing. The rest of this series builds the full machinery. This post explains *what QAOA actually does*, in a way you can hold in your head before a single equation arrives.
+**QAOA** — the Quantum Approximate Optimisation Algorithm[^farhi2014] — alternates two operations in a quantum circuit, and at sufficient depth it crosses that 87% line and keeps climbing. The interesting contest is quantum-vs-quantum: QAOA against DQI, in a regime where DQI is provably limited (Post 7 delivers that punchline). The rest of this series builds the full machinery. This post explains *what QAOA actually does*, in a way you can hold in your head before a single equation arrives.
 
 ## "Tries all answers at once" — and why that misses the point
 
