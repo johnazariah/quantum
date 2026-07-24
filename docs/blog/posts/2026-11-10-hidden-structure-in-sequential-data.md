@@ -10,11 +10,11 @@ tags:
 authors:
 - John Azariah
 social:
-  linkedin: 'Standard tools for sequential data, autocorrelation, n-gram models, entropy estimates, all assume that patterns live in the statistics. But some sequences obey structural rules that leave no statistical fingerprint at the single-symbol level. Computational mechanics asks a different question: what is the simplest machine that could have produced this stream? The answer, the epsilon-machine, groups histories into causal states by predictive equivalence. Two pasts belong to the same state when they make identical predictions about all futures. This is the first post in Hidden Structure, a six-part series building from motivation through CSSR (causal-state splitting reconstruction), spectral learning, and Bayesian inference to the complexity measures that characterise any stationary process.
+  linkedin: 'Standard tools for sequential data, autocorrelation, n-gram models, and entropy estimates, describe surface statistics well. But they do not recover the minimal causal mechanism that produced the sequence, and for processes with unbounded memory they cannot even represent the structure faithfully. Computational mechanics asks a different question: what is the simplest machine that could have produced this stream? The answer, the epsilon-machine, groups histories into causal states by predictive equivalence. Two pasts belong to the same state when they make identical predictions about all futures. This is the first post in Hidden Structure, a six-part series building from motivation through CSSR (causal-state splitting reconstruction), spectral learning, and Bayesian inference to the complexity measures that characterise any stationary process.
 
 
     #MachineLearning #ComputationalMechanics'
-  bluesky: 'A binary stream obeys a structural rule that autocorrelation and n-grams cannot see. Computational mechanics finds the minimal causal model by grouping histories that predict identically. First post in a six-part series.'
+  bluesky: 'Standard tools describe a sequence''s statistics; computational mechanics recovers the minimal causal machine that produced it. A six-part series building epsilon-machine inference from first principles.'
 ---
 
 # The Séance at the Autocorrelator
@@ -27,15 +27,17 @@ A stream of symbols that *looks* random can be hiding perfect structure. This po
 
 ## "I've got a sequence, and it's lying to me"
 
-Recently, while building an epsilon-machine inference library, I found myself staring at a binary sequence that every tool in my kit insisted was boring. Autocorrelation? Flat. Bigram model? Basically a coin flip. Shannon entropy? High. And yet, when I squinted at the raw symbols, I could *feel* a rule. Something was forbidden, something was structured — but none of my usual instruments would tell me what.
+Recently, while building an epsilon-machine inference library, I found myself staring at a binary sequence from the *Even Process* — a process that only allows even-length runs of 1s between 0s. No fixed-order n-gram model can enforce that parity constraint. Autocorrelation decayed quickly to noise; trigrams looked indistinguishable from a simple Markov chain; Shannon entropy was unremarkable. And yet, I *knew* a rule was there — I had built the generator. The problem was not that the sequence lacked structure. The problem was that my tools could not *name* the structure, could not tell me "this is a two-state machine with this specific transition logic."
 
-That experience — the mismatch between what the statistics say and what is actually there — is the starting point for this entire series. It turns out there is a theory that explains exactly when and why standard tools go blind, and an alternative framework that sees the structure directly. It is called *computational mechanics*, and by the end of this post you will understand why it exists and what question it answers.
+That experience — statistical summaries that describe surface behaviour without recovering the *mechanism* underneath — is the starting point for this entire series. It turns out there is a theory that explains exactly what "the simplest mechanism" means and how to find it. It is called *computational mechanics*, and by the end of this post you will understand why it exists and what question it answers.
+
+We will build our intuition on a gentler example first — one where standard tools *do* see the structure, so we can understand what they are doing and exactly where their explanatory power stops.
 
 ---
 
 ## The Golden Mean: a sequence with a secret
 
-Let me give you the sequence that fooled me. It is called the *Golden Mean process*, and it has exactly one rule:
+Let me start with a simple example — not the one that stumped me, but the one that makes the *idea* clear. It is called the *Golden Mean process*, and it has exactly one rule:
 
 > **No two consecutive 1s are allowed.**
 
@@ -56,7 +58,7 @@ def golden_mean(n: int, seed: int = 42) -> list[int]:
     symbols = [0]  # start in state A (just saw a 0)
     for _ in range(n - 1):
         if symbols[-1] == 0:
-            symbols.append(rng.integers(0, 2))  # fair coin
+            symbols.append(int(rng.integers(0, 2)))  # fair coin
         else:
             symbols.append(0)  # forced
     return symbols
@@ -70,16 +72,16 @@ Run that and you get something like:
 
 ```
 First 60 symbols:
-010010101001010010100100101001001010010010100101001010010010
+001010001001000101010101010100100100010101001010000010100101
 ```
 
-It looks… random-ish. Certainly not periodic, certainly not trivially patterned. You would not guess the rule by staring at it. So let us ask the standard tools.
+It looks… random-ish. Certainly not periodic, certainly not trivially patterned. You would not guess "no two consecutive 1s" by staring at it — though you might notice the absence of `11` if you looked hard. Let us ask the standard tools what they make of it.
 
 ---
 
 ## What the usual suspects have to say
 
-### Autocorrelation: "Nothing to see here"
+### Autocorrelation: "I see *something*"
 
 ```python
 from numpy.fft import fft, ifft
@@ -103,21 +105,23 @@ for lag, val in enumerate(acf, 1):
 
 ```
 Autocorrelation (lags 1-10):
-  lag  1: -0.3340
-  lag  2: -0.0005
-  lag  3: +0.1117
-  lag  4: -0.0371
-  lag  5: -0.0246
-  lag  6: +0.0317
-  lag  7: -0.0154
-  lag  8: +0.0004
-  lag  9: +0.0097
-  lag 10: -0.0077
+  lag  1: -0.4917
+  lag  2: +0.2492
+  lag  3: -0.1380
+  lag  4: +0.0828
+  lag  5: -0.0428
+  lag  6: +0.0191
+  lag  7: +0.0001
+  lag  8: -0.0077
+  lag  9: +0.0102
+  lag 10: -0.0043
 ```
 
-There is a negative blip at lag 1 — fair enough, a 1 is always followed by a 0, so adjacent symbols are anti-correlated. But by lag 2, the signal has essentially vanished. An autocorrelation plot would show a single spike and then flat noise. "Short memory, nothing interesting," the tool would say.
+Autocorrelation *does* see something here — a clear decaying oscillation. The strong negative at lag 1 (a 1 is always followed by a 0), the positive at lag 2 (a 0 after a forced-0 is more likely to be followed by a 1), and so on, geometrically damping. This is an honest signal: the Golden Mean is a first-order Markov process, and autocorrelation captures its short-range anti-correlation faithfully.
 
-### N-gram model: "It's basically a biased coin"
+But notice what autocorrelation gives you: a list of *numbers*. Magnitudes of pairwise correlation at increasing lag. It does not give you a *machine*. It does not say "there are two states, and here are the transitions." It describes the *effect* of the structure without naming the *cause*.
+
+### N-gram model: "The bigram nails it — this time"
 
 ```python
 from collections import Counter
@@ -139,19 +143,28 @@ for (a, b), p in sorted(trans.items()):
 
 ```
 Bigram transitions:
-  P(0 | 0) = 0.4997
-  P(1 | 0) = 0.5003
+  P(0 | 0) = 0.5083
+  P(1 | 0) = 0.4917
   P(0 | 1) = 1.0000
-  P(1 | 1) = 0.0000
 ```
 
-Now *this* is interesting! The bigram model does capture the rule — P(1|1) = 0, exactly. But here is the problem: a bigram model always looks like a first-order Markov chain, and this *is* a first-order Markov chain. The tool is not wrong, but it is not doing anything clever either. It has not told us anything about hidden structure versus surface statistics, because for this particular process the two coincide.
+The bigram model captures the rule perfectly: after a 1, the next symbol is always 0 (no `(1,1)` transition exists in the data at all — the Counter has no such key). After a 0, it is roughly a fair coin. For this particular process, the bigram *is* the complete model.
 
-The real test is whether your tools can find structure that is *not* visible at the n-gram level. For the Golden Mean, bigrams happen to suffice. But for processes with deeper memory — the Even Process, the Random Insertion Process, Crutchfield's dripping-tap experiments — n-grams of any fixed order will miss the point. And we will not know they are missing it until we have a better framework.
+So what is the problem? The problem is that the Golden Mean is easy — it is first-order Markov by construction. Standard tools *should* find it. The real question is: what happens when the structure runs deeper than any fixed-order n-gram can reach?
+
+### Where standard tools hit their ceiling
+
+Consider the *Even Process*: a binary stream where runs of 1s between 0s must have even length. The sequence `...010011001111010011...` is valid; `...0100010...` (an odd run of three 1s) is forbidden. No bigram catches this — the transition `1→1` is perfectly legal, as long as it happens an even number of times before the next 0. No trigram catches it either. No *k*-gram for any fixed $k$ can enforce a parity constraint.
+
+Yet the Even Process has a simple two-state machine: one state that has seen an even number of 1s since the last 0, and one that has seen an odd number. Two states, and the entire infinite constraint is captured.
+
+This is the gap that motivated computational mechanics. Standard tools describe *local* statistics — correlations at fixed lags, transitions from fixed-length contexts. They work beautifully when the structure is local (as with the Golden Mean). But when the structure involves *unbounded* context — when the relevant past can extend arbitrarily far — no fixed-order model can represent it faithfully, yet a finite-state machine still can. Finding *that* machine, provably minimal and provably sufficient, is what this series is about.
 
 ---
 
-## The rule you cannot see by staring
+## The machine behind the curtain
+
+So the bigram model *can* describe the Golden Mean. But here is what it cannot do: it cannot tell you that this two-state machine is *optimal*. It cannot prove that no simpler representation exists. And it cannot generalise to processes where the relevant context is unbounded.
 
 Let me show you the machine that generates the Golden Mean process. It has exactly two states:
 
@@ -228,7 +241,7 @@ These are not mere summaries. They are *theorems*: $C_\mu$ is provably the minim
 
 But I am getting ahead of myself. The point of this post is not to develop the full machinery — that is what the rest of the series is for. The point is to show that the *question* matters:
 
-> Standard sequence analysis asks "what does this sequence look like statistically?" Computational mechanics asks "what minimal causal mechanism produced it?" Those are different questions, and they have different answers.
+> Standard sequence analysis asks "what does this sequence look like statistically?" Computational mechanics asks "what is the minimal causal mechanism that produces it?" The first question gives you numbers. The second gives you a machine — and a proof that no simpler machine exists.
 
 ---
 
