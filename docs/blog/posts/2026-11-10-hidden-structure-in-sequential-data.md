@@ -19,7 +19,7 @@ social:
 
 # The Séance at the Autocorrelator
 
-*For Jim Crutchfield, whose computational mechanics made "pattern" a theorem rather than a metaphor, and for Cosma Shalizi, who gave us the algorithm to find it in real data.*
+*For [Jim Crutchfield](https://csc.ucdavis.edu/~chaos/), whose computational mechanics made "pattern" a theorem rather than a metaphor, and for [Cosma Shalizi](https://www.linkedin.com/in/cosma-shalizi-1286252), who gave us the algorithm to find it in real data.*
 
 A stream of symbols that *looks* random can be hiding perfect structure. This post is about learning to see it.
 
