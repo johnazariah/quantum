@@ -19,7 +19,7 @@ social:
 
 # The Antisymmetry Problem: Why Fermions Need Encoding
 
-*For Peter Love, whose 2012 paper with Seeley and Richard gave the field a vocabulary for this problem — and whose framework turns out to be more subtle than it first appears. This series is, in part, an appreciation of that subtlety.*
+*For [Peter Love](https://engineering.tufts.edu/people/faculty/peter-love), whose 2012 paper with Seeley and Richard gave the field a vocabulary for this problem — and whose framework turns out to be more subtle than it first appears. This series is, in part, an appreciation of that subtlety.*
 
 <!-- more -->
 
@@ -61,7 +61,7 @@ The state vanishes. Two electrons *cannot* occupy the same spin-orbital. That is
 
 ### Why this is a problem for simulation
 
-A qubit register is *symmetric*. Flipping qubit 3 from $\lvert 0\rangle$ to $\lvert 1\rangle$ is a local operation: it does not know or care what qubits 0, 1, and 2 are doing. But creating an electron in mode 3 must apply a phase that depends on *how many of the lower modes are already occupied*. The encoding's job is to build that non-local sign structure into the qubit operators.
+A qubit register is *symmetric*. Flipping qubit 3 from $\lvert 0\rangle$ to $\lvert 1\rangle$ is a local operation: it does not know or care what qubits 0, 1, and 2 are doing. But creating an electron in mode 3 — where each spin-orbital is one *mode* of the fermionic system — must apply a phase that depends on *how many of the lower modes are already occupied*. The encoding's job is to build that non-local sign structure into the qubit operators.
 
 ---
 
@@ -155,8 +155,8 @@ For $N$ modes, the creation operator for mode $j$ has Pauli weight $j + 1$. The 
 | System | Modes $N$ | Max JW weight | What that means |
 |--------|:---------:|:-------------:|----------------|
 | H₂ (minimal basis) | 4 | 4 | Fine — toy problem |
-| H₂O (6-31G basis) | 14 | 14 | Starting to hurt |
-| FeMoCo (active space) | 56 | 56 | Deep circuits |
+| H₂O (STO-3G basis) | 14 | 14 | Starting to hurt |
+| FeMoCo (active space) | 108 | 108 | Deep circuits |
 | Large active space | 200 | 200 | Impractical |
 
 The weight never shrinks relative to $N$. Jordan-Wigner's parity chain scales with the total number of modes, regardless of the molecule's local structure. For large systems, this linear overhead dominates the circuit depth.
