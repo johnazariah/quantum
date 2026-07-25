@@ -19,7 +19,7 @@ social:
 
 # The Antisymmetry Problem: Why Fermions Need Encoding
 
-*For [Peter Love](https://engineering.tufts.edu/people/faculty/peter-love), whose 2012 paper with Seeley and Richard gave the field a vocabulary for this problem — and whose framework turns out to be more subtle than it first appears. This series is, in part, an appreciation of that subtlety.*
+*For [Peter Love](https://as.tufts.edu/physics/people/faculty/peter-love), whose 2012 paper with Seeley and Richard gave the field a vocabulary for this problem — and whose framework turns out to be more subtle than it first appears. This series is, in part, an appreciation of that subtlety.*
 
 <!-- more -->
 
