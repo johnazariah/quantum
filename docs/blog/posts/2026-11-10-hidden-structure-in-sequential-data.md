@@ -154,7 +154,7 @@ So what is the problem? The problem is that the Golden Mean is easy — it is fi
 
 ### Where standard tools hit their ceiling
 
-Consider the *Even Process*: a binary stream where runs of 1s between 0s must have even length. The sequence `...010011001111010011...` is valid; `...0100010...` (an odd run of three 1s) is forbidden. No bigram catches this — the transition `1→1` is perfectly legal, as long as it happens an even number of times before the next 0. No trigram catches it either. No *k*-gram for any fixed $k$ can enforce a parity constraint.
+Consider the *Even Process*: a binary stream where runs of 1s between 0s must have even length. The sequence `...011011000011110...` is valid (1-blocks of length 2, 2, and 4); `...01110...` (a run of three 1s) is forbidden. No bigram catches this — the transition `1→1` is perfectly legal, as long as it happens an even number of times before the next 0. No trigram catches it either. No *k*-gram for any fixed $k$ can enforce a parity constraint.
 
 Yet the Even Process has a simple two-state machine: one state that has seen an even number of 1s since the last 0, and one that has seen an odd number. Two states, and the entire infinite constraint is captured.
 
