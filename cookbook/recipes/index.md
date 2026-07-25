@@ -14,8 +14,8 @@ The fundamentals: one to three qubits, a handful of gates, and the first circuit
 |---|--------|--------|-------------|--------|
 | 00 | [Reading a Quantum Circuit](00-reading-a-quantum-circuit/README.md) | 1 | Gates, Bloch sphere, unitary rotation, measurement bases | ✅ Published |
 | 01 | [Bell State](01-bell-state/README.md) | 2 | Entanglement, measurement correlation | ✅ Published |
-| 02 | Teleportation | 3 | Classical feedback, the teleportation protocol | Coming soon |
-| 03 | Deutsch-Jozsa | 3 | Oracles, phase kickback, quantum speedup | Coming soon |
+| 02 | [Teleportation](02-teleportation/README.md) | 3 | Classical feedback, the teleportation protocol | ✅ Published |
+| 03 | [Deutsch-Jozsa](03-deutsch-jozsa/README.md) | 3 | Oracles, phase kickback, quantum speedup | ✅ Published |
 
 ---
 
@@ -25,9 +25,9 @@ Optimisation, simulation, and search: the circuits where quantum algorithms star
 
 | # | Circuit note | Qubits | Key concept | Status |
 |---|--------|--------|-------------|--------|
-| 04 | Bernstein-Vazirani | 4 | Hidden string discovery in one query | Coming soon |
-| 05 | Simon's Problem | 6 | Hidden period, exponential speedup | Coming soon |
-| 06 | Grover's Search | 3 | Unstructured search, quadratic speedup | Coming soon |
+| 04 | [Bernstein-Vazirani](04-bernstein-vazirani/README.md) | 4 | Hidden string discovery in one query | ✅ Published |
+| 05 | [Simon's Problem](05-simons-problem/README.md) | 4 | Hidden period, exponential speedup | ✅ Published |
+| 06 | [Grover's Search](06-grovers-search/README.md) | 3 | Unstructured search, quadratic speedup | ✅ Published |
 | 07 | [QAOA for MaxCut](07-qaoa-maxcut/README.md) | 3 | Combinatorial optimisation, variational methods | ✅ Published |
 | 08 | [VQE for H₂](08-vqe-h2/README.md) | 2 | Quantum chemistry, molecular simulation | ✅ Published |
 | 09 | [Quantum Fourier Transform](09-quantum-fourier-transform/README.md) | 3 | Fourier analysis on a quantum register | ✅ Published |
@@ -41,5 +41,5 @@ Phase estimation, quantum counting, and the techniques that power the big algori
 | # | Circuit note | Qubits | Key concept | Status |
 |---|--------|--------|-------------|--------|
 | 10 | [Quantum Phase Estimation](10-quantum-phase-estimation/README.md) | 4 | Eigenvalue extraction, precision measurement | ✅ Published |
-| 11 | Error Mitigation (ZNE) | 2 | Zero-noise extrapolation, practical noise reduction | Coming soon |
-| 12 | Quantum Counting | 5 | Counting solutions without finding them | Coming soon |
+| 11 | [Error Mitigation (ZNE)](11-error-mitigation-zne/README.md) | 2 | Zero-noise extrapolation, practical noise reduction | ✅ Published |
+| 12 | [Quantum Counting](12-quantum-counting/README.md) | 4 | Counting solutions without finding them | ✅ Published |
