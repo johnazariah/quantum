@@ -3,12 +3,16 @@
 ## Post 01: The $50M Delivery Route (Jul 28)
 
 ### LinkedIn
-A delivery company's route optimisation is worth tens of millions a year. The notebook solves a triangle. That gap is the point. This is the first post in The Quantum Bottleneck, an eight-part series that takes real-world problems, codes up the smallest quantum version that actually runs, and asks honestly: where is the bottleneck, and does a quantum computer help? First up: logistics and QAOA.
+Twenty delivery stops can be ordered in 20! ways, about 2.4 quintillion. UPS reports that removing one mile from each driver's daily route can save up to $50 million a year.
+
+The first Quantum Bottleneck post asks what QAOA changes in that kind of combinatorial search. Its companion notebook uses MaxCut on a three-node triangle, where all eight candidates can be scored by hand, then follows the cost phase, mixer, measurement, and classical scoring loop.
+
+Moving from the triangle to a real routing problem adds qubits, constraints, penalty weights, circuit depth, and a classical optimiser, all beyond what this notebook claims to solve.
 
 #QuantumComputing #Logistics
 
 ### Bluesky
-New series: The Quantum Bottleneck. Eight real-world problems, each with a runnable notebook. Post 1: logistics route optimisation. The notebook solves a triangle. The problem is worth $50M. That gap is the point.
+Twenty delivery stops have about 2.4 quintillion possible orderings. A three-node MaxCut notebook shows how QAOA turns a small version of that search into interference, with all eight candidates checked by hand.
 
 ---
 
