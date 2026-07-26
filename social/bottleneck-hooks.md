@@ -103,7 +103,7 @@ I kept the roster to two nurses and two shifts so all four assignments fit on on
 ## Post 07: The Materials Maze (Aug 19)
 
 ### LinkedIn
-The materials notebook does two different jobs, and I leave the seam visible. First, exact classical diagonalisation supplies the spectrum of a half-filled two-site Hubbard model. Then one known energy is shifted onto a three-bit grid and read by compiled quantum phase estimation.
+The materials notebook does two different jobs, and I leave the seam visible. First, exact classical diagonalisation supplies the singlet-sector spectrum of a half-filled two-site Hubbard model. Then one known energy is shifted onto a three-bit grid and read by compiled quantum phase estimation.
 
 That circuit demonstrates binary phase extraction. It does not implement controlled evolution under the Hubbard Hamiltonian, so calling it a quantum materials simulation would erase the most expensive step.
 

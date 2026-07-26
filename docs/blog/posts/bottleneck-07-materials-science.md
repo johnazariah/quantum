@@ -13,7 +13,7 @@ tags:
 authors:
 - John Azariah
 social:
-  linkedin: 'The materials notebook does two different jobs, and I leave the seam visible. First, exact classical diagonalisation supplies the spectrum of a half-filled two-site Hubbard model. Then one known energy is shifted onto a three-bit grid and read by compiled quantum phase estimation.
+  linkedin: 'The materials notebook does two different jobs, and I leave the seam visible. First, exact classical diagonalisation supplies the singlet-sector spectrum of a half-filled two-site Hubbard model. Then one known energy is shifted onto a three-bit grid and read by compiled quantum phase estimation.
 
 
     That circuit demonstrates binary phase extraction. It does not implement controlled evolution under the Hubbard Hamiltonian, so calling it a quantum materials simulation would erase the most expensive step.
@@ -72,7 +72,7 @@ For the side paths, [Circuit Bench 10: Quantum Phase Estimation](../../circuit-b
 
 The notebook keeps its two jobs separate.
 
-First, it solves the half-filled two-site Hubbard model exactly. This gives a benchmark spectrum and shows how the ground-state energy changes as $U/t$ increases. On two sites this is a crossover in a toy benchmark, not a true bulk Mott transition.
+First, it diagonalises the three-dimensional spin-singlet sector of the half-filled two-site Hubbard model exactly. This gives a singlet-sector benchmark spectrum and shows how the ground-state energy changes as $U/t$ increases. The three spin-triplet states are outside this reduced model. On two sites this is a crossover in a toy benchmark, not a true bulk Mott transition.
 
 Second, it picks one benchmark energy, shifts and rescales it into a phase window, rounds that phase onto a three-bit grid, and feeds the result into a compiled QPE toy circuit.
 
