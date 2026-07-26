@@ -11,38 +11,42 @@ tags:
 authors:
 - John Azariah
 social:
-  linkedin: 'A delivery company''s route optimisation is worth tens of millions a year. The notebook solves a triangle. That gap is the point. This is the first post in The Quantum Bottleneck, an eight-part series that takes real-world problems, codes up the smallest quantum version that actually runs, and asks honestly: where is the bottleneck, and does a quantum computer help? First up: logistics and QAOA.
+  linkedin: 'Twenty delivery stops can be ordered in 20! ways, about 2.4 quintillion. UPS reports that removing one mile from each driver''s daily route can save up to $50 million a year.
+
+
+    The first Quantum Bottleneck post asks what QAOA changes in that kind of combinatorial search. Its companion notebook uses MaxCut on a three-node triangle, where all eight candidates can be scored by hand, then follows the cost phase, mixer, measurement, and classical scoring loop.
+
+
+    Moving from the triangle to a real routing problem adds qubits, constraints, penalty weights, circuit depth, and a classical optimiser, all beyond what this notebook claims to solve.
 
 
     #QuantumComputing #Logistics'
-  bluesky: 'New series: The Quantum Bottleneck. Eight real-world problems, each with a runnable notebook. Post 1: logistics route optimisation. The notebook solves a triangle. The problem is worth $50M. That gap is the point.'
+  bluesky: 'Twenty delivery stops have about 2.4 quintillion possible orderings. A three-node MaxCut notebook shows how QAOA turns a small version of that search into interference, with all eight candidates checked by hand.'
 ---
 
 # The $50M Delivery Route
 
 *Dedicated to my friend, mentor and a boss who stood up for me when no one else would, Dave Fellows. You encouraged me when I told you I was writing a book on quantum computing, and this is a step in that direction.*
 
-The notebook starts with a triangle.
+UPS reports that removing one mile from each driver's daily route can save up to **$50 million a year**.[^ups-orion] At fleet scale, a route planner can create real value without proving it has found the perfect route; a repeatable improvement is enough.
 
-The problem starts with trucks.
+Even a route with only 20 stops admits
 
-That gap is the point.
+$$
+20! = 2,432,902,008,176,640,000
+$$
 
-This post is about crossing that gap carefully. The triangle is not a substitute for the logistics problem; it is the smallest example that lets us see the whole mechanism without hiding the important pieces behind software.
+possible orderings, before time windows, vehicle capacity, driver hours, or traffic enter the model.
+
+The notebook reduces the optimisation machinery to **MaxCut** on a triangle: three nodes, three edges, and eight colourings. We can enumerate every candidate, inspect every gate, and compare the circuit's samples with uniform random choice.
 
 <!-- more -->
 
-If you ask a delivery company for the best route through a hundred stops, nobody in the room says, "Great, let's enumerate all possible routes." The exact program is easy to imagine and hopeless to run at that scale. Try every ordering, compute every distance, keep the shortest. Beautiful, correct, and almost immediately impractical.
+The transfer to routing is structural: encode discrete decisions, turn the objective and constraints into a cost operator, alternate cost and mixer operations, then measure and score candidate solutions. The price of that transfer is also concrete. Real instances need far more variables, carefully weighted constraint penalties, deeper circuits, and a classical optimiser around the quantum circuit.
 
-This is the first lesson of optimisation: the code can be simple while the search space is absurd.
+The exact enumeration program is easy to describe: generate every route, compute every distance, and keep the shortest. Its running time makes it useless long before the model becomes realistic.
 
-UPS made this painfully concrete. Their ORION route-optimisation system reportedly saved up to **$50 million per year** for each mile shaved from a driver's daily route.[^ups-orion] One mile. Not a perfect route. Not a proof of optimality. One mile, multiplied by a fleet large enough for the arithmetic to become real money.
-
-That is why this matters. We are not optimising because computer scientists enjoy suffering. We are optimising because small improvements in large systems compound.
-
-The notebook does not begin with vehicle routing. It begins with **MaxCut** on a triangle: three nodes, three edges, colour each node one of two colours, and count how many edges connect different colours.
-
-That may feel much smaller than the problem we started with. It is meant to. A triangle is small enough that we can see every possible answer, every circuit operation, and every measurement outcome. It is a microscope slide, not a destination.
+The triangle strips those domain constraints away and leaves a complete circuit example whose inputs and outputs fit on the page.
 
 ## The shape under the logistics
 
@@ -68,11 +72,11 @@ There are only eight bit strings for a triangle:
 000  001  010  011  100  101  110  111
 ```
 
-The notebook starts by brute-forcing all of them. This is not because brute force is clever. It is because, for three nodes, brute force is honest. We can see the whole space, compute the truth, and then check whether the quantum circuit is doing anything meaningful.
+The notebook enumerates all eight. For three nodes, brute force gives us ground truth: we can compute the exact answer before asking whether the quantum circuit produces a useful distribution.
 
 For a triangle, the best possible cut value is 2. You cannot cut all three edges because a triangle has an odd cycle: once two edges cross the cut, the third edge necessarily lands inside one side. So the six bit strings with one bit different from the other two are optimal; `000` and `111` are the bad ones.
 
-Already we have the core of the lesson:
+The classical problem now has three explicit parts:
 
 ```text
 bit string -> candidate solution
@@ -80,35 +84,27 @@ cut value  -> score
 best score -> optimisation target
 ```
 
-The quantum computer does not change the problem. It changes how we try to bias ourselves toward good candidates.
+QAOA keeps that candidate representation and score, then changes the distribution from which we sample candidates.
 
 If circuit words like gate, basis, or measurement are new, start with [Circuit Bench 00: Reading a Quantum Circuit](../../circuit-bench/00-reading-a-quantum-circuit/README.md). If you want the first two-qubit example before the QAOA circuit appears, [Circuit Bench 01: The Bell State](../../circuit-bench/01-bell-state/README.md) is the side path: Hadamard, CNOT, measurement correlation, and why changing measurement basis matters. You do not need either note first, but they are there when those primitives deserve a closer look.
 
-## What superposition does not do by itself
+## Superposition is only the start
 
-The phrase you will hear, usually with great confidence, is:
+A common explanation of quantum search says:
 
 > A quantum computer tries all answers at once.
 
-There is a useful intuition hiding inside that sentence, but by itself it points in the wrong direction.
-
-It is true that the QAOA circuit begins by placing the qubits into a superposition of all eight triangle colourings. But if you created that superposition and immediately measured it, you would just get a random bit string. You would not have solved MaxCut. You would have used quantum hardware to sample uniformly from the candidate answers.
-
-So superposition is necessary, but not sufficient.
-
-The useful word is **interference**.
+The QAOA circuit does begin by placing the qubits into a superposition of all eight triangle colourings. Measuring at that point, however, returns a uniformly random bit string. Superposition prepares the candidate states; **interference** creates the useful bias.
 
 A quantum algorithm is useful when it arranges the computation so that unwanted possibilities cancel and wanted possibilities reinforce. The possibilities being "present" is not enough. Their amplitudes have to be made to interfere in the right way before measurement.
 
-QAOA, the **Quantum Approximate Optimisation Algorithm**, is one attempt to do that for optimisation problems. It does not guarantee the optimum. It does not make NP-hardness evaporate. It produces a probability distribution over candidate answers, and the hope is that good answers appear more often than they would under blind random sampling.
+QAOA, the **Quantum Approximate Optimisation Algorithm**, is one attempt to do that for optimisation problems. It offers no guarantee of the optimum and no escape from NP-hardness. It produces a probability distribution over candidate answers, with parameters chosen so that good answers appear more often than they would under uniform random sampling.
 
-That sounds modest because it is modest. It is also the honest claim, and it is the claim the notebook is designed to make visible.
+For this notebook, the test is concrete: do the chosen angles shift probability away from `000` and `111` and towards the six cuts with score 2?
 
-## The Hamiltonian move
+## Turn the cut into an operator
 
-QAOA works by making an optimisation problem look like a physics problem.
-
-In physics, a Hamiltonian assigns energy to states of a system. Low-energy states are special because physical systems tend to settle there. In optimisation, we can borrow the same language: define an artificial energy function where better answers have better energy, then build a quantum circuit that tries to steer probability toward those states.
+QAOA represents the objective as an operator that is diagonal in the computational basis. Each candidate bit string is then an eigenstate, and its score is the corresponding eigenvalue.
 
 For MaxCut, the key operator is Pauli-$Z$.
 
@@ -125,13 +121,13 @@ If the two bits are the same, $Z_i Z_j$ gives $+1$.
 
 If the two bits are different, $Z_i Z_j$ gives $-1$.
 
-So this little expression:
+The expression
 
 $$
 \frac{1 - Z_i Z_j}{2}
 $$
 
-is exactly an edge-cut detector. It evaluates to 0 when the edge is not cut, and 1 when it is cut.
+is an edge-cut detector. It evaluates to 0 when the edge is not cut, and 1 when it is cut.
 
 Sum that expression over every edge and you have turned the graph into an operator:
 
@@ -139,15 +135,9 @@ $$
 C = \sum_{(i,j)\in E} \frac{1 - Z_i Z_j}{2}.
 $$
 
-Here $C$ is a score to maximise, not an energy to minimise. If you prefer the ground-state language, use $-C$ as the Hamiltonian. The circuit only needs a consistent phase convention.
+Here $C$ is a score to maximise. Ground-state formulations instead use $-C$ as an energy to minimise. The identity term in $C$ contributes only a global phase, so the notebook drops it and absorbs the remaining sign and factor into its angle convention. Under that convention, each edge compiles to CNOT-$R_Z(2\gamma)$-CNOT. Changing the sign or factor changes the numerical optimum for $\gamma$.
 
-That is the structural move. A graph problem has become a Hamiltonian. A candidate colouring has become a quantum basis state. The cut value has become something the circuit can imprint as phase.
-
-If you take one idea from this first notebook, make it this:
-
-> QAOA starts by finding the shape of the classical problem and encoding that shape as an operator.
-
-This is the pattern that will come back in the later workbooks. Molecules become Hamiltonians. Schedules become Hamiltonians. Materials become Hamiltonians. The domain vocabulary changes; the structural move keeps reappearing.
+Each colouring is now a computational-basis state whose cut value can be written into relative phase. The same structural move returns later when molecules, schedules, and materials become operators.
 
 ## What the circuit actually does
 
@@ -156,6 +146,14 @@ The notebook builds a depth-1 QAOA circuit for the triangle. Depth 1 means one r
 ```text
 cost, then mix
 ```
+
+Two angles control that round. The cost angle $\gamma$ sets the edge phases; the mixer angle $\beta$ controls how far amplitude moves between neighbouring bit strings. The notebook uses values tuned for this graph and this gate convention:
+
+$$
+\gamma = 1.264491043069892,
+\qquad
+\beta = 0.3063052837250049.
+$$
 
 There are four stages in the circuit.
 
@@ -169,7 +167,7 @@ h q[1];
 h q[2];
 ```
 
-Each Hadamard takes a qubit that starts as `0` and puts it into an equal superposition of `0` and `1`. Three Hadamards on three qubits creates an equal superposition of the eight possible colourings.
+Each Hadamard takes a qubit that starts as `0` and puts it into an equal superposition of `0` and `1`. Three Hadamards on three qubits create an equal superposition of the eight possible colourings.
 
 At this point, every bit string has probability $1/8$.
 
@@ -177,39 +175,31 @@ Nothing has been optimised yet. We have only prepared the search space.
 
 ### 2. Imprint the cost as phase
 
-For each graph edge, the notebook emits the same three-gate pattern:
+For each graph edge, the notebook emits the same three-gate pattern. For edge `(0, 1)` with the fixed $\gamma$ above:
 
 ```qasm
-cx q[i], q[j];
-rz(2 * gamma) q[j];
-cx q[i], q[j];
+cx q[0], q[1];
+rz(2.528982) q[1];
+cx q[0], q[1];
 ```
-
-This is the smallest piece of useful machinery in the notebook, so it is worth slowing down.
 
 The first CNOT computes whether the two endpoint bits agree or differ, storing that parity temporarily in the target qubit. The $R_Z$ rotation then applies a phase depending on that parity. The second CNOT uncomputes the parity so the qubits go back to representing the original colouring.
 
-The visible bit string is unchanged.
-
-The phase is changed.
-
-That distinction matters. After the cost step, the probabilities are still not better. If you measured immediately, you would still see a uniform distribution. The cost step has written information in a place measurement cannot directly see.
-
-This is why "try all answers at once" is incomplete. The hard part is not placing answers in superposition. The hard part is arranging the phases so that the next step can turn hidden cost information into visible probability bias.
+The edge block restores the visible bit string and changes its relative phase. Measurement immediately after the cost step would still produce a uniform distribution; the mixer must turn those phase differences into probability differences.
 
 ### 3. Mix neighbouring colourings
 
 The mixer applies an $R_X$ rotation to every qubit:
 
 ```qasm
-rx(2 * beta) q[0];
-rx(2 * beta) q[1];
-rx(2 * beta) q[2];
+rx(0.612611) q[0];
+rx(0.612611) q[1];
+rx(0.612611) q[2];
 ```
 
 An $R_X$ rotation partially moves amplitude between `0` and `1` on a qubit. On the full bit string, that means amplitude can flow between colourings that differ by one bit flip.
 
-This is the quantum analogue of "try a neighbouring solution" in a local search algorithm, but with one crucial difference: the movement is coherent. The amplitudes carry the phases from the cost step. When amplitude arrives from different neighbouring colourings, those phase arrows can add or cancel.
+This resembles trying a neighbouring solution in local search, except the movement is coherent. The amplitudes carry the phases from the cost step, so contributions arriving from different neighbouring colourings can add or cancel.
 
 For the triangle, that interference suppresses `000` and `111`, the two colourings that cut no edges, and amplifies the six colourings that cut two edges. The circuit is not inspecting each answer and choosing the best one. The cost phase and mixer have been arranged so that amplitudes interfere differently around good and bad colourings.
 
@@ -223,11 +213,7 @@ measure q[1] -> c[1];
 measure q[2] -> c[2];
 ```
 
-A single run gives one bit string. That is all measurement ever gives you.
-
-So the notebook runs the circuit many times, counts the observed bit strings, computes the cut value for each one, and estimates the expected cut value of the distribution.
-
-This is the right way to think about QAOA:
+A single shot returns one candidate bit string. The notebook therefore runs the circuit many times, counts the outcomes, computes the cut value for each one, and estimates the expected cut value of the distribution:
 
 ```text
 one shot       -> one candidate solution
@@ -236,7 +222,7 @@ cut function   -> score each sample
 average score  -> quality of the chosen angles
 ```
 
-The two angles, $\gamma$ and $\beta$, are the knobs. $\gamma$ controls how strongly the cost information is written into phase. $\beta$ controls how strongly the mixer moves amplitude between neighbouring bit strings. Choose them badly and the circuit is mostly random. Choose them well and the distribution leans toward better answers.
+Poor angles leave the distribution close to random. Better angles concentrate more probability on high-scoring cuts.
 
 For the same circuit viewed directly on the Circuit Bench, see [QAOA for MaxCut](../../circuit-bench/07-qaoa-maxcut/README.md). The post you are reading explains why this circuit belongs in the logistics story; the Circuit Bench note is the more direct gate-by-gate version.
 
@@ -246,7 +232,7 @@ Open the notebook here:
 
 [Unit 1 notebook: QAOA for MaxCut](https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/01-logistics.ipynb)
 
-The notebook is deliberately small and explicit. That is not a lack of sophistication; it is the teaching choice. You should be able to see every moving part.
+The notebook keeps the exact baseline, circuit construction, sampling, scoring, and parameter sweep explicit. You should be able to see every moving part.
 
 ### Section 1: Define the graph
 
@@ -266,7 +252,7 @@ def cut_value(bitstring: str, edges: list) -> int:
 
 This is the classical problem, with no quantum mechanics anywhere near it. Given a proposed colouring, count the edges whose endpoints differ.
 
-The notebook then enumerates all eight bit strings. This gives us ground truth before we run the quantum circuit. That habit is important. On a tiny example, never trust a fancy method before checking it against the boring exact answer.
+The notebook then enumerates all eight bit strings, establishing ground truth before we run the quantum circuit.
 
 ### Section 2: Build the QAOA circuit
 
@@ -286,7 +272,7 @@ gamma_opt = 1.264491043069892
 beta_opt = 0.3063052837250049
 ```
 
-These are not magic constants. They are simply good angles for this small instance. The later parameter sweep shows why angle choice matters.
+These values are tuned for this small graph and the stated gate convention; they are not universal QAOA constants. The later parameter sweep shows why angle choice matters.
 
 ### Section 3: Run on Quokka
 
@@ -309,13 +295,11 @@ That expected cut value is the quantity the classical optimiser would try to imp
 
 ### Section 4: Sweep the parameter landscape
 
-This is my favourite part of the notebook, because it makes the hybrid nature of QAOA visible.
+The parameter sweep makes the hybrid nature of QAOA visible. The notebook runs a grid of circuits over $\gamma$ and $\beta$ and records the expected cut value at each point. The heatmap is the landscape a classical optimiser would have to navigate.
 
-The circuit has two knobs: $\gamma$ and $\beta$. The notebook runs a grid of circuits over those angles and records the expected cut value at each grid point. The heatmap is the optimisation landscape.
+For a larger problem, we would use a classical optimiser rather than sweep every point.
 
-For a real problem, you would not sweep every point. You would call a classical optimiser. But the sweep is the right teaching move because it shows what the optimiser is trying to navigate.
-
-This is the full hybrid loop in miniature:
+The complete hybrid loop is:
 
 ```text
 choose angles
@@ -326,35 +310,17 @@ choose better angles
 repeat
 ```
 
-The quantum circuit does not replace classical optimisation. It becomes the thing the classical optimiser queries.
+The quantum circuit is the function the classical optimiser queries.
 
 That distinction will matter again in the VQE workbook. QAOA and VQE look like different algorithms, but structurally they are cousins: parameterised quantum circuit inside, classical optimiser outside.
 
 ### Section 5: Compare with random sampling
 
-The final comparison is intentionally humble. It asks: what if we simply sampled random colourings?
+The final comparison uses uniform random sampling. This is a meaningful baseline for the triangle because six of its eight states are optimal: random sampling reaches an optimal cut with probability $3/4$ and has expected cut value $1.5$. The tuned circuit should concentrate still more probability on the six cuts with value 2.
 
-For a triangle, random sampling is not a strawman. There are only eight states, six of them optimal, so even blind luck does reasonably well. That is another reason this notebook is honest: it does not pretend the tiny graph needs quantum help.
+## Back to the trucks
 
-The point is the mechanism. We built a circuit whose distribution is shaped by the objective function, and we checked that it improves on an uninformed baseline for this instance.
-
-That is enough for a first workbook.
-
-Not because the triangle is industrially important.
-
-Because the triangle lets you inspect the entire pipeline.
-
-## What this shows, and what it does not
-
-This notebook does not prove that quantum computers will optimise delivery fleets.
-
-It does not prove that QAOA beats the best classical algorithms.
-
-It does not even prove that depth-1 QAOA is a good idea for large MaxCut instances.
-
-That is not a problem with the notebook. It is the reason the notebook is kept honest.
-
-What it demonstrates is smaller and more useful:
+The notebook establishes the mechanics:
 
 1. A combinatorial optimisation problem can be encoded as a Hamiltonian.
 2. The Hamiltonian can be compiled into circuit operations.
@@ -363,11 +329,9 @@ What it demonstrates is smaller and more useful:
 5. Samples from the circuit can be scored classically.
 6. A classical optimiser can use those scores to tune the quantum circuit.
 
-That is the QAOA architecture.
+It does not establish an advantage for delivery routing, or even for large MaxCut instances. Industrial vehicle-routing problems already have mixed-integer methods, decomposition techniques, local search, and specialised heuristics. A useful QAOA result must compare against serious implementations of those methods while also paying for the quantum encoding, repeated measurements, and parameter tuning.
 
-The open question is whether this architecture becomes practically useful at the scales and depths where industrial optimisation lives. Today's hardware is noisy and shallow. Classical optimisation is extremely strong. Low-depth QAOA is not a shortcut around decades of optimisation research. The honest research programme is to compare against serious classical baselines, on problem families where the quantum circuit has a structural reason to help, at depths hardware can eventually support.
-
-The triangle is not the destination. It is the first clean specimen under the glass.
+Routing also changes the circuit. Every decision variable needs a representation; capacity, timing, and assignment rules need constraints or a constraint-preserving mixer; and additional QAOA rounds add depth. Today's shallow, noisy hardware has not demonstrated that full pipeline at industrial scale.
 
 ## What to try next
 
@@ -384,14 +348,12 @@ Change $\gamma$ and $\beta$ and watch the distribution flatten or sharpen.
 
 Increase the parameter-sweep resolution and see how noisy the heatmap becomes when each circuit uses fewer shots.
 
-Then extend the QASM builder to depth 2: cost, mixer, cost, mixer, with four angles instead of two. You will immediately feel the tradeoff that defines near-term quantum algorithms: deeper circuits are more expressive, but they are harder to tune and more vulnerable to noise.
-
-That is where the real story starts to become visible.
+Then extend the QASM builder to depth 2: cost, mixer, cost, mixer, with four angles instead of two. Deeper circuits are more expressive, but they are harder to tune and more vulnerable to noise.
 
 The larger Quantum Bottleneck project goes further into the logistics motivation and the QAOA advantage debate. The workbook gives you the thing you can touch: a graph, a Hamiltonian, a circuit, a sampler, and a distribution that is no longer uniform.
 
-For a first workbook, that is enough: one triangle, fully exposed.
+For a first workbook, one fully exposed triangle is enough.
 
 [^ups-orion]: See the ORION case summary in Delen, ["Analytics Success Story: UPS's ORION Project"](https://www.informit.com/articles/article.aspx?p=2992600&seqNum=6), which reports that reducing one mile per driver per day over a year can save UPS up to $50 million.
 
-Next up: [The Trapdoor](bottleneck-02-cryptography.md) — where the bottleneck is not a search landscape but a hidden period, and the quantum move changes from "cost and mix" to "Fourier and measure."
+Next up: [The Trapdoor](bottleneck-02-cryptography.md) — where a hidden period replaces the search landscape, and "cost and mix" gives way to "Fourier and measure."
