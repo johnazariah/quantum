@@ -110,11 +110,29 @@ jobs:
               elif post_date in target_dates:
                   posts_to_syndicate.append((post_path, fm, parts[2]))
 
-          if not posts_to_syndicate:
-              print("No posts to syndicate")
+          # Find matching standalone announcements (launches, roundups, etc.).
+          announcements_to_syndicate = []
+          announcements_file = ".github/social-announcements.yml"
+          if os.path.exists(announcements_file):
+              announcements_data = yaml.safe_load(open(announcements_file)) or {}
+              for announcement in announcements_data.get("announcements", []):
+                  announcement_date = announcement.get("date", "")
+                  if hasattr(announcement_date, "strftime"):
+                      announcement_date = announcement_date.strftime("%Y-%m-%d")
+                  else:
+                      announcement_date = str(announcement_date)
+                  if target_dates is None:
+                      if announcement_date <= today:
+                          announcements_to_syndicate.append(announcement)
+                  elif announcement_date in target_dates:
+                      announcements_to_syndicate.append(announcement)
+
+          if not posts_to_syndicate and not announcements_to_syndicate:
+              print("No posts or announcements to syndicate")
               sys.exit(0)
 
           print(f"Found {len(posts_to_syndicate)} post(s)")
+          print(f"Found {len(announcements_to_syndicate)} announcement(s)")
 
           # Load syndication state
           state_file = ".github/.syndicated"
@@ -219,6 +237,54 @@ jobs:
                       syndicated.add(key)
                   except urllib.error.HTTPError as e:
                       print(f"❌ {slug}: {e.code} {e.read().decode()}")
+
+              for announcement in announcements_to_syndicate:
+                  announcement_id = str(announcement["id"])
+                  title = str(announcement["title"])
+                  url = str(announcement["url"])
+                  hook = str(announcement.get("linkedin", "")).strip()
+                  key = f"li-ann:{announcement_id}"
+                  if not hook:
+                      continue
+                  if key in syndicated:
+                      print(f"⏭️  Already posted announcement: {announcement_id}")
+                      continue
+
+                  payload = {
+                      "author": li_urn,
+                      "commentary": escape_linkedin(hook),
+                      "visibility": "PUBLIC",
+                      "distribution": {
+                          "feedDistribution": "MAIN_FEED",
+                          "targetEntities": [],
+                          "thirdPartyDistributionChannels": []
+                      },
+                      "content": {
+                          "article": {
+                              "source": url,
+                              "title": title
+                          }
+                      },
+                      "lifecycleState": "PUBLISHED",
+                      "isReshareDisabledByAuthor": False
+                  }
+                  req = urllib.request.Request(
+                      "https://api.linkedin.com/rest/posts",
+                      data=json.dumps(payload).encode(),
+                      headers={
+                          "Authorization": f"Bearer {li_token}",
+                          "Content-Type": "application/json",
+                          "LinkedIn-Version": "202601",
+                          "X-Restli-Protocol-Version": "2.0.0",
+                      },
+                      method="POST"
+                  )
+                  try:
+                      urllib.request.urlopen(req)
+                      print(f"✅ Announcement: {title}")
+                      syndicated.add(key)
+                  except urllib.error.HTTPError as e:
+                      print(f"❌ Announcement {announcement_id}: {e.code} {e.read().decode()}")
 
           # --- Bluesky ---
           if do_bluesky:
@@ -333,6 +399,64 @@ jobs:
                                   threads[series_name]["latest"] = {"uri": post_uri, "cid": post_cid}
                       except urllib.error.HTTPError as e:
                           print(f"❌ {slug}: {e.code} {e.read().decode()}")
+
+                  for announcement in announcements_to_syndicate:
+                      announcement_id = str(announcement["id"])
+                      title = str(announcement["title"])
+                      url = str(announcement["url"])
+                      hook = str(announcement.get("bluesky", "")).strip()
+                      key = f"bs-ann:{announcement_id}"
+                      if not hook:
+                          continue
+                      if key in syndicated:
+                          print(f"⏭️  Already posted announcement: {announcement_id}")
+                          continue
+
+                      full_text = f"{hook}\n\n{url}"
+                      if len(full_text) > 300:
+                          print(f"❌ Announcement {announcement_id}: Bluesky payload is {len(full_text)} characters")
+                          continue
+                      url_start = len(full_text.encode("utf-8")) - len(url.encode("utf-8"))
+                      url_end = len(full_text.encode("utf-8"))
+                      record = {
+                          "$type": "app.bsky.feed.post",
+                          "text": full_text,
+                          "createdAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.000Z"),
+                          "facets": [{
+                              "index": {"byteStart": url_start, "byteEnd": url_end},
+                              "features": [{
+                                  "$type": "app.bsky.richtext.facet#link",
+                                  "uri": url
+                              }]
+                          }],
+                          "embed": {
+                              "$type": "app.bsky.embed.external",
+                              "external": {
+                                  "uri": url,
+                                  "title": title,
+                                  "description": hook[:200]
+                              }
+                          }
+                      }
+                      req = urllib.request.Request(
+                          "https://bsky.social/xrpc/com.atproto.repo.createRecord",
+                          data=json.dumps({
+                              "repo": bsky_did,
+                              "collection": "app.bsky.feed.post",
+                              "record": record
+                          }).encode(),
+                          headers={
+                              "Content-Type": "application/json",
+                              "Authorization": f"Bearer {bsky_token}",
+                          },
+                          method="POST"
+                      )
+                      try:
+                          urllib.request.urlopen(req)
+                          print(f"✅ Announcement: {title}")
+                          syndicated.add(key)
+                      except urllib.error.HTTPError as e:
+                          print(f"❌ Announcement {announcement_id}: {e.code} {e.read().decode()}")
 
               # Save thread state
               os.makedirs(os.path.dirname(threads_file), exist_ok=True)

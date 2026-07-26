@@ -1,0 +1,19 @@
+announcements:
+  - id: circuit-bench-launch
+    date: 2026-07-31
+    title: Circuit Bench
+    url: https://johnazariah.github.io/quantum/circuit-bench/
+    linkedin: |
+      The Bottleneck posts keep reaching a point where I want to stop, point at three gates, and explain what they are doing. That would ruin the pace of every post, so I built somewhere else to do it.
+
+      Circuit Bench is now open: thirteen small, self-contained circuit notes, from reading a circuit and preparing a Bell state through teleportation, Grover, QAOA, VQE, the quantum Fourier transform, phase estimation, error mitigation and quantum counting.
+
+      Each note has one teaching job. You get a circuit diagram, the OpenQASM program, the expected output, and an explanation of what each gate contributes. No framework gets to hide the machinery.
+
+      I built it as the reference shelf beside The Quantum Bottleneck. When a post reaches a circuit, you can step sideways, inspect the mechanism, and return to the application.
+
+      All thirteen notes are live.
+
+      #QuantumComputing #Education
+    bluesky: >-
+      The Bottleneck posts keep reaching a point where I want to stop and explain three gates. Circuit Bench is where I do it: 13 self-contained notes with diagrams, OpenQASM, expected output, and a gate-by-gate explanation.
