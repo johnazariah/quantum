@@ -11,17 +11,19 @@ tags:
 authors:
 - John Azariah
 social:
-  linkedin: 'Twenty delivery stops can be ordered in 20! ways, about 2.4 quintillion. UPS reports that removing one mile from each driver''s daily route can save up to $50 million a year.
+  linkedin: |
+    One mile is not much of a route. Across the UPS fleet, it can be worth up to $50 million a year.
 
+    That is where I wanted to begin The Quantum Bottleneck: not with a qubit, but with a problem whose value is obvious and whose search space gets silly very quickly. Twenty delivery stops can be ordered in about 2.4 quintillion ways.
 
-    The first Quantum Bottleneck post asks what QAOA changes in that kind of combinatorial search. Its companion notebook uses MaxCut on a three-node triangle, where all eight candidates can be scored by hand, then follows the cost phase, mixer, measurement, and classical scoring loop.
+    The companion notebook uses a triangle because I want every moving part of QAOA to remain visible. Three nodes give us eight candidate cuts, so we can check every answer by hand, inspect the cost and mixer gates, and compare the samples with random choice.
 
+    Then we put the trucks back in. A real routing model adds variables, constraints, penalty weights, circuit depth, a classical optimiser, and some formidable classical competition.
 
-    Moving from the triangle to a real routing problem adds qubits, constraints, penalty weights, circuit depth, and a classical optimiser, all beyond what this notebook claims to solve.
+    This is the first post in an eight-part series about where quantum algorithms might help, where they plainly do not yet, and what the runnable toy examples actually teach us.
 
-
-    #QuantumComputing #Logistics'
-  bluesky: 'Twenty delivery stops have about 2.4 quintillion possible orderings. A three-node MaxCut notebook shows how QAOA turns a small version of that search into interference, with all eight candidates checked by hand.'
+    #QuantumComputing #Logistics
+  bluesky: 'UPS says one mile less per driver per day can save up to $50M a year. I use an eight-solution triangle to keep every QAOA step visible, then put the trucks back in and ask what survives at logistics scale.'
 ---
 
 # The $50M Delivery Route
