@@ -49,6 +49,24 @@ plugins:
 
 nav:
   - Home: index.md
+  - Circuit Bench:
+    - circuit-bench/index.md
+    - Foundations:
+      - circuit-bench/00-reading-a-quantum-circuit/README.md
+      - circuit-bench/01-bell-state/README.md
+      - circuit-bench/02-teleportation/README.md
+      - circuit-bench/03-deutsch-jozsa/README.md
+    - Algorithms & Applications:
+      - circuit-bench/04-bernstein-vazirani/README.md
+      - circuit-bench/05-simons-problem/README.md
+      - circuit-bench/06-grovers-search/README.md
+      - circuit-bench/07-qaoa-maxcut/README.md
+      - circuit-bench/08-vqe-h2/README.md
+      - circuit-bench/09-quantum-fourier-transform/README.md
+    - Advanced Techniques:
+      - circuit-bench/10-quantum-phase-estimation/README.md
+      - circuit-bench/11-error-mitigation-zne/README.md
+      - circuit-bench/12-quantum-counting/README.md
 
 markdown_extensions:
   - admonition
