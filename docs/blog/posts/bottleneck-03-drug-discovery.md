@@ -12,26 +12,34 @@ tags:
 authors:
 - John Azariah
 social:
-  linkedin: 'Getting a drug to market costs roughly $2B, and a substantial fraction goes to molecular screening. Before a molecule reaches a clinical trial, we often do not know enough about how its electrons behave. VQE promises to compute electronic structure on a quantum computer, but the gap between a hydrogen molecule on a simulator and a real drug candidate is vast. This post walks through both sides honestly.
+  linkedin: 'Published estimates of developing a new medicine vary widely and can reach several billion dollars once failures and financing costs are included. Better electronic-structure calculations address one part of that risk: predicting molecular energies before expensive experiments.
+
+
+    The runnable example does not model a drug candidate. It runs the variational quantum eigensolver on a reduced two-qubit H2 Hamiltonian at one bond length, measures Z, X, and Y Pauli terms, and compares the energy with exact diagonalisation.
+
+
+    The circuit exposes the complete hybrid loop. Drug-relevant calculations still require molecular integrals, active-space selection, expressive states, many measurements, and a classical chemistry workflow around the quantum solver.
 
 
     #QuantumComputing #DrugDiscovery'
-  bluesky: 'Bottleneck 03: The $2B Molecule. VQE computes electronic structure for drug candidates, but the gap between a hydrogen molecule on a simulator and a real drug is the bottleneck.'
+  bluesky: 'Drug development can cost billions, but this notebook makes a smaller claim: VQE on a reduced two-qubit H2 Hamiltonian at one bond length. It exposes the measurement loop without presenting a drug simulation.'
 ---
 
 # The $2B Molecule
 
-**Drug discovery is expensive because biology is not the only uncertainty. Before a molecule ever reaches a clinical trial, we often do not know enough about how its electrons behave.**
+Published estimates of developing a new medicine span hundreds of millions to several billion US dollars once failed programmes and financing costs are included.[^drug-cost] That bill is not a quantum-chemistry budget; clinical trials, manufacturing, regulation, and failure account for much of it. Early decisions nevertheless depend on questions about molecular energies, bonding, and reaction pathways.
+
+To expose the quantum workflow, Unit 3 uses the smallest chemistry example that carries the full loop: a reduced two-qubit Hamiltonian for $\mathrm{H}_2$ at one bond length.
 
 <!-- more -->
 
-A candidate drug is not just a shape in a docking diagram. It is a quantum system: nuclei, electrons, charges, orbitals, and bonds. Whether it binds to a target, whether it prefers one conformation over another, and whether it participates in the chemistry we want are all consequences of electronic structure.
+A candidate drug is more than a shape in a docking diagram. Electronic structure helps determine its bonds, charge distribution, conformational energies, and possible reactions. Binding and efficacy also depend on solvation, entropy, dynamics, metabolism, and the biology around the molecule.
 
-That is the promise behind computational chemistry in drug discovery. If we could predict the relevant molecular energies accurately enough, early screening would become less empirical. Fewer dead ends would be synthesised. Fewer candidates would enter expensive experiments for the wrong reasons.
+More accurate molecular energies could make early screening less empirical, reducing the number of dead ends that are synthesised or advanced for the wrong reasons.
 
-The catch is that the calculation we want is the one classical computers struggle to do exactly.
+The difficult cases are the ones in which classical computers struggle to calculate those energies accurately.
 
-## The bottleneck: electron correlation
+## Where the classical calculation grows
 
 Electrons are not little planets orbiting nuclei independently. They are indistinguishable quantum particles whose joint state must obey antisymmetry, Coulomb repulsion, and the Pauli principle. The difficult part is **correlation**: the way the motion of one electron changes the possible motion of the others.
 
@@ -42,9 +50,9 @@ Classical chemistry therefore lives on a ladder of approximations:
 - **Coupled-cluster and configuration-interaction methods** recover more correlation, but the cost rises steeply.
 - **Full configuration interaction** is exact within a chosen basis, but the state space grows exponentially.
 
-That exponential growth is not rhetorical. If $N$ electrons can occupy $M$ spin-orbitals, the number of allowed configurations grows like $\binom{M}{N}$. The active spaces that matter for catalysis, transition metals, and bond breaking can become too large for exact classical treatment.
+The growth is combinatorial. If $N$ electrons can occupy $M$ spin-orbitals, the number of allowed configurations grows like $\binom{M}{N}$. The active spaces that matter for catalysis, transition metals, and bond breaking can become too large for exact classical treatment.
 
-## The quantum idea: estimate the energy directly
+## Put the energy in a variational loop
 
 A quantum computer does not make chemistry easy. What it changes is the representation problem. Qubits can store and manipulate quantum amplitudes without writing the full state vector into classical memory.
 
@@ -57,7 +65,7 @@ For chemistry, the usual workflow is:
 5. measure the expected energy;
 6. let a classical optimiser adjust the circuit and try again.
 
-That loop is the **Variational Quantum Eigensolver**, or VQE. The principle underneath it is simple: for any trial state $|\psi(\theta)\rangle$,
+That loop is the **variational quantum eigensolver** (VQE). The principle underneath it is simple: for any trial state $|\psi(\theta)\rangle$,
 
 $$
 \langle \psi(\theta) | H | \psi(\theta) \rangle \geq E_0,
@@ -69,20 +77,20 @@ The quantum computer prepares and measures $|\psi(\theta)\rangle$. The classical
 
 If the measurement-basis language feels sudden, [Circuit Bench 00](../../circuit-bench/00-reading-a-quantum-circuit/README.md) gives the one-qubit version first. For the chemistry-specific circuit used here, [Circuit Bench 08](../../circuit-bench/08-vqe-h2/README.md) walks through the H2 VQE measurement circuit.
 
-## The companion notebook
+## Hydrogen on the bench
 
-The notebook deliberately does **not** pretend to be a drug-discovery platform. It works with the smallest useful chemistry example: a reduced two-qubit Hamiltonian for $\mathrm{H}_2$ at one bond length.
+The notebook works with a reduced two-qubit Hamiltonian for $\mathrm{H}_2$ at one bond length. Molecular-integral generation, a potential-energy surface, and a protein binding pocket are outside this calculation.
 
-That scope matters. The notebook does not build molecular integrals from scratch, does not scan a full potential-energy surface, and does not model a protein binding pocket. It shows the anatomy of the VQE loop:
+Within that boundary, it shows the anatomy of the VQE loop:
 
 - a precomputed reduced $\mathrm{H}_2$ Hamiltonian;
 - an exact diagonalisation benchmark for that same reduced model;
 - a Hartree-Fock reference state;
-- a one-parameter ansatz circuit;
+- a one-parameter trial-state, or ansatz, circuit;
 - direct measurements in the $Z$, $X$, and $Y$ bases for the Pauli terms;
 - a parameter sweep that compares the VQE estimate with the exact benchmark.
 
-In code, the shape is:
+The notebook code makes that loop explicit:
 
 ```python
 coeffs = h2_hamiltonian_coeffs()
@@ -92,13 +100,13 @@ for theta in thetas:
     energy = compute_energy(theta, coeffs, shots=1024)
 ```
 
-The teaching point is not that two qubits are chemically impressive. They are not. The point is that the full VQE pattern is visible: encode a Hamiltonian, prepare a trial state, measure Pauli expectations, combine them into an energy, and use a classical loop to search for a lower value.
+Two qubits are enough to make the full pattern visible: encode a Hamiltonian, prepare a trial state, measure Pauli expectations, combine them into an energy, and use a classical loop to search for a lower value.
 
-## Reality check
+## Reality check: from $\mathrm{H}_2$ to active spaces
 
 VQE became attractive because it uses shallower circuits than phase-estimation-based chemistry. That makes it a natural algorithm to test on noisy hardware. But "shallower" is not the same as "easy."
 
-There are three hard problems hiding behind the small H2 example.
+There are three hard problems hiding behind the small $\mathrm{H}_2$ example.
 
 First, the **measurement cost** grows. A realistic molecular Hamiltonian can contain many Pauli terms, and each term needs enough shots to estimate its contribution accurately. Grouping commuting terms, classical shadows, and other measurement strategies help, but they do not remove the issue.
 
@@ -106,11 +114,13 @@ Second, the **ansatz matters**. A circuit that cannot represent the relevant che
 
 Third, **scale changes the story**. A drug-sized system is not two qubits at one bond length. The credible path is an active-space calculation: use classical methods for the parts they handle well, and reserve the quantum device for the strongly correlated subproblem.
 
-So the honest claim is narrow but important: VQE is a concrete way to turn molecular energy estimation into a quantum-classical loop. The notebook shows that loop in its smallest form. The bottleneck is what happens when the active space stops being small.
+VQE gives the quantum device a specific job inside a larger chemistry workflow: estimate the energy of a prepared state. For a drug-relevant active space, the surrounding work includes choosing orbitals, constructing the Hamiltonian, preparing a state that represents the relevant chemistry, budgeting many measurements, and comparing with strong classical methods.
 
-## Want more?
+## Try the molecule
 
 The [companion notebook](https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/03-drug-discovery.ipynb) lets you run the single-geometry $\mathrm{H}_2$ VQE anatomy demo. For the gate-level side path, see [Circuit Bench 08 — VQE for H2](../../circuit-bench/08-vqe-h2/README.md).
+
+[^drug-cost]: Schlander et al., ["How Much Does It Cost to Research and Develop a New Drug? A Systematic Review and Assessment"](https://doi.org/10.1007/s40273-021-01065-y), *PharmacoEconomics*, 2021. The review found a wide range driven by methods, included development phases, failures, and capital costs.
 
 ---
 

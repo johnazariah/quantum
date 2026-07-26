@@ -86,7 +86,7 @@ cut value  -> score
 best score -> optimisation target
 ```
 
-QAOA keeps that candidate representation and score, then changes the distribution from which we sample candidates.
+The **Quantum Approximate Optimisation Algorithm** (QAOA) keeps that candidate representation and score, then changes the distribution from which we sample candidates.
 
 If circuit words like gate, basis, or measurement are new, start with [Circuit Bench 00: Reading a Quantum Circuit](../../circuit-bench/00-reading-a-quantum-circuit/README.md). If you want the first two-qubit example before the QAOA circuit appears, [Circuit Bench 01: The Bell State](../../circuit-bench/01-bell-state/README.md) is the side path: Hadamard, CNOT, measurement correlation, and why changing measurement basis matters. You do not need either note first, but they are there when those primitives deserve a closer look.
 
@@ -100,7 +100,7 @@ The QAOA circuit does begin by placing the qubits into a superposition of all ei
 
 A quantum algorithm is useful when it arranges the computation so that unwanted possibilities cancel and wanted possibilities reinforce. The possibilities being "present" is not enough. Their amplitudes have to be made to interfere in the right way before measurement.
 
-QAOA, the **Quantum Approximate Optimisation Algorithm**, is one attempt to do that for optimisation problems. It offers no guarantee of the optimum and no escape from NP-hardness. It produces a probability distribution over candidate answers, with parameters chosen so that good answers appear more often than they would under uniform random sampling.
+QAOA is one attempt to do that for optimisation problems. It offers no guarantee of the optimum and does not remove MaxCut's worst-case computational hardness. It produces a probability distribution over candidate answers, with parameters chosen so that good answers appear more often than they would under uniform random sampling.
 
 For this notebook, the test is concrete: do the chosen angles shift probability away from `000` and `111` and towards the six cuts with score 2?
 
@@ -137,7 +137,7 @@ $$
 C = \sum_{(i,j)\in E} \frac{1 - Z_i Z_j}{2}.
 $$
 
-Here $C$ is a score to maximise. Ground-state formulations instead use $-C$ as an energy to minimise. The identity term in $C$ contributes only a global phase, so the notebook drops it and absorbs the remaining sign and factor into its angle convention. Under that convention, each edge compiles to CNOT-$R_Z(2\gamma)$-CNOT. Changing the sign or factor changes the numerical optimum for $\gamma$.
+Here $E$ is the set of graph edges and $C$ is a score to maximise. Ground-state formulations instead use $-C$ as an energy to minimise. The identity term in $C$ contributes only a global phase, so the notebook drops it and absorbs the remaining sign and factor into its angle convention. Under that convention, each edge compiles to CNOT-$R_Z(2\gamma)$-CNOT. Changing the sign or factor changes the numerical optimum for $\gamma$.
 
 Each colouring is now a computational-basis state whose cut value can be written into relative phase. The same structural move returns later when molecules, schedules, and materials become operators.
 
@@ -260,7 +260,7 @@ The notebook then enumerates all eight bit strings, establishing ground truth be
 
 The function `qaoa_qasm` writes OpenQASM 2.0 as a string.
 
-That may look low-level if you are used to polished SDKs, but it is exactly what we want pedagogically. The code does not hide the circuit behind a library object. You can see:
+Writing OpenQASM strings keeps the circuit visible instead of hiding it behind a library object. You can see:
 
 - the Hadamards that prepare the uniform superposition;
 - one CNOT-$R_Z$-CNOT block per edge;
@@ -314,7 +314,7 @@ repeat
 
 The quantum circuit is the function the classical optimiser queries.
 
-That distinction will matter again in the VQE workbook. QAOA and VQE look like different algorithms, but structurally they are cousins: parameterised quantum circuit inside, classical optimiser outside.
+The variational quantum eigensolver (VQE) uses the same division of labour: a parameterised quantum circuit inside and a classical optimiser outside.
 
 ### Section 5: Compare with random sampling
 
@@ -324,8 +324,8 @@ The final comparison uses uniform random sampling. This is a meaningful baseline
 
 The notebook establishes the mechanics:
 
-1. A combinatorial optimisation problem can be encoded as a Hamiltonian.
-2. The Hamiltonian can be compiled into circuit operations.
+1. A combinatorial optimisation problem can be encoded as a cost operator, or Hamiltonian.
+2. That operator can be compiled into circuit operations.
 3. The cost can be written into quantum phase.
 4. A mixer can turn phase differences into measurement bias.
 5. Samples from the circuit can be scored classically.
@@ -356,6 +356,6 @@ The larger Quantum Bottleneck project goes further into the logistics motivation
 
 For a first workbook, one fully exposed triangle is enough.
 
-[^ups-orion]: See the ORION case summary in Delen, ["Analytics Success Story: UPS's ORION Project"](https://www.informit.com/articles/article.aspx?p=2992600&seqNum=6), which reports that reducing one mile per driver per day over a year can save UPS up to $50 million.
+[^ups-orion]: See the On-Road Integrated Optimization and Navigation (ORION) case summary in Delen, ["Analytics Success Story: UPS's ORION Project"](https://www.informit.com/articles/article.aspx?p=2992600&seqNum=6), which reports that reducing one mile per driver per day over a year can save UPS up to $50 million.
 
 Next up: [The Trapdoor](bottleneck-02-cryptography.md) — where a hidden period replaces the search landscape, and "cost and mix" gives way to "Fourier and measure."

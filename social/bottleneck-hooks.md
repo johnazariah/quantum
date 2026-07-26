@@ -23,81 +23,109 @@ UPS says one mile less per driver per day can save up to $50M a year. I use an e
 ## Post 02: The Trapdoor (Aug 1)
 
 ### LinkedIn
-The notebook factors 15. The problem is the cryptographic machinery that keeps the internet standing. Shor's algorithm threatens RSA not by brute force but by turning factoring into period-finding, and period-finding into phase estimation. This post walks through the circuit, the quantum Fourier transform, and the honest gap between a toy demonstration and a real cryptographic threat.
+RSA depends on a one-way asymmetry: multiplying two large primes is easy, while recovering them from their product has resisted efficient classical algorithms. Shor's algorithm reduces factoring to period-finding and uses quantum phase estimation to expose the period.
+
+For its runnable example, the notebook works with N=15 and a=7. It compiles one known phase branch into a small circuit, measures the phase, recovers period 4 with continued fractions, and obtains factors 3 and 5 with greatest-common-divisor arithmetic.
+
+Modular exponentiation, error correction, and cryptographic-scale resources are outside this demonstration. Those are the pieces that make breaking RSA a fault-tolerant hardware problem rather than a present-day capability.
 
 #QuantumComputing #Cryptography
 
 ### Bluesky
-Bottleneck 02: The Trapdoor. The notebook factors 15. The problem is RSA. Shor's algorithm turns factoring into period-finding, and the gap between 15 and a real key is the bottleneck.
+Shor's algorithm factors by finding a period rather than searching candidate divisors. This notebook compiles one known phase branch for N=15, then recovers period 4 and factors 3 and 5 with classical post-processing.
 
 ---
 
 ## Post 03: The $2B Molecule (Aug 5)
 
 ### LinkedIn
-Getting a drug to market costs roughly $2B, and a substantial fraction goes to molecular screening. Before a molecule reaches a clinical trial, we often do not know enough about how its electrons behave. VQE promises to compute electronic structure on a quantum computer, but the gap between a hydrogen molecule on a simulator and a real drug candidate is vast. This post walks through both sides honestly.
+Published estimates of developing a new medicine vary widely and can reach several billion dollars once failures and financing costs are included. Better electronic-structure calculations address one part of that risk: predicting molecular energies before expensive experiments.
+
+The runnable example does not model a drug candidate. It runs the variational quantum eigensolver on a reduced two-qubit H2 Hamiltonian at one bond length, measures Z, X, and Y Pauli terms, and compares the energy with exact diagonalisation.
+
+The circuit exposes the complete hybrid loop. Drug-relevant calculations still require molecular integrals, active-space selection, expressive states, many measurements, and a classical chemistry workflow around the quantum solver.
 
 #QuantumComputing #DrugDiscovery
 
 ### Bluesky
-Bottleneck 03: The $2B Molecule. VQE computes electronic structure for drug candidates, but the gap between a hydrogen molecule on a simulator and a real drug is the bottleneck.
+Drug development can cost billions, but this notebook makes a smaller claim: VQE on a reduced two-qubit H2 Hamiltonian at one bond length. It exposes the measurement loop without presenting a drug simulation.
 
 ---
 
 ## Post 04: The Feature Explosion (Aug 8)
 
 ### LinkedIn
-Machine learning works by moving data into a richer feature space. Quantum machine learning asks: what if the useful feature space is naturally quantum and classically awkward to compute? This post looks at quantum kernels, SVMs, and the dequantisation results that put a ceiling on the quantum speedup claims. The Netflix Prize is still a useful parable.
+On the notebook's two-dimensional half-moons data, the two-qubit quantum kernel does not beat the classical radial basis function baseline. The result is useful because a large quantum feature space is not evidence of a useful classifier.
+
+The post starts with the Netflix Prize's lesson that representation matters. Its notebook then builds overlap circuits, assembles a kernel matrix from measurement counts, and trains a classical support vector machine.
+
+Any advantage depends on the access model, data-encoding cost, and whether the kernel remains hard to approximate classically. Rigorous separations exist for constructed quantum-data tasks; dequantisation results remove other claimed speedups when classical algorithms receive comparable access.
 
 #QuantumComputing #MachineLearning
 
 ### Bluesky
-Bottleneck 04: The Feature Explosion. Quantum kernels promise richer feature spaces. Dequantisation results say: not so fast. This post walks through the honest gap.
+A two-qubit quantum kernel does not beat the classical RBF baseline on this half-moons dataset. The result sets up the real question: when is a quantum similarity useful and classically hard to approximate?
 
 ---
 
 ## Post 05: The Convergence Wall (Aug 12)
 
 ### LinkedIn
-Finance runs on Monte Carlo. Option prices, value-at-risk, stress tests: all computed by averaging over many possible futures. Every extra digit of accuracy quadruples the computation. Quantum amplitude estimation promises a quadratic speedup on that convergence rate. This post runs a small option pricing circuit and asks what stands between a toy demo and a real trading desk.
+Classical Monte Carlo error falls as 1/sqrt(N), so one more decimal digit costs roughly 100 times as many samples. Quantum amplitude estimation can improve the query scaling to 1/N, provided the quantity is already encoded in a suitable quantum amplitude.
+
+The notebook prices a European call classically with Black-Scholes and Monte Carlo. Its quantum circuit does something narrower: it reads a compiled three-bit phase for the fraction of eight uniformly weighted price bins above the strike. It does not encode the discounted payoff or build the state-preparation and Grover oracles.
+
+The possible speedup belongs to oracle queries. Distribution loading, reversible payoff logic, controlled operations, and fault-tolerant depth still determine whether a finance application wins end to end.
 
 #QuantumComputing #Finance
 
 ### Bluesky
-Bottleneck 05: The Convergence Wall. Classical Monte Carlo needs 100x more samples for each extra digit. Quantum amplitude estimation promises quadratic speedup. The bottleneck is everything in between.
+One more decimal digit in classical Monte Carlo costs about 100 times as many samples. This notebook prices the option classically; its compiled circuit reads the in-the-money fraction on an eight-bin price grid.
 
 ---
 
 ## Post 06: The Scheduling Nightmare (Aug 15)
 
 ### LinkedIn
-Assign nurses to shifts. Route trucks through depots. Match jobs to machines. These are not smooth optimisation problems; they are combinatorial, and a decision is yes or no. QAOA encodes them as QUBO problems and searches for the optimal assignment. This post walks through the encoding, the circuit, and the gap between satisfying a few constraints and solving a real scheduling problem.
+Two nurses and two shifts need only two bits in this notebook because Nurse B's assignment is implied by Nurse A's. Even here, one hard coverage rule and one soft preference must be combined without letting the penalty weight overwhelm the objective.
+
+The notebook enumerates all four assignments, maps the exact QUBO cost to an Ising Hamiltonian, tunes one QAOA layer classically, and runs the two-qubit circuit. The circuit biases samples towards feasible schedules; it does not guarantee the optimum.
+
+A real roster adds variables, legal and skill constraints, penalty design, and a serious comparison with mixed-integer and constraint-programming solvers.
 
 #QuantumComputing #Optimisation
 
 ### Bluesky
-Bottleneck 06: The Scheduling Nightmare. Supply chains are webs of discrete choices. QAOA attacks them as QUBO problems. The post walks through the gap between a toy schedule and a real one.
+A two-bit nurse schedule exposes QUBO penalty design: one hard coverage rule and one soft preference. The notebook maps that cost to a two-qubit QAOA circuit that biases samples towards feasible schedules.
 
 ---
 
 ## Post 07: The Materials Maze (Aug 19)
 
 ### LinkedIn
-The materials we care about most are the awkward ones: catalysts, superconductors, battery cathodes. Their behaviour comes from strongly correlated electrons, and that is exactly where classical approximations become fragile. The Hubbard model is the standard test case. This post runs a small quantum simulation and asks how far we are from materials that matter.
+The materials notebook solves a two-site Hubbard model by exact classical diagonalisation. Its quantum circuit begins only after one known energy has been shifted, rounded onto a three-bit phase grid, and compiled into a phase-estimation readout.
+
+The Hubbard benchmark introduces the competition between electron hopping and on-site repulsion, while the circuit demonstrates how quantum phase estimation turns an eigenphase into measured bits. Controlled evolution under the Hubbard Hamiltonian is not implemented.
+
+Scaling towards useful materials requires a faithful Hamiltonian encoding, state preparation, controlled time evolution, phase precision, error correction, and comparison with tensor-network, Monte Carlo, and embedding methods in the regimes where they work.
 
 #QuantumComputing #MaterialsScience
 
 ### Bluesky
-Bottleneck 07: The Materials Maze. Strongly correlated electrons make materials hard to simulate classically. The Hubbard model is the test case. This post asks how far we are.
+This notebook diagonalises a two-site Hubbard model classically, then reads one known energy with compiled three-bit QPE. It demonstrates phase extraction, not quantum simulation of the Hubbard Hamiltonian.
 
 ---
 
 ## Post 08: The Catalyst Bottleneck (Aug 22)
 
 ### LinkedIn
-The energy transition needs better catalysts for water splitting, CO2 reduction, nitrogen fixation, and battery chemistry. Catalyst design is an electronic-structure problem in disguise. This final post in The Quantum Bottleneck runs a VQE calculation on a small active space and closes the series with an honest assessment: quantum computing is not a shortcut past chemistry, but it may be the only path through certain problems classical computers cannot reach.
+Better catalysts for water splitting, carbon dioxide reduction, nitrogen fixation, and battery chemistry depend on active sites embedded in much larger environments. Quantum embedding gives a quantum computer one focused job: solve the hard active-space Hamiltonian.
+
+The capstone notebook starts after active-space selection and embedding. It runs the variational quantum eigensolver on a precomputed two-qubit effective Hamiltonian, then compares the measured energy with an exact benchmark for that reduced model.
+
+The notebook does not run density functional theory, construct an embedding bath, or simulate a catalyst. A useful quantum contribution depends on the accuracy of that classical interface as well as the state preparation, measurement cost, optimiser, and hardware.
 
 #QuantumComputing #ClimateTech
 
 ### Bluesky
-Bottleneck 08: The Catalyst Bottleneck. Climate tech needs better catalysts. Catalyst design is electronic structure in disguise. The series closer asks honestly: where does quantum computing fit?
+Quantum embedding gives a quantum computer a specific job: solve a hard active-space Hamiltonian inside a catalyst model. This two-qubit VQE notebook starts from precomputed inputs; it does not simulate a catalyst.
