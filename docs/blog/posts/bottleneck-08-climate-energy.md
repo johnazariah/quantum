@@ -13,17 +13,17 @@ tags:
 authors:
 - John Azariah
 social:
-  linkedin: 'Better catalysts for water splitting, carbon dioxide reduction, nitrogen fixation, and battery chemistry depend on active sites embedded in much larger environments. Quantum embedding gives a quantum computer one focused job: solve the hard active-space Hamiltonian.
+  linkedin: 'I am ending The Quantum Bottleneck with embedding because it gives the quantum solver a bounded job inside a scientific workflow. A catalyst is too large to hand to one device, but its hardest correlated orbitals can sometimes be isolated as an active space.
 
 
-    The capstone notebook starts after active-space selection and embedding. It runs the variational quantum eigensolver on a precomputed two-qubit effective Hamiltonian, then compares the measured energy with an exact benchmark for that reduced model.
+    The notebook begins after a classical calculation has selected that space and supplied a two-qubit effective Hamiltonian. VQE prepares a trial state, measures its Pauli terms, and compares the resulting energy with an exact benchmark for the same reduced model.
 
 
-    The notebook does not run density functional theory, construct an embedding bath, or simulate a catalyst. A useful quantum contribution depends on the accuracy of that classical interface as well as the state preparation, measurement cost, optimiser, and hardware.
+    The surrounding chemistry has not disappeared. Active-space choice, the environment, self-consistency, measurement cost, and hardware errors still determine whether the quantum correction means anything for a real catalyst.
 
 
     #QuantumComputing #ClimateTech'
-  bluesky: 'Quantum embedding gives a quantum computer a specific job: solve a hard active-space Hamiltonian inside a catalyst model. This two-qubit VQE notebook starts from precomputed inputs; it does not simulate a catalyst.'
+  bluesky: 'I end the series with embedding because it gives the quantum solver a bounded job inside a catalyst workflow. The two-qubit notebook starts from a precomputed active-space Hamiltonian; it does not simulate the catalyst.'
 ---
 
 # The Catalyst Bottleneck

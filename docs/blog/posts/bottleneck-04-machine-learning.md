@@ -12,17 +12,17 @@ tags:
 authors:
 - John Azariah
 social:
-  linkedin: 'On the notebook''s two-dimensional half-moons data, the two-qubit quantum kernel does not beat the classical radial basis function baseline. The result is useful because a large quantum feature space is not evidence of a useful classifier.
+  linkedin: 'The two-qubit quantum kernel and classical RBF baseline both classify 11 of 12 test points. I am keeping the tie because it is the useful result: a quantum feature space does not become valuable merely by being quantum.
 
 
-    The post starts with the Netflix Prize''s lesson that representation matters. Its notebook then builds overlap circuits, assembles a kernel matrix from measurement counts, and trains a classical support vector machine.
+    The Netflix Prize is still my preferred way into this topic. Machine learning lives or dies by representation, so the notebook builds a feature map, estimates pairwise overlaps from circuits, assembles the kernel matrix, and hands that matrix to a classical support vector machine.
 
 
-    Any advantage depends on the access model, data-encoding cost, and whether the kernel remains hard to approximate classically. Rigorous separations exist for constructed quantum-data tasks; dequantisation results remove other claimed speedups when classical algorithms receive comparable access.
+    The harder question comes after the circuit runs. Any advantage depends on data-loading cost, the access model, and whether a classical algorithm can approximate the same kernel. The dequantisation results belong in the main argument, not in small print.
 
 
     #QuantumComputing #MachineLearning'
-  bluesky: 'A two-qubit quantum kernel does not beat the classical RBF baseline on this half-moons dataset. The result sets up the real question: when is a quantum similarity useful and classically hard to approximate?'
+  bluesky: 'The quantum kernel and classical RBF baseline both classify 11 of 12 points. I kept the tie because it forces the right question: is the quantum similarity useful, cheap to encode, and genuinely hard to approximate?'
 ---
 
 # The Feature Explosion

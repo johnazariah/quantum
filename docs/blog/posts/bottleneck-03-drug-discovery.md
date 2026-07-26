@@ -12,17 +12,17 @@ tags:
 authors:
 - John Azariah
 social:
-  linkedin: 'Published estimates of developing a new medicine vary widely and can reach several billion dollars once failures and financing costs are included. Better electronic-structure calculations address one part of that risk: predicting molecular energies before expensive experiments.
+  linkedin: 'Drug-development estimates can reach several billion dollars, but quantum chemistry owns only part of that bill. I wanted this example to isolate that part rather than let a two-qubit circuit masquerade as a drug-discovery platform.
 
 
-    The runnable example does not model a drug candidate. It runs the variational quantum eigensolver on a reduced two-qubit H2 Hamiltonian at one bond length, measures Z, X, and Y Pauli terms, and compares the energy with exact diagonalisation.
+    I use H2 at one bond length because it is the smallest molecule that keeps the complete VQE loop visible. We prepare a trial state, measure the Z, X, and Y terms, reconstruct an energy, and compare it with exact diagonalisation of the same reduced Hamiltonian.
 
 
-    The circuit exposes the complete hybrid loop. Drug-relevant calculations still require molecular integrals, active-space selection, expressive states, many measurements, and a classical chemistry workflow around the quantum solver.
+    A drug-relevant calculation brings back the pieces this notebook leaves out: molecular integrals, active-space selection, an expressive trial state, a large measurement budget, and the classical chemistry workflow around the quantum solver.
 
 
     #QuantumComputing #DrugDiscovery'
-  bluesky: 'Drug development can cost billions, but this notebook makes a smaller claim: VQE on a reduced two-qubit H2 Hamiltonian at one bond length. It exposes the measurement loop without presenting a drug simulation.'
+  bluesky: 'I use H2 at one bond length because two qubits expose VQE''s measurement loop. It is not a drug simulation; molecular integrals, active-space choice, measurement cost, and the classical chemistry around the solver still matter.'
 ---
 
 # The $2B Molecule

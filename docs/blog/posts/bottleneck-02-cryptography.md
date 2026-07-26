@@ -13,17 +13,17 @@ tags:
 authors:
 - John Azariah
 social:
-  linkedin: 'RSA depends on a one-way asymmetry: multiplying two large primes is easy, while recovering them from their product has resisted efficient classical algorithms. Shor''s algorithm reduces factoring to period-finding and uses quantum phase estimation to expose the period.
+  linkedin: 'Shor''s algorithm is usually introduced as the quantum algorithm that factors numbers. I think that description skips the useful move: the circuit estimates a period, and ordinary number theory turns that period into factors.
 
 
-    For its runnable example, the notebook works with N=15 and a=7. It compiles one known phase branch into a small circuit, measures the phase, recovers period 4 with continued fractions, and obtains factors 3 and 5 with greatest-common-divisor arithmetic.
+    N=15 and a=7 earn their place because every arithmetic step fits on the page. The notebook compiles one known phase branch, reads 1/4 as 010, recovers period 4 with continued fractions, and obtains 3 and 5 with greatest-common-divisor arithmetic.
 
 
-    Modular exponentiation, error correction, and cryptographic-scale resources are outside this demonstration. Those are the pieces that make breaking RSA a fault-tolerant hardware problem rather than a present-day capability.
+    At cryptographic scale, all the omitted machinery returns. A real implementation still needs reversible modular exponentiation, error correction, and millions of physical qubits. Factoring 15 is the transparent example; those missing resources are the reason RSA is not falling to today''s hardware.
 
 
     #QuantumComputing #Cryptography'
-  bluesky: 'Shor''s algorithm factors by finding a period rather than searching candidate divisors. This notebook compiles one known phase branch for N=15, then recovers period 4 and factors 3 and 5 with classical post-processing.'
+  bluesky: 'Shor''s algorithm is usually introduced as a factoring algorithm. I chose N=15 because it makes the more useful move visible: a quantum circuit exposes a period, then classical arithmetic turns that period into factors.'
 ---
 
 # The Trapdoor

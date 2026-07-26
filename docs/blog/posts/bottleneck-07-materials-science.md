@@ -13,17 +13,17 @@ tags:
 authors:
 - John Azariah
 social:
-  linkedin: 'The materials notebook solves a two-site Hubbard model by exact classical diagonalisation. Its quantum circuit begins only after one known energy has been shifted, rounded onto a three-bit phase grid, and compiled into a phase-estimation readout.
+  linkedin: 'The materials notebook does two different jobs, and I leave the seam visible. First, exact classical diagonalisation supplies the spectrum of a half-filled two-site Hubbard model. Then one known energy is shifted onto a three-bit grid and read by compiled quantum phase estimation.
 
 
-    The Hubbard benchmark introduces the competition between electron hopping and on-site repulsion, while the circuit demonstrates how quantum phase estimation turns an eigenphase into measured bits. Controlled evolution under the Hubbard Hamiltonian is not implemented.
+    That circuit demonstrates binary phase extraction. It does not implement controlled evolution under the Hubbard Hamiltonian, so calling it a quantum materials simulation would erase the most expensive step.
 
 
-    Scaling towards useful materials requires a faithful Hamiltonian encoding, state preparation, controlled time evolution, phase precision, error correction, and comparison with tensor-network, Monte Carlo, and embedding methods in the regimes where they work.
+    For a useful material, state preparation, controlled time evolution, phase precision, error correction, and the modelling around the active space all return. Tensor networks, quantum Monte Carlo, and embedding methods remain the classical competition wherever their assumptions hold.
 
 
     #QuantumComputing #MaterialsScience'
-  bluesky: 'This notebook diagonalises a two-site Hubbard model classically, then reads one known energy with compiled three-bit QPE. It demonstrates phase extraction, not quantum simulation of the Hubbard Hamiltonian.'
+  bluesky: 'I leave the seam visible in this materials notebook: exact diagonalisation supplies a two-site Hubbard energy, then compiled QPE reads that known phase. The circuit demonstrates phase extraction, not Hubbard simulation.'
 ---
 
 # The Materials Maze

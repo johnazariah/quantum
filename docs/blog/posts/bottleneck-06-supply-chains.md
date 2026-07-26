@@ -13,17 +13,17 @@ tags:
 authors:
 - John Azariah
 social:
-  linkedin: 'Two nurses and two shifts need only two bits in this notebook because Nurse B''s assignment is implied by Nurse A''s. Even here, one hard coverage rule and one soft preference must be combined without letting the penalty weight overwhelm the objective.
+  linkedin: 'I kept the roster to two nurses and two shifts so all four assignments fit on one page. That is enough to expose the modelling problem: one hard coverage rule, one soft preference, and a penalty weight that can quietly overwhelm the objective.
 
 
-    The notebook enumerates all four assignments, maps the exact QUBO cost to an Ising Hamiltonian, tunes one QAOA layer classically, and runs the two-qubit circuit. The circuit biases samples towards feasible schedules; it does not guarantee the optimum.
+    The notebook enumerates every assignment, derives the exact QUBO and Ising coefficients, tunes one QAOA layer classically, and runs the two-qubit circuit. QAOA biases the samples towards feasible schedules; it does not certify the optimum.
 
 
-    A real roster adds variables, legal and skill constraints, penalty design, and a serious comparison with mixed-integer and constraint-programming solvers.
+    A badly written QUBO will be optimised faithfully, which is not much comfort to the person writing next month''s roster. Real scheduling brings back legal rules, skills, fairness, thousands of variables, and formidable mixed-integer and constraint-programming baselines.
 
 
     #QuantumComputing #Optimisation'
-  bluesky: 'A two-bit nurse schedule exposes QUBO penalty design: one hard coverage rule and one soft preference. The notebook maps that cost to a two-qubit QAOA circuit that biases samples towards feasible schedules.'
+  bluesky: 'I kept the roster to two nurses and two shifts so all four assignments fit on one page. The QUBO exposes one hard rule, one soft preference, and a warning: the circuit will faithfully sample the model we actually wrote.'
 ---
 
 # The Scheduling Nightmare

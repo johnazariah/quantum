@@ -23,109 +23,109 @@ UPS says one mile less per driver per day can save up to $50M a year. I use an e
 ## Post 02: The Trapdoor (Aug 1)
 
 ### LinkedIn
-RSA depends on a one-way asymmetry: multiplying two large primes is easy, while recovering them from their product has resisted efficient classical algorithms. Shor's algorithm reduces factoring to period-finding and uses quantum phase estimation to expose the period.
+Shor's algorithm is usually introduced as the quantum algorithm that factors numbers. I think that description skips the useful move: the circuit estimates a period, and ordinary number theory turns that period into factors.
 
-For its runnable example, the notebook works with N=15 and a=7. It compiles one known phase branch into a small circuit, measures the phase, recovers period 4 with continued fractions, and obtains factors 3 and 5 with greatest-common-divisor arithmetic.
+N=15 and a=7 earn their place because every arithmetic step fits on the page. The notebook compiles one known phase branch, reads 1/4 as 010, recovers period 4 with continued fractions, and obtains 3 and 5 with greatest-common-divisor arithmetic.
 
-Modular exponentiation, error correction, and cryptographic-scale resources are outside this demonstration. Those are the pieces that make breaking RSA a fault-tolerant hardware problem rather than a present-day capability.
+At cryptographic scale, all the omitted machinery returns. A real implementation still needs reversible modular exponentiation, error correction, and millions of physical qubits. Factoring 15 is the transparent example; those missing resources are the reason RSA is not falling to today's hardware.
 
 #QuantumComputing #Cryptography
 
 ### Bluesky
-Shor's algorithm factors by finding a period rather than searching candidate divisors. This notebook compiles one known phase branch for N=15, then recovers period 4 and factors 3 and 5 with classical post-processing.
+Shor's algorithm is usually introduced as a factoring algorithm. I chose N=15 because it makes the more useful move visible: a quantum circuit exposes a period, then classical arithmetic turns that period into factors.
 
 ---
 
 ## Post 03: The $2B Molecule (Aug 5)
 
 ### LinkedIn
-Published estimates of developing a new medicine vary widely and can reach several billion dollars once failures and financing costs are included. Better electronic-structure calculations address one part of that risk: predicting molecular energies before expensive experiments.
+Drug-development estimates can reach several billion dollars, but quantum chemistry owns only part of that bill. I wanted this example to isolate that part rather than let a two-qubit circuit masquerade as a drug-discovery platform.
 
-The runnable example does not model a drug candidate. It runs the variational quantum eigensolver on a reduced two-qubit H2 Hamiltonian at one bond length, measures Z, X, and Y Pauli terms, and compares the energy with exact diagonalisation.
+I use H2 at one bond length because it is the smallest molecule that keeps the complete VQE loop visible. We prepare a trial state, measure the Z, X, and Y terms, reconstruct an energy, and compare it with exact diagonalisation of the same reduced Hamiltonian.
 
-The circuit exposes the complete hybrid loop. Drug-relevant calculations still require molecular integrals, active-space selection, expressive states, many measurements, and a classical chemistry workflow around the quantum solver.
+A drug-relevant calculation brings back the pieces this notebook leaves out: molecular integrals, active-space selection, an expressive trial state, a large measurement budget, and the classical chemistry workflow around the quantum solver.
 
 #QuantumComputing #DrugDiscovery
 
 ### Bluesky
-Drug development can cost billions, but this notebook makes a smaller claim: VQE on a reduced two-qubit H2 Hamiltonian at one bond length. It exposes the measurement loop without presenting a drug simulation.
+I use H2 at one bond length because two qubits expose VQE's measurement loop. It is not a drug simulation; molecular integrals, active-space choice, measurement cost, and the classical chemistry around the solver still matter.
 
 ---
 
 ## Post 04: The Feature Explosion (Aug 8)
 
 ### LinkedIn
-On the notebook's two-dimensional half-moons data, the two-qubit quantum kernel does not beat the classical radial basis function baseline. The result is useful because a large quantum feature space is not evidence of a useful classifier.
+The two-qubit quantum kernel and classical RBF baseline both classify 11 of 12 test points. I am keeping the tie because it is the useful result: a quantum feature space does not become valuable merely by being quantum.
 
-The post starts with the Netflix Prize's lesson that representation matters. Its notebook then builds overlap circuits, assembles a kernel matrix from measurement counts, and trains a classical support vector machine.
+The Netflix Prize is still my preferred way into this topic. Machine learning lives or dies by representation, so the notebook builds a feature map, estimates pairwise overlaps from circuits, assembles the kernel matrix, and hands that matrix to a classical support vector machine.
 
-Any advantage depends on the access model, data-encoding cost, and whether the kernel remains hard to approximate classically. Rigorous separations exist for constructed quantum-data tasks; dequantisation results remove other claimed speedups when classical algorithms receive comparable access.
+The harder question comes after the circuit runs. Any advantage depends on data-loading cost, the access model, and whether a classical algorithm can approximate the same kernel. The dequantisation results belong in the main argument, not in small print.
 
 #QuantumComputing #MachineLearning
 
 ### Bluesky
-A two-qubit quantum kernel does not beat the classical RBF baseline on this half-moons dataset. The result sets up the real question: when is a quantum similarity useful and classically hard to approximate?
+The quantum kernel and classical RBF baseline both classify 11 of 12 points. I kept the tie because it forces the right question: is the quantum similarity useful, cheap to encode, and genuinely hard to approximate?
 
 ---
 
 ## Post 05: The Convergence Wall (Aug 12)
 
 ### LinkedIn
-Classical Monte Carlo error falls as 1/sqrt(N), so one more decimal digit costs roughly 100 times as many samples. Quantum amplitude estimation can improve the query scaling to 1/N, provided the quantity is already encoded in a suitable quantum amplitude.
+One more decimal digit in classical Monte Carlo costs roughly 100 times as many samples. That convergence law is why quantum amplitude estimation attracts so much attention in finance.
 
-The notebook prices a European call classically with Black-Scholes and Monte Carlo. Its quantum circuit does something narrower: it reads a compiled three-bit phase for the fraction of eight uniformly weighted price bins above the strike. It does not encode the discounted payoff or build the state-preparation and Grover oracles.
+I leave the option price on the classical side in this notebook. Black-Scholes and Monte Carlo supply the real pricing comparison; the compiled quantum circuit reads only the in-the-money fraction on eight uniformly weighted price bins. Calling that quantum option pricing would hide the state-preparation, payoff, and Grover oracles we have not built.
 
-The possible speedup belongs to oracle queries. Distribution loading, reversible payoff logic, controlled operations, and fault-tolerant depth still determine whether a finance application wins end to end.
+The possible 1/N scaling counts oracle queries. Distribution loading, reversible payoff logic, controlled operations, and fault-tolerant depth still decide whether anything improves back on the trading desk.
 
 #QuantumComputing #Finance
 
 ### Bluesky
-One more decimal digit in classical Monte Carlo costs about 100 times as many samples. This notebook prices the option classically; its compiled circuit reads the in-the-money fraction on an eight-bin price grid.
+One more decimal digit in Monte Carlo costs about 100 times as many samples. I leave the option price classical; the compiled quantum circuit reads only an eight-bin fraction because the real pricing oracles are not built.
 
 ---
 
 ## Post 06: The Scheduling Nightmare (Aug 15)
 
 ### LinkedIn
-Two nurses and two shifts need only two bits in this notebook because Nurse B's assignment is implied by Nurse A's. Even here, one hard coverage rule and one soft preference must be combined without letting the penalty weight overwhelm the objective.
+I kept the roster to two nurses and two shifts so all four assignments fit on one page. That is enough to expose the modelling problem: one hard coverage rule, one soft preference, and a penalty weight that can quietly overwhelm the objective.
 
-The notebook enumerates all four assignments, maps the exact QUBO cost to an Ising Hamiltonian, tunes one QAOA layer classically, and runs the two-qubit circuit. The circuit biases samples towards feasible schedules; it does not guarantee the optimum.
+The notebook enumerates every assignment, derives the exact QUBO and Ising coefficients, tunes one QAOA layer classically, and runs the two-qubit circuit. QAOA biases the samples towards feasible schedules; it does not certify the optimum.
 
-A real roster adds variables, legal and skill constraints, penalty design, and a serious comparison with mixed-integer and constraint-programming solvers.
+A badly written QUBO will be optimised faithfully, which is not much comfort to the person writing next month's roster. Real scheduling brings back legal rules, skills, fairness, thousands of variables, and formidable mixed-integer and constraint-programming baselines.
 
 #QuantumComputing #Optimisation
 
 ### Bluesky
-A two-bit nurse schedule exposes QUBO penalty design: one hard coverage rule and one soft preference. The notebook maps that cost to a two-qubit QAOA circuit that biases samples towards feasible schedules.
+I kept the roster to two nurses and two shifts so all four assignments fit on one page. The QUBO exposes one hard rule, one soft preference, and a warning: the circuit will faithfully sample the model we actually wrote.
 
 ---
 
 ## Post 07: The Materials Maze (Aug 19)
 
 ### LinkedIn
-The materials notebook solves a two-site Hubbard model by exact classical diagonalisation. Its quantum circuit begins only after one known energy has been shifted, rounded onto a three-bit phase grid, and compiled into a phase-estimation readout.
+The materials notebook does two different jobs, and I leave the seam visible. First, exact classical diagonalisation supplies the spectrum of a half-filled two-site Hubbard model. Then one known energy is shifted onto a three-bit grid and read by compiled quantum phase estimation.
 
-The Hubbard benchmark introduces the competition between electron hopping and on-site repulsion, while the circuit demonstrates how quantum phase estimation turns an eigenphase into measured bits. Controlled evolution under the Hubbard Hamiltonian is not implemented.
+That circuit demonstrates binary phase extraction. It does not implement controlled evolution under the Hubbard Hamiltonian, so calling it a quantum materials simulation would erase the most expensive step.
 
-Scaling towards useful materials requires a faithful Hamiltonian encoding, state preparation, controlled time evolution, phase precision, error correction, and comparison with tensor-network, Monte Carlo, and embedding methods in the regimes where they work.
+For a useful material, state preparation, controlled time evolution, phase precision, error correction, and the modelling around the active space all return. Tensor networks, quantum Monte Carlo, and embedding methods remain the classical competition wherever their assumptions hold.
 
 #QuantumComputing #MaterialsScience
 
 ### Bluesky
-This notebook diagonalises a two-site Hubbard model classically, then reads one known energy with compiled three-bit QPE. It demonstrates phase extraction, not quantum simulation of the Hubbard Hamiltonian.
+I leave the seam visible in this materials notebook: exact diagonalisation supplies a two-site Hubbard energy, then compiled QPE reads that known phase. The circuit demonstrates phase extraction, not Hubbard simulation.
 
 ---
 
 ## Post 08: The Catalyst Bottleneck (Aug 22)
 
 ### LinkedIn
-Better catalysts for water splitting, carbon dioxide reduction, nitrogen fixation, and battery chemistry depend on active sites embedded in much larger environments. Quantum embedding gives a quantum computer one focused job: solve the hard active-space Hamiltonian.
+I am ending The Quantum Bottleneck with embedding because it gives the quantum solver a bounded job inside a scientific workflow. A catalyst is too large to hand to one device, but its hardest correlated orbitals can sometimes be isolated as an active space.
 
-The capstone notebook starts after active-space selection and embedding. It runs the variational quantum eigensolver on a precomputed two-qubit effective Hamiltonian, then compares the measured energy with an exact benchmark for that reduced model.
+The notebook begins after a classical calculation has selected that space and supplied a two-qubit effective Hamiltonian. VQE prepares a trial state, measures its Pauli terms, and compares the resulting energy with an exact benchmark for the same reduced model.
 
-The notebook does not run density functional theory, construct an embedding bath, or simulate a catalyst. A useful quantum contribution depends on the accuracy of that classical interface as well as the state preparation, measurement cost, optimiser, and hardware.
+The surrounding chemistry has not disappeared. Active-space choice, the environment, self-consistency, measurement cost, and hardware errors still determine whether the quantum correction means anything for a real catalyst.
 
 #QuantumComputing #ClimateTech
 
 ### Bluesky
-Quantum embedding gives a quantum computer a specific job: solve a hard active-space Hamiltonian inside a catalyst model. This two-qubit VQE notebook starts from precomputed inputs; it does not simulate a catalyst.
+I end the series with embedding because it gives the quantum solver a bounded job inside a catalyst workflow. The two-qubit notebook starts from a precomputed active-space Hamiltonian; it does not simulate the catalyst.

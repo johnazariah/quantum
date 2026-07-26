@@ -12,17 +12,17 @@ tags:
 authors:
 - John Azariah
 social:
-  linkedin: 'Classical Monte Carlo error falls as 1/sqrt(N), so one more decimal digit costs roughly 100 times as many samples. Quantum amplitude estimation can improve the query scaling to 1/N, provided the quantity is already encoded in a suitable quantum amplitude.
+  linkedin: 'One more decimal digit in classical Monte Carlo costs roughly 100 times as many samples. That convergence law is why quantum amplitude estimation attracts so much attention in finance.
 
 
-    The notebook prices a European call classically with Black-Scholes and Monte Carlo. Its quantum circuit does something narrower: it reads a compiled three-bit phase for the fraction of eight uniformly weighted price bins above the strike. It does not encode the discounted payoff or build the state-preparation and Grover oracles.
+    I leave the option price on the classical side in this notebook. Black-Scholes and Monte Carlo supply the real pricing comparison; the compiled quantum circuit reads only the in-the-money fraction on eight uniformly weighted price bins. Calling that quantum option pricing would hide the state-preparation, payoff, and Grover oracles we have not built.
 
 
-    The possible speedup belongs to oracle queries. Distribution loading, reversible payoff logic, controlled operations, and fault-tolerant depth still determine whether a finance application wins end to end.
+    The possible 1/N scaling counts oracle queries. Distribution loading, reversible payoff logic, controlled operations, and fault-tolerant depth still decide whether anything improves back on the trading desk.
 
 
     #QuantumComputing #Finance'
-  bluesky: 'One more decimal digit in classical Monte Carlo costs about 100 times as many samples. This notebook prices the option classically; its compiled circuit reads the in-the-money fraction on an eight-bin price grid.'
+  bluesky: 'One more decimal digit in Monte Carlo costs about 100 times as many samples. I leave the option price classical; the compiled quantum circuit reads only an eight-bin fraction because the real pricing oracles are not built.'
 ---
 
 # The Convergence Wall
