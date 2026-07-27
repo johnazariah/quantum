@@ -12,20 +12,28 @@ tags:
 authors:
 - John Azariah
 social:
-  linkedin: 'Machine learning works by moving data into a richer feature space. Quantum machine learning asks: what if the useful feature space is naturally quantum and classically awkward to compute? This post looks at quantum kernels, SVMs, and the dequantisation results that put a ceiling on the quantum speedup claims. The Netflix Prize is still a useful parable.
+  linkedin: 'The two-qubit quantum kernel and classical RBF baseline both classify 11 of 12 test points. I am keeping the tie because it is the useful result: a quantum feature space does not become valuable merely by being quantum.
+
+
+    The Netflix Prize is still my preferred way into this topic. Machine learning lives or dies by representation, so the notebook builds a feature map, estimates pairwise overlaps from circuits, assembles the kernel matrix, and hands that matrix to a classical support vector machine.
+
+
+    The harder question comes after the circuit runs. Any advantage depends on data-loading cost, the access model, and whether a classical algorithm can approximate the same kernel. The dequantisation results belong in the main argument, not in small print.
 
 
     #QuantumComputing #MachineLearning'
-  bluesky: 'Bottleneck 04: The Feature Explosion. Quantum kernels promise richer feature spaces. Dequantisation results say: not so fast. This post walks through the honest gap.'
+  bluesky: 'The quantum kernel and classical RBF baseline both classify 11 of 12 points. I kept the tie because it forces the right question: is the quantum similarity useful, cheap to encode, and genuinely hard to approximate?'
 ---
 
 # The Feature Explosion
 
-**Modern machine learning often works by moving data into a larger feature space. Quantum machine learning asks a sharper question: what if the useful feature space is naturally quantum, and classically awkward to compute?**
+The two-qubit quantum kernel in the companion notebook does not beat its classical radial basis function baseline on the half-moons data. That result is useful: a feature space does not become valuable merely by being quantum.
+
+The Netflix Prize remains a good parable. Recommendation quality depended on finding representations that exposed useful structure in sparse, noisy data, then comparing them against strong baselines.
 
 <!-- more -->
 
-The Netflix Prize is still a useful parable. The problem was not just to recommend films. It was to infer preference from sparse, noisy, high-dimensional data: users, items, ratings, genres, histories, and all the interactions between them.
+The problem was not simply to recommend films. It was to infer preference from users, items, ratings, histories, and all the interactions between them.
 
 That is a familiar machine-learning move. When a problem is not linearly separable in the data we can see, we map it into a richer space where the separating surface may become simple. The cost is that richer spaces can become enormous.
 
@@ -35,25 +43,25 @@ $$
 K(x, x') = \langle \phi(x), \phi(x') \rangle .
 $$
 
-Support Vector Machines use those pairwise similarities to find a separating boundary. As long as $K(x, x')$ is cheap to evaluate, the feature space can be large without being explicitly stored.
+Support vector machines (SVMs) use those pairwise similarities to find a separating boundary. As long as $K(x, x')$ is cheap to evaluate, the feature space can be large without being explicitly stored.
 
 The bottleneck appears when the similarity itself becomes the hard part.
 
-## The bottleneck: kernels are only useful if you can compute them
+## When similarity becomes expensive
 
-It is tempting to say that high dimension is the problem. That is too blunt. High dimension is often the solution. The real problem is whether the geometry of that space can be accessed efficiently.
+High dimension alone is not the obstruction; kernel methods deliberately create high-dimensional spaces. The cost lies in accessing their geometry efficiently.
 
-A kernel method needs a kernel matrix: every training point compared with every other training point. If there are $m$ training examples, that is $m^2$ kernel evaluations before the classifier even starts training.
+A kernel method needs a kernel matrix. The straightforward implementation in the notebook compares every training point with every other training point, requiring $m^2$ circuit evaluations for $m$ examples. Symmetry can remove nearly half of those evaluations for the square training matrix, but the scaling remains quadratic.
 
-So the practical question is not "can I imagine a useful feature space?" It is:
+A practical kernel method must answer three questions:
 
 - can I encode the data into that space;
 - can I compute the pairwise similarities;
 - can I do both without smuggling in an even harder classical problem?
 
-Quantum kernels live exactly at that boundary.
+Quantum kernels live at that boundary.
 
-## The quantum idea: Hilbert space as feature space
+## Use a quantum state as the feature map
 
 A quantum feature map prepares a state $|\phi(x)\rangle$ from classical data $x$. The associated kernel is the overlap between two prepared states:
 
@@ -61,7 +69,7 @@ $$
 K(x, x') = |\langle \phi(x') | \phi(x) \rangle|^2 .
 $$
 
-Operationally, this is a circuit experiment. Prepare $U_\phi(x)|0\rangle$, apply the inverse of $U_\phi(x')$, and measure the probability of returning to $|0\rangle$. If the circuit vocabulary is new, [Circuit Bench 00](../../circuit-bench/00-reading-a-quantum-circuit/README.md) explains gates, unitary rotations, and measurement before you meet them inside the kernel circuit.
+Operationally, this is a circuit experiment. Prepare $U_\phi(x)|00\rangle$, apply the inverse of $U_\phi(x')$, and measure the probability of returning to $|00\rangle$. If the circuit vocabulary is new, [Circuit Bench 00](../../circuit-bench/00-reading-a-quantum-circuit/README.md) explains gates, unitary rotations, and measurement before you meet them inside the kernel circuit.
 
 The hybrid workflow is:
 
@@ -70,19 +78,19 @@ The hybrid workflow is:
 3. assemble the kernel matrix;
 4. train a classical SVM using that precomputed kernel.
 
-The quantum computer is not replacing the whole classifier. It is being used as a kernel-estimation device.
+The quantum device supplies the kernel estimates, and a classical SVM trains on the resulting matrix.
 
-## The companion notebook
+## Build the kernel, then compare it
 
-The notebook builds a deliberately small quantum-kernel workflow:
+The notebook builds a small quantum-kernel workflow:
 
 - generate a two-dimensional half-moons dataset;
 - encode each point into a two-qubit feature map using rotations and entanglement;
 - estimate the kernel matrix by running overlap circuits;
 - train a classical SVM on that quantum kernel;
-- compare it with a classical RBF-kernel SVM.
+- compare it with a classical radial basis function (RBF) kernel SVM.
 
-The kernel circuit has the form:
+Schematically, the kernel circuit has the following form. The notebook itself constructs the corresponding OpenQASM strings rather than Python gate objects:
 
 ```python
 def kernel_circuit(x, xp):
@@ -91,24 +99,27 @@ def kernel_circuit(x, xp):
 
 The measured probability of `00` is the estimated overlap. Repeating that for every pair of training points gives the matrix passed to `SVC(kernel='precomputed')`.
 
-This is a faithful worked example, not an advantage claim. With two features and a small synthetic dataset, a classical RBF kernel is already very strong. The point of the notebook is to make the quantum-kernel workflow concrete enough that the later caveats have somewhere to attach.
+On this fixed data split, the ideal overlap kernel and the classical RBF baseline each classify 11 of the 12 test points. The notebook estimates each overlap from finite shots, so individual runs can move with sampling noise. The comparison supplies a working quantum-kernel pipeline, not evidence of an advantage.
 
-## Reality check
+## Reality check: the classical baseline fights back
 
-Quantum machine learning is one of the easiest areas to oversell, because the words line up too neatly: Hilbert spaces are large, machine learning likes large feature spaces, therefore quantum computers should help. The middle step is where the work is.
+Quantum machine learning is one of the easiest areas to oversell, because the words line up too neatly: quantum state spaces are large, machine learning likes large feature spaces, therefore quantum computers should help. The middle step is where the work is.
 
-There are real theoretical separations. Some constructed classification tasks can be learned more efficiently with quantum kernels than by classical learners under the same access model. That matters, but it does not automatically translate into recommender systems, medical classifiers, or language models.
+Rigorous separations do exist on constructed learning tasks when the learner has direct quantum access to quantum data.[^quantum-learning] That access model does not automatically describe recommender systems, medical classifiers, or language models built from classical records.
 
-There are also real dequantisation results. Several proposed quantum machine-learning speedups became less compelling once classical algorithms were given comparable sampling or data-access assumptions. That does not kill quantum ML. It does make the target smaller and more precise.
+Dequantisation results show the other side. Under length-squared sampling access, classical algorithms can match quantum-inspired performance for tasks such as principal-component analysis and supervised clustering, removing an exponential separation under those assumptions.[^dequantisation] The access model is part of the claim.
 
 The largest practical obstacle is often **data loading**. If a million classical features require a million gates to encode, the quantum feature map may lose before the kernel is ever measured. Quantum advantage is more plausible when the data is already quantum, when the feature map is compact, or when the classical simulation of the kernel circuit is genuinely hard.
 
-So the honest claim is this: quantum kernels are a clean way to ask whether a quantum circuit can define a useful similarity measure. The notebook shows how that question becomes code. It does not show that today's quantum hardware improves practical machine learning.
+The notebook asks a narrower question: can a quantum circuit define and estimate a useful similarity measure? Its half-moons comparison answers the engineering question and leaves the advantage question open.
 
-## Want more?
+## Compare the kernels
 
 The [companion notebook](https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/04-machine-learning.ipynb) lets you compare a two-qubit quantum kernel with a classical RBF kernel on the same toy dataset.
 
+[^quantum-learning]: Huang et al., ["Quantum advantage in learning from experiments"](https://doi.org/10.1126/science.abn7293), *Science*, 2022. The separation concerns constructed tasks with quantum experimental access, not arbitrary classical datasets.
+[^dequantisation]: Chia et al., ["Sampling-Based Sublinear Low-Rank Matrix Arithmetic Framework for Dequantizing Quantum Machine Learning"](https://doi.org/10.1145/3549524), *Journal of the ACM*, 2022.
+
 ---
 
-*This is Unit 4 of The Quantum Bottleneck series. Next up: [The Convergence Wall](bottleneck-05-finance.md) — when Monte Carlo is the only option and every extra digit of accuracy gets expensive.*
+*This is Unit 4 of The Quantum Bottleneck series. Next up: [The Convergence Wall](bottleneck-05-finance.md) — where expectation estimation meets the Monte Carlo square-root law.*

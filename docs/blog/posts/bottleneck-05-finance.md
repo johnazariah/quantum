@@ -12,16 +12,24 @@ tags:
 authors:
 - John Azariah
 social:
-  linkedin: 'Finance runs on Monte Carlo. Option prices, value-at-risk, stress tests: all computed by averaging over many possible futures. Every extra digit of accuracy quadruples the computation. Quantum amplitude estimation promises a quadratic speedup on that convergence rate. This post runs a small option pricing circuit and asks what stands between a toy demo and a real trading desk.
+  linkedin: 'One more decimal digit in classical Monte Carlo costs roughly 100 times as many samples. That convergence law is why quantum amplitude estimation attracts so much attention in finance.
+
+
+    I leave the option price on the classical side in this notebook. Black-Scholes and Monte Carlo supply the real pricing comparison; the compiled quantum circuit reads only the in-the-money fraction on eight uniformly weighted price bins. Calling that quantum option pricing would hide the state-preparation, payoff, and Grover oracles we have not built.
+
+
+    The possible 1/N scaling counts oracle queries. Distribution loading, reversible payoff logic, controlled operations, and fault-tolerant depth still decide whether anything improves back on the trading desk.
 
 
     #QuantumComputing #Finance'
-  bluesky: 'Bottleneck 05: The Convergence Wall. Classical Monte Carlo needs 100x more samples for each extra digit. Quantum amplitude estimation promises quadratic speedup. The bottleneck is everything in between.'
+  bluesky: 'One more decimal digit in Monte Carlo costs about 100 times as many samples. I leave the option price classical; the compiled quantum circuit reads only an eight-bin fraction because the real pricing oracles are not built.'
 ---
 
 # The Convergence Wall
 
-**Finance often asks for an average over possible futures. Classical Monte Carlo is the workhorse for that job, but every extra digit of accuracy is expensive.**
+Finance often asks for an average over possible futures. Classical Monte Carlo is the workhorse for that job, but its error falls only as $1/\sqrt{N}$. One more decimal digit of accuracy therefore needs roughly 100 times as many samples.
+
+Unit 5 keeps the option price classical. Its quantum circuit reads a compiled phase for the fraction of eight uniformly weighted price bins above the strike, exposing the amplitude-estimation mechanism after state preparation and oracle construction have been supplied.
 
 <!-- more -->
 
@@ -31,13 +39,15 @@ That is a good reason Monte Carlo is everywhere in finance. It is flexible, mode
 
 The catch is convergence.
 
-## The bottleneck: square-root accuracy
+## Why the last decimal place costs so much
 
 For a European call option, the quantity of interest is an expectation:
 
 $$
 V = e^{-rT}\mathbb{E}[\max(S_T - K, 0)].
 $$
+
+Here $S_T$ is the stock price at maturity $T$, $K$ is the strike price, and $r$ is the continuously compounded risk-free rate.
 
 The Black-Scholes formula gives a closed-form answer under its assumptions, which makes it a useful benchmark. But the Monte Carlo version is the more general pattern:
 
@@ -53,25 +63,25 @@ $$
 
 where $N$ is the number of sampled scenarios. To halve the error, you need roughly four times as many paths. To gain another decimal digit, you need roughly one hundred times as many paths.
 
-That is the convergence wall. It is not that Monte Carlo is bad. It is that the last bit of accuracy gets brutally expensive.
+Monte Carlo remains flexible and parallel, but its last bit of accuracy is expensive.
 
-## The quantum idea: estimate an amplitude
+## Change the convergence law
 
-Quantum Amplitude Estimation, or QAE, attacks the square-root law. In its ideal form, if a quantum circuit prepares a probability amplitude $a$ encoding the quantity of interest, QAE can estimate $a$ with error scaling like $1/N$ rather than $1/\sqrt{N}$.
+Quantum amplitude estimation (QAE) attacks the square-root law. Given coherent access to a state-preparation unitary and the required Grover-style reflections, QAE can estimate an amplitude $a$ with query error scaling like $1/N$ rather than $1/\sqrt{N}$.[^qae]
 
-That is the famous quadratic improvement.
+That is a quadratic improvement in oracle-query complexity.
 
-The word "if" is doing real work. A finance problem does not arrive already encoded as a clean quantum amplitude. A useful QAE pipeline needs circuits for the uncertainty model, payoff function, comparison threshold, and controlled amplification operator. Those circuits have to be accurate enough that the asymptotic improvement is not eaten by encoding cost.
+A finance problem does not arrive as a clean quantum amplitude. A useful QAE pipeline needs problem-specific circuits, often called oracles, for the uncertainty model, payoff function, comparison threshold, and controlled amplification operator. Their construction cost, depth, and approximation error sit outside the $1/N$ query statement.
 
-The companion notebook therefore narrows the scope. It does not build a production option-pricing oracle. It shows the convergence issue classically, then uses a compiled toy phase-readout circuit to make the QAE mechanism visible.
+The companion notebook shows the convergence issue classically, then uses a compiled phase-readout circuit to make the QAE mechanism visible. A production option-pricing oracle is outside its scope.
 
-If the phase-readout part is the unfamiliar piece, [Circuit Bench 10: Quantum Phase Estimation](../../circuit-bench/10-quantum-phase-estimation/README.md) gives the gate-level pattern: controlled powers, inverse QFT, and a binary phase estimate.
+If the phase-readout part is the unfamiliar piece, [Circuit Bench 10: Quantum Phase Estimation](../../circuit-bench/10-quantum-phase-estimation/README.md) gives the gate-level pattern: controlled powers, an inverse quantum Fourier transform (QFT), and a binary phase estimate.
 
-## The companion notebook
+## What the circuit estimates
 
-The notebook has two deliberately separate halves.
+The notebook has two separate halves.
 
-First, it prices a simple Black-Scholes call option both analytically and by classical Monte Carlo. This gives you the baseline and the convergence picture:
+First, it prices a simple Black-Scholes call option both analytically and by classical Monte Carlo. Schematically, the convergence loop is:
 
 ```python
 for n_paths in path_counts:
@@ -79,22 +89,20 @@ for n_paths in path_counts:
     error = abs(estimate - black_scholes_price)
 ```
 
-Second, it switches to a toy quantum proxy. Instead of encoding the full payoff distribution, it discretises the terminal-price model into a binary exercise-probability question: is the option in the money or not? That probability is mapped onto a three-bit phase grid, and a compiled amplitude-estimation-style circuit reads out the corresponding phase.
+Second, it switches to a toy quantum proxy. It divides a price range into eight uniformly weighted bins, marks the bins whose centres are above the strike, and computes the in-the-money fraction. That grid fraction is mapped onto a three-bit phase, and a compiled amplitude-estimation-style circuit reads it out. It is not a market-weighted exercise probability.
 
-That scope is important:
+The boundary is explicit:
 
 - the notebook uses Black-Scholes and Monte Carlo for the actual option-pricing baseline;
-- the quantum circuit estimates a discretised exercise-probability proxy, not the full discounted payoff;
+- the quantum circuit estimates the in-the-money fraction on a uniform eight-bin price grid, not a market-weighted probability or the full discounted payoff;
 - the amplitude-estimation circuit is compiled from the known proxy value;
 - the state-preparation, payoff, and controlled-Grover oracles are not constructed.
 
-So the notebook is not claiming to quantum-price an option. It is showing why Monte Carlo convergence hurts, and what kind of phase-estimation readout sits inside QAE once the hard oracle-building work has been done.
+The option price remains a classical benchmark. The circuit shows the phase-estimation readout inside QAE after the hard oracle-building work has been compiled away.
 
-## Reality check
+## Reality check: pay for the oracle
 
-The finance story is tempting to oversell because the asymptotic improvement is real and easy to state. Quadratic speedups are valuable in a domain that spends huge resources on Monte Carlo.
-
-But useful quantum finance has to pay for the whole pipeline.
+The asymptotic improvement is real, and a useful finance implementation must still pay for the whole pipeline.
 
 First, the probability distribution must be loaded or generated coherently. If preparing the market model costs too much, the algorithm loses before estimation starts.
 
@@ -102,11 +110,13 @@ Second, the payoff must be encoded reversibly. Real derivatives can have path de
 
 Third, amplitude estimation usually needs deeper controlled circuits than near-term hardware can run reliably. The cleanest version is a fault-tolerant algorithm, not a shallow demonstration circuit.
 
-The honest claim is therefore narrow but worth understanding: QAE changes the scaling of expectation estimation once a suitable quantum encoding exists. The notebook shows the convergence wall and the phase-readout mechanism in miniature. The bottleneck is building the full financial oracle cheaply enough for that scaling to matter.
+Once a suitable coherent encoding exists, QAE changes the query scaling of expectation estimation. Practical value depends on building that encoding and its controlled operations cheaply enough for the scaling improvement to survive end to end.
 
-## Want more?
+## Follow the convergence
 
 The [companion notebook](https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/05-finance.ipynb) lets you compare Black-Scholes, Monte Carlo convergence, and a compiled three-bit amplitude-estimation proxy. For the phase-estimation circuit pattern underneath the proxy, see [Circuit Bench 10 — Quantum Phase Estimation](../../circuit-bench/10-quantum-phase-estimation/README.md).
+
+[^qae]: Brassard et al., ["Quantum Amplitude Amplification and Estimation"](https://doi.org/10.1090/conm/305/05215), *Contemporary Mathematics*, 2002. The quadratic improvement counts calls to the state-preparation and amplification oracles; it is not an end-to-end runtime guarantee.
 
 ---
 
