@@ -13,6 +13,10 @@ Then we put the trucks back in. A real routing model adds variables, constraints
 
 This is the first post in an eight-part series about where quantum algorithms might help, where they plainly do not yet, and what the runnable toy examples actually teach us.
 
+This first post is dedicated to Dave Fellows: https://www.linkedin.com/in/dave-fellows-3a6b9a17/
+
+My friend, mentor and a boss who stood up for me when no one else would. You encouraged me when I told you I was writing a book on quantum computing, and this is a step in that direction.
+
 #QuantumComputing #Logistics
 
 ### Bluesky
@@ -28,6 +32,10 @@ Shor's algorithm is usually introduced as the quantum algorithm that factors num
 N=15 and a=7 earn their place because every arithmetic step fits on the page. The notebook compiles one known phase branch, reads 1/4 as 010, recovers period 4 with continued fractions, and obtains 3 and 5 with greatest-common-divisor arithmetic.
 
 At cryptographic scale, all the omitted machinery returns. A real implementation still needs reversible modular exponentiation, error correction, and millions of physical qubits. Factoring 15 is the transparent example; those missing resources are the reason RSA is not falling to today's hardware.
+
+This post is for Simon Middlemiss: https://www.linkedin.com/in/simon-middlemiss-3959b12/
+
+In memory of that glorious talk we did together in Las Vegas in 2019. Truly one of the very best!
 
 #QuantumComputing #Cryptography
 

@@ -22,11 +22,19 @@ social:
     At cryptographic scale, all the omitted machinery returns. A real implementation still needs reversible modular exponentiation, error correction, and millions of physical qubits. Factoring 15 is the transparent example; those missing resources are the reason RSA is not falling to today''s hardware.
 
 
+    This post is for Simon Middlemiss: https://www.linkedin.com/in/simon-middlemiss-3959b12/
+
+
+    In memory of that glorious talk we did together in Las Vegas in 2019. Truly one of the very best!
+
+
     #QuantumComputing #Cryptography'
   bluesky: 'Shor''s algorithm is usually introduced as a factoring algorithm. I chose N=15 because it makes the more useful move visible: a quantum circuit exposes a period, then classical arithmetic turns that period into factors.'
 ---
 
 # The Trapdoor
+
+*For [Simon Middlemiss](https://www.linkedin.com/in/simon-middlemiss-3959b12/), in memory of that glorious talk we did together in Las Vegas in 2019! Truly one of the very best!*
 
 The Rivest-Shamir-Adleman (RSA) cryptosystem publishes a number $N = pq$ while keeping its prime factors $p$ and $q$ secret. Multiplying the primes is routine; no efficient classical algorithm is known for recovering them from a suitably large product.
 

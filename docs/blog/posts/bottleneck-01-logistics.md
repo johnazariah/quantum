@@ -22,6 +22,10 @@ social:
 
     This is the first post in an eight-part series about where quantum algorithms might help, where they plainly do not yet, and what the runnable toy examples actually teach us.
 
+    This first post is dedicated to Dave Fellows: https://www.linkedin.com/in/dave-fellows-3a6b9a17/
+
+    My friend, mentor and a boss who stood up for me when no one else would. You encouraged me when I told you I was writing a book on quantum computing, and this is a step in that direction.
+
     #QuantumComputing #Logistics
   bluesky: 'UPS says one mile less per driver per day can save up to $50M a year. I use an eight-solution triangle to keep every QAOA step visible, then put the trucks back in and ask what survives at logistics scale.'
 ---
