@@ -24,6 +24,16 @@ The linear algebra behind quantum computing and machine learning. Each post buil
 - [The Eigensolver Zoo](blog/2026/07/21/the-eigensolver-zoo/) — every eigensolver is a function of the operator; this post surveys the classical half.
 - [What a Difference *i* Makes](blog/2026/07/24/what-a-difference-i-makes/) — insert a factor of *i* and stretch becomes rotation. The quantum eigensolvers.
 
+### The Quantum Bottleneck
+
+In *The Quantum Bottleneck*, I begin with problems that already cost industries real money, then follow each one down to the mathematical obstruction and the circuit proposed to address it. Every post has a runnable notebook and a reality check against the classical methods and hardware limits that remain.
+
+- [The $50M Delivery Route](blog/2026/07/27/the-50m-delivery-route/) — UPS can save up to $50 million a year by removing one mile from each driver's daily route. We use a three-node MaxCut problem to inspect the complete QAOA loop before putting the trucks back in.
+- [Series overview and companion notebooks](bottleneck/) — the full eight-part path, publishing every Monday and Wednesday through 19 August.
+- [Circuit Bench](circuit-bench/) — thirteen circuit notes with diagrams, OpenQASM, expected output, and gate-by-gate explanations for the machinery used throughout the series.
+
+Next up: **The Trapdoor** on 29 July — Shor's algorithm viewed as period-finding rather than a black-box factoring trick.
+
 ### From Saturday to Co-Author
 
 How a functional programmer went from "what is QAOA?" on a Saturday morning to co-author on a quantum computing paper, eight weeks later. Written in Julia and grounded in functional programming.
