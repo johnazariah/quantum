@@ -1,6 +1,6 @@
 # Learning Path
 
-A guided route through the recipes, from zero to quantum algorithms. Follow this if you're new and want a structured progression.
+A guided route through the Circuit Bench, from zero to quantum algorithms. Follow this if you're new and want a structured progression.
 
 ---
 
@@ -8,10 +8,11 @@ A guided route through the recipes, from zero to quantum algorithms. Follow this
 
 *What's a qubit? What's a gate? What does measurement mean?*
 
-These recipes build your intuition for the three things that make quantum computing different: **superposition**, **entanglement**, and **measurement**.
+These circuit notes build your intuition for the machinery behind quantum computing: **gates**, **measurement bases**, **superposition**, **entanglement**, and **measurement**.
 
-| Order | Recipe | Key concept |
+| Order | Circuit note | Key concept |
 |-------|--------|-------------|
+| 0 | [Reading a Quantum Circuit](recipes/00-reading-a-quantum-circuit/README.md) | Gates, Bloch sphere, unitary rotation, and measurement bases |
 | 1 | [Bell State](recipes/01-bell-state/README.md) | Entanglement — two qubits, perfectly correlated |
 | 2 | [Teleportation](recipes/02-teleportation/README.md) | Using entanglement as a resource to transmit quantum information |
 | 3 | [Deutsch-Jozsa](recipes/03-deutsch-jozsa/README.md) | Your first quantum speedup — interference as computation |
@@ -27,7 +28,7 @@ These recipes build your intuition for the three things that make quantum comput
 
 *How do you extract information from a quantum system?*
 
-| Order | Recipe | Key concept |
+| Order | Circuit note | Key concept |
 |-------|--------|-------------|
 | 4 | [Bernstein-Vazirani](recipes/04-bernstein-vazirani/README.md) | Querying a hidden structure with one question |
 | 5 | [Simon's Problem](recipes/05-simons-problem/README.md) | Exponential speedup from structure in a function |
@@ -44,7 +45,7 @@ These recipes build your intuition for the three things that make quantum comput
 
 *What can you actually compute?*
 
-| Order | Recipe | Key concept |
+| Order | Circuit note | Key concept |
 |-------|--------|-------------|
 | 7 | [QAOA for MaxCut](recipes/07-qaoa-maxcut/README.md) | Variational optimization on a graph |
 | 8 | [VQE for H₂](recipes/08-vqe-h2/README.md) | Finding the ground-state energy of a molecule |
@@ -61,7 +62,7 @@ These recipes build your intuition for the three things that make quantum comput
 
 *Advanced techniques for when you want the full picture.*
 
-| Order | Recipe | Key concept |
+| Order | Circuit note | Key concept |
 |-------|--------|-------------|
 | 10 | [Quantum Phase Estimation](recipes/10-quantum-phase-estimation/README.md) | Precision measurement of eigenvalues |
 | 11 | [Error Mitigation (ZNE)](recipes/11-error-mitigation-zne/README.md) | Making noisy results useful |
@@ -71,6 +72,6 @@ These recipes build your intuition for the three things that make quantum comput
 
 ## Philosophy
 
-Each stage builds on the previous one, but every recipe is self-contained. If you already understand entanglement, skip to Stage 2. If you're here for VQE, jump straight to Stage 3 — links to prerequisite concepts are built into every recipe.
+Each stage builds on the previous one, but every circuit note is self-contained. If you already understand entanglement, skip to Stage 2. If you're here for VQE, jump straight to Stage 3 — links to prerequisite concepts are built into every note.
 
 The goal is **understanding**, not coverage. We'd rather you deeply grasp six circuits than skim twenty.

@@ -7,7 +7,7 @@ Usage:
     # Run a QASM string
     results = run_qasm("OPENQASM 2.0; ...", shots=1024)
 
-    # Run a .qasm file from the recipes folder
+    # Run a .qasm file from the Circuit Bench source directory
     results = run_qasm_file("../recipes/01-bell-state/bell.qasm", shots=1024)
 """
 

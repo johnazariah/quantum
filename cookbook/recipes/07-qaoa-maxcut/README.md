@@ -1,6 +1,8 @@
 # Circuit Bench 07: QAOA for MaxCut
 
-## What are we making?
+<span id="what-are-we-making"></span>
+
+## What this circuit does
 
 A three-qubit QAOA circuit for **MaxCut on a triangle**.
 
@@ -8,7 +10,9 @@ If you came here from [The $50M Delivery Route](../../blog/posts/bottleneck-01-l
 
 QAOA is a **variational quantum algorithm**. A quantum circuit prepares a probability distribution over candidate solutions; a classical optimiser chooses the circuit angles that make better solutions more likely. In this circuit note we use fixed angles that are already tuned for the triangle, so you can inspect the circuit without also building the optimiser.
 
-## What you need
+<span id="what-you-need"></span>
+
+## Circuit components
 
 - 3 qubits, one per graph node
 - Hadamard gates (`h`)
@@ -196,7 +200,9 @@ In an ideal simulation with the fixed angles above, the six optimal bit strings 
 
 Shot noise means your exact counts will vary. The important thing to check is not the order of the bit strings; it is whether the samples are concentrated on cuts with value 2.
 
-## Deep dive
+<span id="deep-dive"></span>
+
+## Analysis
 
 ### Why the CNOT-RZ-CNOT block is a ZZ phase
 
@@ -232,7 +238,9 @@ This note freezes the loop at one good pair of angles so the circuit is readable
 
 The companion notebook runs the same idea in a more workbook-like form: it builds the graph, brute-forces the answer, constructs QASM, samples the circuit, and sweeps the parameter landscape.
 
-## Notes
+<span id="notes"></span>
+
+## Practical notes
 
 - **This is a circuit note, not an advantage claim.** The triangle does not need a quantum computer. It is small enough to expose the mechanism.
 - **The angles are convention-dependent.** If you change signs, factors of two, or edge-order conventions, the best numerical angles can change.

@@ -1,12 +1,16 @@
 # Circuit Bench 04: Bernstein-Vazirani
 
-## What are we making?
+<span id="what-are-we-making"></span>
+
+## What this circuit does
 
 An algorithm that discovers a hidden binary string in a single query. Someone has picked a secret $n$-bit string $s$, and they've given you a black box that computes $f(x) = s \cdot x \mod 2$ — the bitwise inner product of $x$ with $s$. Your job: find $s$.
 
 Classically, you need $n$ queries (one per bit — feed in $100\ldots0$, $010\ldots0$, etc.). The Bernstein-Vazirani algorithm finds all $n$ bits in **one query**. Same circuit structure as Deutsch-Jozsa, deeper question.
 
-## Ingredients
+<span id="ingredients"></span>
+
+## Circuit components
 
 - 4 qubits (3 input + 1 ancilla)
 - Hadamard gates (`h`)
@@ -35,7 +39,9 @@ Classically, you'd query $x = 100$ to learn $s_0$, $x = 010$ to learn $s_1$, and
 
 Quantum mechanically: one query. You ask *all inputs simultaneously* and read $s$ directly from the interference pattern.
 
-## Method
+<span id="method"></span>
+
+## Circuit walkthrough
 
 ### Step 1: Prepare the ancilla
 
@@ -135,7 +141,9 @@ As a circuit diagram:
 
 ![Bernstein-Vazirani circuit](circuit.png)
 
-## Taste test
+<span id="taste-test"></span>
+
+## Run it
 
 Paste `bernstein_vazirani.qasm` into your Quokka. You should see:
 
@@ -153,7 +161,9 @@ The hidden string $s = 101$ is recovered with certainty in one query.
     - **$s = 111$:** Use all three CNOTs
     - **$s = 000$:** No CNOTs at all → output is $|000\rangle$ (like Deutsch-Jozsa constant)
 
-## Deep dive
+<span id="deep-dive"></span>
+
+## Analysis
 
 ??? abstract "Proof of correctness for general $n$"
 
@@ -220,7 +230,9 @@ The hidden string $s = 101$ is recovered with certainty in one query.
 
     This is the simplest possible oracle structure, which is why Bernstein-Vazirani is the cleanest demonstration of the general Fourier sampling paradigm.
 
-## Chef's notes
+<span id="chefs-notes"></span>
+
+## Practical notes
 
 - **Classical query complexity.** A deterministic classical algorithm needs exactly $n$ queries; each query $x = e_i$ reveals one bit $s_i$. A randomised classical algorithm also needs $\Omega(n)$ queries (with bounded error). The quantum advantage here is a polynomial $n \to 1$ speedup, not exponential — but it's *exact* (zero error, one query).
 

@@ -1,7 +1,7 @@
-# Desserts
+<span id="desserts"></span>
 
-*Coming soon.*
+# Advanced techniques
 
-Phase estimation, quantum counting, and the techniques that power the big algorithms.
+These Circuit Bench notes are now published. See [Advanced techniques](index.md#advanced-techniques) for phase estimation, error mitigation, and quantum counting.
 
-Check back, or [watch the repo](https://github.com/johnazariah/quantum) for updates.
+[Watch the repository](https://github.com/johnazariah/quantum) for future additions.

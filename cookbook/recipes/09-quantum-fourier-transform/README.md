@@ -28,7 +28,9 @@ For this circuit, $n = 3$ and $N = 8$. Every output basis state has probability 
 
 That is the first important lesson: **a standalone QFT on a basis state looks uniform when measured.**
 
-## What you need
+<span id="what-you-need"></span>
+
+## Prerequisites
 
 If gates, measurement, and basis changes are new, start with [Circuit Bench 00: Reading a Quantum Circuit](../00-reading-a-quantum-circuit/README.md).
 

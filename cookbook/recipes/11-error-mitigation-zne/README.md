@@ -1,12 +1,16 @@
 # Circuit Bench 11: Error Mitigation (ZNE)
 
-## What are we making?
+<span id="what-are-we-making"></span>
+
+## What this circuit does
 
 A technique to **reduce the effect of hardware noise** on quantum circuit results — without any additional qubits. **Zero-Noise Extrapolation (ZNE)** is the simplest and most widely-used error mitigation method: run the same circuit at multiple noise levels, then extrapolate backward to estimate what the result would be at zero noise.
 
 This isn't error *correction* (which requires massive overhead). It's error *mitigation* — a practical trick for making noisy results more useful right now.
 
-## Ingredients
+<span id="ingredients"></span>
+
+## Circuit components
 
 - 1–2 qubits
 - Hadamard gates (`h`)
@@ -38,7 +42,9 @@ The key insight: if you can make the noise **worse** in a controlled way, you ca
 
 The simplest option: linear extrapolation with two points. Better: Richardson extrapolation with three or more points.
 
-## Method
+<span id="method"></span>
+
+## Circuit walkthrough
 
 We'll demonstrate ZNE on the simplest possible circuit: prepare $|+\rangle$ and measure $\langle X \rangle$. The ideal answer is $\langle X \rangle = 1.0$.
 
@@ -106,7 +112,9 @@ Three QASM files, one per noise scale:
 
 ![ZNE circuits](circuit.png)
 
-## Taste test
+<span id="taste-test"></span>
+
+## Run it
 
 Run all three circuits on your Quokka. On a **perfect simulator**, all three give $|0\rangle$ every time ($\langle X \rangle = 1.0$). The technique only shows its value on **noisy hardware**.
 
@@ -127,7 +135,9 @@ Both are closer to the ideal ($1.0$) than the raw $0.89$. Not perfect — but yo
 !!! tip "Apply this to any circuit note"
     ZNE works on any circuit. To mitigate Circuit Bench 01 (Bell State), for example, replace the CNOT with three CNOTs (CX·CX·CX = CX) for $\lambda = 3$, and five for $\lambda = 5$. Then extrapolate the correlation measurement.
 
-## Deep dive
+<span id="deep-dive"></span>
+
+## Analysis
 
 ??? abstract "The noise model: depolarizing channels"
 
@@ -201,7 +211,9 @@ Both are closer to the ideal ($1.0$) than the raw $0.89$. Not perfect — but yo
 
     For practical VQE-style circuits (tens to low hundreds of gates), ZNE typically improves results by 10–50%.
 
-## Chef's notes
+<span id="chefs-notes"></span>
+
+## Practical notes
 
 - **This is the most practical Circuit Bench note.** Most other notes assume near-perfect execution. This one deals with reality. If you're running on real hardware, ZNE is your first line of defense.
 

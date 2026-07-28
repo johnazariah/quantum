@@ -23,7 +23,15 @@ No framework boilerplate. No 47 imports. Just circuits, explained.
 | 01 | [Bell State](recipes/01-bell-state/) | Entanglement, measurement correlation |
 | 02 | [Teleportation](recipes/02-teleportation/) | Classical feedback, the teleportation protocol |
 | 03 | [Deutsch-Jozsa](recipes/03-deutsch-jozsa/) | Oracles, quantum speedup, interference |
-| ... | More coming | New notes as the workbooks need them |
+| 04 | [Bernstein-Vazirani](recipes/04-bernstein-vazirani/) | Hidden string discovery in one query |
+| 05 | [Simon's Problem](recipes/05-simons-problem/) | Hidden periods and Fourier sampling |
+| 06 | [Grover's Search](recipes/06-grovers-search/) | Unstructured search and amplitude amplification |
+| 07 | [QAOA for MaxCut](recipes/07-qaoa-maxcut/) | Variational optimisation on a graph |
+| 08 | [VQE for H2](recipes/08-vqe-h2/) | Quantum chemistry and measurement workflows |
+| 09 | [Quantum Fourier Transform](recipes/09-quantum-fourier-transform/) | Fourier structure on a quantum register |
+| 10 | [Quantum Phase Estimation](recipes/10-quantum-phase-estimation/) | Eigenphase extraction |
+| 11 | [Error Mitigation (ZNE)](recipes/11-error-mitigation-zne/) | Noise scaling and extrapolation |
+| 12 | [Quantum Counting](recipes/12-quantum-counting/) | Counting solutions with Grover and QPE |
 
 ## How to use this repo
 

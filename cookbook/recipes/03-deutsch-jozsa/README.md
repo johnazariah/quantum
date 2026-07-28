@@ -1,14 +1,18 @@
 # Circuit Bench 03: Deutsch-Jozsa
 
-## What are we making?
+<span id="what-are-we-making"></span>
 
-An algorithm that answers a yes-or-no question about a function in **one query** — a question that classically requires up to $2^{n-1}+1$ queries in the worst case. This is your first taste of exponential quantum speedup.
+## What this circuit does
+
+An algorithm that answers a yes-or-no question about a function in **one query** — a question that classically requires up to $2^{n-1}+1$ queries in the worst case. This is the first Circuit Bench example of an exponential separation in deterministic query complexity.
 
 Here's the setup: someone gives you a black box (an "oracle") that computes a function $f:\{0,1\}^n \to \{0,1\}$. You're promised that $f$ is either **constant** (same output for all inputs) or **balanced** (outputs 0 for exactly half the inputs, 1 for the other half). Which is it?
 
 Classically, you might need to check just over half the inputs before you know. Quantumly: one shot.
 
-## Ingredients
+<span id="ingredients"></span>
+
+## Circuit components
 
 - 3 qubits (2 input + 1 ancilla)
 - Hadamard gates (`h`)
@@ -44,7 +48,9 @@ With 2 bits, a classical algorithm needs at most 3 queries to be certain (if the
 
 The Deutsch-Jozsa algorithm: one query, any $n$, 100% correct.
 
-## Method
+<span id="method"></span>
+
+## Circuit walkthrough
 
 We'll run two versions: one with a **constant** oracle ($f(x) = 0$, does nothing) and one with a **balanced** oracle ($f(x) = x_0 \oplus x_1$, XOR of the input bits). The same algorithm, different oracles, different results.
 
@@ -218,7 +224,9 @@ q[1] : ─── H ──────│──●─ H ─── M
 q[2] : ─ X ─ H ────X──X──────────
 ```
 
-## Taste test
+<span id="taste-test"></span>
+
+## Run it
 
 Paste each circuit into your Quokka:
 
@@ -236,7 +244,9 @@ Always `11` — not `00`, so the function is balanced. ✓
 
 **Try it:** Modify the balanced oracle. Replace `cx q[0], q[2]; cx q[1], q[2];` with just `cx q[0], q[2];` (implementing $f(x) = x_0$). This is also balanced. What do you get? (Spoiler: `10` — still not `00`, so the algorithm correctly identifies it.)
 
-## Deep dive
+<span id="deep-dive"></span>
+
+## Analysis
 
 ??? abstract "Phase kickback — the mechanism behind the magic"
 
@@ -309,7 +319,9 @@ Always `11` — not `00`, so the function is balanced. ✓
 
     The Deutsch-Jozsa algorithm is historically important: it was the first problem shown to have an exponential quantum speedup (in the query model). It directly inspired Simon's algorithm (Circuit Bench 05), which in turn inspired Shor's algorithm for factoring.
 
-## Chef's notes
+<span id="chefs-notes"></span>
+
+## Practical notes
 
 - **Phase kickback is the technique to internalise.** It appears in nearly every quantum algorithm: Bernstein-Vazirani, Simon, Grover, QPE. If you understand why the $|{-}\rangle$ ancilla converts bit flips to phases, you understand a core piece of quantum computing.
 

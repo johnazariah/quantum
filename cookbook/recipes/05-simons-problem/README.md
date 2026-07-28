@@ -1,12 +1,16 @@
 # Circuit Bench 05: Simon's Problem
 
-## What are we making?
+<span id="what-are-we-making"></span>
+
+## What this circuit does
 
 An algorithm that finds a hidden period in a function — with exponentially fewer queries than any classical algorithm. You're given a black-box function $f: \{0,1\}^n \to \{0,1\}^n$ with the promise that there exists a secret string $s$ such that $f(x) = f(y)$ if and only if $x = y$ or $x = y \oplus s$. Your job: find $s$.
 
 Classically, this requires $\Omega(2^{n/2})$ queries (birthday paradox). Simon's algorithm solves it in $O(n)$ quantum queries. This is the first **exponential** quantum speedup that works even against randomised classical algorithms, and it's the conceptual ancestor of Shor's factoring algorithm.
 
-## Ingredients
+<span id="ingredients"></span>
+
+## Circuit components
 
 - 4 qubits (2 input + 2 output)
 - Hadamard gates (`h`)
@@ -34,7 +38,9 @@ Notice: $f(00) = f(11)$ and $00 \oplus 11 = 11 = s$. Similarly, $f(01) = f(10)$ 
 
 **Quantum:** Each run of Simon's algorithm produces a random string $z$ satisfying $s \cdot z = 0 \mod 2$. After $O(n)$ runs, you have enough linear equations to solve for $s$ by Gaussian elimination.
 
-## Method
+<span id="method"></span>
+
+## Circuit walkthrough
 
 ### Step 1: Superposition on the input register
 
@@ -136,7 +142,9 @@ As a circuit diagram:
 
 ![Simon's Problem circuit](circuit.png)
 
-## Taste test
+<span id="taste-test"></span>
+
+## Run it
 
 Paste `simons.qasm` into your Quokka. You should see:
 
@@ -148,7 +156,9 @@ Only $00$ and $11$ appear — both satisfy $s \cdot z = 0$ for $s = 11$. You nev
 
 From the non-trivial sample $z = 11$: $s_0 \oplus s_1 = 0 \Rightarrow s = 11$. ✓
 
-## Deep dive
+<span id="deep-dive"></span>
+
+## Analysis
 
 ??? abstract "Why the output register doesn't need to be measured"
 
@@ -219,7 +229,9 @@ From the non-trivial sample $z = 11$: $s_0 \oplus s_1 = 0 \Rightarrow s = 11$. �
 
     The Gaussian elimination step is classical and runs in $O(n^3)$ time — negligible compared to the oracle queries.
 
-## Chef's notes
+<span id="chefs-notes"></span>
+
+## Practical notes
 
 - **This is the first exponential quantum speedup that beats randomness.** Deutsch-Jozsa and Bernstein-Vazirani beat *deterministic* classical algorithms but can be matched by randomised ones (up to constant factors). Simon's algorithm beats everything classical by an exponential factor. This is what made the community take quantum computing seriously.
 

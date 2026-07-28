@@ -85,4 +85,4 @@ We use standard Dirac notation throughout the Circuit Bench:
 | $\otimes$ | Tensor product (combining systems) |
 | $\langle \psi \| \phi \rangle$ | Inner product / overlap |
 
-If the notation in a circuit note ever feels unfamiliar, check back here or follow the links in the note's "What you need" section.
+If the notation in a circuit note ever feels unfamiliar, check back here or follow the prerequisite links near the start of the note.
