@@ -3,17 +3,15 @@ hide:
   - navigation
 ---
 
-<span id="the-quokka-cookbook"></span>
+# The Quokka Cookbook
 
-# Circuit Bench
-
-**Quantum circuit notes you can actually run.**
+**Quantum computing recipes you can actually run.**
 
 ---
 
 ## What is this?
 
-A growing collection of self-contained quantum circuit notes — each one explains a concept from the ground up, builds a circuit step by step, and gives you a working [OpenQASM 2.0](https://openqasm.com/) program you can run on your [Quokka](https://www.quokkacomputing.com/).
+A growing collection of self-contained quantum computing recipes — each one explains a concept from the ground up, builds a circuit step by step, and gives you a working [OpenQASM 2.0](https://openqasm.com/) program you can run on your [Quokka](https://www.quokkacomputing.com/).
 
 No framework bloat. No 47 imports. No prerequisites beyond curiosity. Just circuits, explained — then executed.
 
@@ -21,7 +19,7 @@ No framework bloat. No 47 imports. No prerequisites beyond curiosity. Just circu
 
 Most quantum computing resources teach you qubits and gates, then leave you stranded somewhere around phase kickback wondering *why you should care*.
 
-We do it the other way around. Each circuit note starts with a **problem** — something concrete and interesting — then builds the quantum circuit that solves it. Theory arrives when it's useful, not when it's scheduled. Phase kickback shows up when it saves you a measurement, not because it's Chapter 3.
+We do it the other way around. Each recipe starts with a **problem** — something concrete and interesting — then builds the quantum circuit that solves it. Theory arrives when it's useful, not when it's scheduled. Phase kickback shows up when it saves you a measurement, not because it's Chapter 3.
 
 The goal is **understanding through doing**. If you can read a `for` loop, you can read a quantum circuit. And if you can run one, you'll understand it better than if you'd read ten pages of formalism.
 
@@ -41,32 +39,29 @@ The goal is **understanding through doing**. If you can read a `for` loop, you c
 
     ---
 
-    Quokka runs standard [OpenQASM 2.0](https://openqasm.com/) — no proprietary language, no SDK lock-in. Every Circuit Bench program is a plain text `.qasm` file. What you learn here works everywhere.
+    Quokka runs standard [OpenQASM 2.0](https://openqasm.com/) — no proprietary language, no SDK lock-in. Every recipe in this cookbook is a plain text `.qasm` file. What you learn here works everywhere.
 
 </div>
 
-<span id="whats-coming"></span>
+## What's coming
 
-## Circuit Bench structure
+We're releasing recipes regularly, building from the fundamentals to real applications. Each recipe is a self-contained blog post with a runnable circuit.
 
-The published notes progress from the fundamentals to algorithms, applications, and advanced techniques. Each note is self-contained and includes a runnable circuit.
-
-| | Circuit Bench section | What you'll learn |
+| | Course | What you'll learn |
 |---|--------|-------------------|
-| **Foundations** | Circuit literacy, Bell state, teleportation, Deutsch-Jozsa | Gates, bases, entanglement, measurement, your first quantum speedup |
-| **Algorithms and applications** | Bernstein-Vazirani, Simon, Grover, QAOA, VQE, QFT | Oracles, search, optimisation, molecular simulation |
-| **Advanced techniques** | Phase estimation, error mitigation, quantum counting | The techniques that power the big algorithms |
+| **Appetizers** | Bell state, teleportation, Deutsch-Jozsa | Entanglement, measurement, your first quantum speedup |
+| **Mains** | Bernstein-Vazirani, Simon, Grover, QAOA, VQE, QFT | Oracles, search, optimisation, molecular simulation |
+| **Desserts** | Phase estimation, error mitigation, quantum counting | The techniques that power the big algorithms |
 
-!!! tip "How each circuit note works"
+!!! tip "How each recipe works"
 
-    Where a section applies, circuit notes use a shared structure:
+    Every recipe follows the same structure:
 
-    1. **What this circuit does** — the problem and goal, in plain language
-    2. **Circuit components or prerequisites** — the required qubits, gates, and prior concepts
-    3. **Circuit walkthrough** — the circuit, built incrementally with explanation at every step
-    4. **The complete circuit** — the runnable OpenQASM program in one place
-    5. **Run it** — execute the circuit, observe the output, and interpret the result
-    6. **Analysis and practical notes** — derivations, limitations, connections, and next experiments
+    1. **What are we making?** — the problem, in plain language
+    2. **Ingredients** — what you need to know (with links if you need a refresher)
+    3. **Method** — the circuit, built incrementally with explanation at every step
+    4. **Taste test** — run it on your Quokka, see the output, interpret the results
+    5. **Chef's notes** — gotchas, deeper connections, and what to try next
 
 ## Who is this for?
 
@@ -79,7 +74,7 @@ No physics degree required. We introduce every concept when it's needed, in the 
 
 ## Stay in the loop
 
-New circuit notes appear as the workbooks need them. [Watch the repo on GitHub](https://github.com/johnazariah/quantum) to get notified, or check back here.
+Recipes drop regularly. [Watch the repo on GitHub](https://github.com/johnazariah/quantum) to get notified, or check back here.
 
 <div class="grid cards" markdown>
 
@@ -103,7 +98,7 @@ New circuit notes appear as the workbooks need them. [Watch the repo on GitHub](
 
     ---
 
-    Found a typo? Want to suggest a circuit note? Every note is a PR away.
+    Found a typo? Want to suggest a recipe? Every recipe is a PR away.
 
     [:octicons-arrow-right-24: GitHub](https://github.com/johnazariah/quantum)
 
@@ -111,24 +106,23 @@ New circuit notes appear as the workbooks need them. [Watch the repo on GitHub](
 
     ---
 
-    The quantum computing puck these circuit notes are built for.
+    The quantum computing puck these recipes are built for.
 
     [:octicons-arrow-right-24: quokkacomputing.com](https://www.quokkacomputing.com/)
 
 </div>
 
-<span id="run-the-recipes-no-hardware-required"></span>
+## Run the recipes — no hardware required
 
-## Run the circuits — no hardware required
-
-You don't need to own a Quokka puck. [Sign up at quokkacomputing.com](https://www.quokkacomputing.com/get-started) to get a Google Colab notebook that connects to one of six cloud Quokkas — paste in any Circuit Bench `.qasm` file, run the cell, and see the results.
+You don't need to own a Quokka puck. [Sign up at quokkacomputing.com](https://www.quokkacomputing.com/get-started) to get a Google Colab notebook that connects to one of six cloud Quokkas — paste in any `.qasm` file from this cookbook, run the cell, and see the results.
 
 !!! note "Other ways to run QASM"
-    Every circuit note uses standard OpenQASM 2.0. You can also run the programs for free on:
+    Every recipe is a standard OpenQASM 2.0 file. You can also run them for free on:
 
     - **[IBM Quantum](https://quantum.ibm.com/)** — free account, paste QASM into the Composer, run on simulators or real 127-qubit hardware
     - **[Quirk](https://algassert.com/quirk)** — instant drag-and-drop circuit simulator in the browser (no QASM paste, but great for visual intuition)
 
     Your learning is portable. What you build here works everywhere.
 
-Every `.qasm` file on the Circuit Bench is a valid OpenQASM 2.0 program. If you outgrow Quokka, the same files run on IBM Quantum, Qiskit, or any other QASM-compatible platform.
+Every `.qasm` file in this cookbook is a valid OpenQASM 2.0 program. If you outgrow Quokka, the same files run on IBM Quantum, Qiskit, or any other QASM-compatible platform.
+

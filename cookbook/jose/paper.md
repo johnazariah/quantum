@@ -1,5 +1,5 @@
 ---
-title: 'Circuit Bench: Application-Oriented Quantum Computing Notes with Executable Circuits'
+title: 'The Quokka Cookbook: Application-Oriented Quantum Computing Recipes with Executable Circuits'
 tags:
   - quantum computing
   - quantum algorithms
@@ -26,29 +26,26 @@ bibliography: paper.bib
 
 # Summary
 
-Circuit Bench is an open-source collection of thirteen self-contained
-quantum circuit notes, each built around a concrete computational
+The Quokka Cookbook is an open-source collection of twelve self-contained
+quantum computing recipes, each built around a concrete computational
 problem and a working OpenQASM\ 2.0 circuit that runs on Quokka — a
 30-qubit quantum computing system designed for education and
 exploration\ [@quokka2025].  The resource takes an **application-down**
-approach: every circuit note starts with a problem worth solving, builds
-the circuit that solves it step by step, and introduces theory only at
-the point where it becomes necessary.
+approach: every recipe starts with a problem worth solving, builds the
+circuit that solves it step by step, and introduces theory only at the
+point where it becomes necessary.
 
-The thirteen notes are organized into three progressive tiers:
+The twelve recipes are organized into three progressive tiers:
 
-1. **Foundations** — the fundamental building blocks of quantum
+1. **Appetizers** — the fundamental building blocks of quantum
    computation.
-    - *Reading a Quantum Circuit*: gates, unitary rotations, Bloch-sphere
-      intuition, and measurement bases.
     - *Bell State*: entanglement and measurement correlation.
     - *Teleportation*: transmitting an unknown quantum state via
       entanglement and classical communication.
     - *Deutsch–Jozsa*: the first exponential separation between
       deterministic classical and quantum query complexity.
 
-2. **Algorithms and applications** — querying, searching, optimization,
-   and simulation.
+2. **Mains** — querying, searching, and optimization.
     - *Bernstein–Vazirani*: exact recovery of a hidden string in one
       query via Fourier sampling.
     - *Simon's Problem*: the first exponential speedup over randomised
@@ -63,8 +60,7 @@ The thirteen notes are organized into three progressive tiers:
     - *Quantum Fourier Transform*: the key subroutine behind phase
       estimation and Shor's algorithm.
 
-3. **Advanced techniques** — phase extraction, noise-aware execution,
-   and composite algorithms.
+3. **Desserts** — advanced techniques.
     - *Quantum Phase Estimation*: extracting eigenvalues of a unitary
       operator to arbitrary precision.
     - *Error Mitigation (ZNE)*: zero-noise extrapolation for improving
@@ -72,11 +68,11 @@ The thirteen notes are organized into three progressive tiers:
     - *Quantum Counting*: combining Grover's operator with phase
       estimation to count solutions without finding them.
 
-Every circuit note includes executable `.qasm` files, expected output for
-verification, and a step-by-step explanation with inline mathematics.
-The twelve algorithm notes also include auto-generated circuit diagrams,
-and longer notes provide collapsible analysis sections with derivations,
-proofs, and connections to the broader literature.
+Every recipe includes: (i)\ a complete, executable `.qasm` circuit
+file; (ii)\ expected output for verification; (iii)\ a step-by-step
+explanation with inline mathematics; (iv)\ collapsible deep-dive
+sections containing full derivations, proofs, and connections to the
+broader literature; and (v)\ an auto-generated circuit diagram.
 
 The resource is deployed as a static site via MkDocs Material, with
 LaTeX mathematics rendered by MathJax.  All content is MIT-licensed.
@@ -106,10 +102,10 @@ limitations:
   explain *why* those gates are there or connect the circuit to the
   mathematical structure.
 
-Circuit Bench addresses these gaps by combining three properties
+The Quokka Cookbook addresses these gaps by combining three properties
 that no existing resource unifies:
 
-1. **Application-oriented structure.** Every circuit note starts with a
+1. **Application-oriented structure.** Every recipe starts with a
    problem — "find a hidden string," "count the solutions," "compute
    the ground-state energy" — and derives the circuit as the solution.
    Theory enters in context, not as prerequisite.
@@ -120,7 +116,7 @@ that no existing resource unifies:
    dependencies.
 
 3. **Layered depth.** The main narrative is accessible to anyone
-   comfortable with complex numbers.  Collapsible analysis sections
+   comfortable with complex numbers.  Collapsible deep-dive sections
    provide full linear algebra, density matrix derivations, and proofs
    for students and researchers who want rigour.
 
@@ -132,7 +128,7 @@ self-contained modules they can assign or adapt.
 
 # Learning Objectives
 
-After completing the full set of circuit notes, a student will be able to:
+After completing the full set of recipes, a student will be able to:
 
 1. Construct and interpret quantum circuits for entanglement
    generation, quantum teleportation, and Bell measurements.
@@ -156,29 +152,25 @@ After completing the full set of circuit notes, a student will be able to:
 
 # Instructional Design
 
-Each circuit note draws from a flexible six-part structure designed for
-circuit construction and verification:
+Each recipe follows a consistent five-part structure inspired by
+cooking pedagogy:
 
-1. **What this circuit does** — the problem, in plain language, with
+1. **What are we making?** — the problem, in plain language, with
    motivation.
-2. **Circuit components or prerequisites** — qubits, gates, and prior
-   concepts, listed explicitly.
-3. **Circuit walkthrough** — the circuit, built incrementally with
-   mathematical explanation at every step.
-4. **The complete circuit** — the executable OpenQASM program in one
-   place.
-5. **Run it** — execute the circuit, observe the output, and interpret
-   the results.
-6. **Analysis and practical notes** — derivations, limitations,
-   connections to other algorithms, and suggestions for further
-   exploration.
+2. **Ingredients** — qubits, gates, and prerequisites, listed
+   explicitly.
+3. **Method** — the circuit, built incrementally with mathematical
+   explanation at every step.
+4. **Taste test** — run the circuit, observe the output, interpret the
+   results.
+5. **Chef's notes** — gotchas, connections to other algorithms, and
+   suggestions for further exploration.
 
-This structure keeps every circuit note self-contained: a student can
-enter at any point, and where prior knowledge is required, the
-components or prerequisites section lists it explicitly with links to
-earlier notes.
+This structure ensures that every recipe is self-contained: a student
+can enter at any point, and the ingredients section explicitly lists
+what prior knowledge is assumed (with links to prerequisite recipes).
 
-Longer **analysis sections** are implemented as collapsible admonitions
+The **deep-dive sections** are implemented as collapsible admonitions
 (using pymdownx.details), allowing students to expand the mathematical
 content on demand without disrupting the narrative flow.  Topics covered
 include: gate matrix representations, density matrix formalism, the
@@ -188,13 +180,11 @@ problem framework.
 
 # Content and Scope
 
-The thirteen circuit notes span the core of quantum algorithms and
-provide a coherent progression from fundamental gates to composite
-algorithms:
+The twelve recipes span the core of quantum algorithms and provide
+a coherent progression from fundamental gates to composite algorithms:
 
-| Circuit note | Qubits | Key concepts |
+| Recipe | Qubits | Key concepts |
 |--------|--------|-------------|
-| 00\ Reading a Quantum Circuit | 1 | Gates, unitary rotations, Bloch sphere, measurement bases |
 | 01\ Bell State | 2 | Entanglement, measurement correlation, tensor products |
 | 02\ Teleportation | 3 | Bell measurement, classical communication, no-cloning |
 | 03\ Deutsch–Jozsa | 3 | Oracles, phase kickback, interference |
@@ -208,11 +198,11 @@ algorithms:
 | 11\ ZNE | 1–2 | Noise amplification, Richardson extrapolation |
 | 12\ Quantum Counting | 4 | Grover + QPE composition, solution counting |
 
-The progression is designed so that later notes reuse concepts and
-circuits from earlier ones: the Bell pair from Circuit Bench\ 01 is
-consumed by Circuit Bench\ 02; the phase kickback technique from Circuit
-Bench\ 03 recurs in Circuit Bench\ 04–06 and\ 10; the QFT from Circuit
-Bench\ 09 is inverted inside Circuit Bench\ 10 and\ 12.
+The progression is designed so that later recipes reuse concepts and
+circuits from earlier ones: the Bell pair from Recipe\ 01 is consumed
+by Recipe\ 02; the phase kickback technique from Recipe\ 03 recurs in
+Recipes\ 04–06 and\ 10; the QFT from Recipe\ 09 is inverted inside
+Recipes\ 10 and\ 12.
 
 # Implementation
 
