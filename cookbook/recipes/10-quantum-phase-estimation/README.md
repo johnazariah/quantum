@@ -46,7 +46,9 @@ $$
 \hat{\varphi} = \frac{1}{2^3} = \frac{1}{8}.
 $$
 
-## What you need
+<span id="what-you-need"></span>
+
+## Prerequisites
 
 If the circuit vocabulary is new, start with [Circuit Bench 00: Reading a Quantum Circuit](../00-reading-a-quantum-circuit/README.md).
 

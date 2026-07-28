@@ -1,7 +1,7 @@
-# Mains
+<span id="mains"></span>
 
-*Coming soon.*
+# Algorithms and applications
 
-The recipes where quantum computing earns its keep — optimization, simulation, and machine learning.
+These Circuit Bench notes are now published. See [Algorithms and applications](index.md#algorithms-and-applications) for the current list of optimisation, simulation, search, and Fourier-transform circuits.
 
-Check back, or [watch the repo](https://github.com/johnazariah/quantum) for updates.
+[Watch the repository](https://github.com/johnazariah/quantum) for future additions.

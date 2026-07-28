@@ -1,12 +1,16 @@
 # Circuit Bench 02: Quantum Teleportation
 
-## What are we making?
+<span id="what-are-we-making"></span>
+
+## What this circuit does
 
 A protocol that transmits the *exact* quantum state of one qubit to another — without physically moving the qubit. Alice has a qubit in some state $|\psi\rangle$. She wants Bob to have that state, but she can't send the qubit itself. Using a shared Bell pair and two classical bits, she can **teleport** $|\psi\rangle$ to Bob's qubit.
 
 This isn't science fiction — it's the backbone of quantum networking, quantum error correction, and measurement-based computation. And it takes only 6 gates.
 
-## Ingredients
+<span id="ingredients"></span>
+
+## Circuit components
 
 - 3 qubits (`q[0]` = Alice's message, `q[1]` = Alice's half of the Bell pair, `q[2]` = Bob's half)
 - 1 X gate (`x`)
@@ -30,7 +34,9 @@ No. Two fundamental theorems forbid it:
 
 Teleportation solves this: Alice transfers $|\psi\rangle$ to Bob without ever learning what $|\psi\rangle$ is, and without cloning it. The original is destroyed in the process (as it must be — no-cloning is not violated).
 
-## Method
+<span id="method"></span>
+
+## Circuit walkthrough
 
 We'll teleport the state $|1\rangle$ from Alice to Bob. (In the code we use `x q[0]` to prepare this state. You could prepare any state $|\psi\rangle = \alpha|0\rangle + \beta|1\rangle$ — the protocol works the same.)
 
@@ -171,7 +177,9 @@ q[1] (|0⟩) : ────────── H ──●──X─────�
 q[2] (|0⟩) : ───────────────X─────── if c1: X ── if c0: Z ── M
 ```
 
-## Taste test
+<span id="taste-test"></span>
+
+## Run it
 
 Copy the contents of [`teleport.qasm`](teleport.qasm) and paste it into your Quokka.
 
@@ -185,7 +193,9 @@ The last bit (Bob's) is always `1`. The first two bits (Alice's) are uniformly r
 
 **Try it:** Change `x q[0]` to just remove it entirely (teleporting $|0\rangle$ instead). Now Bob should always measure `0`.
 
-## Deep dive
+<span id="deep-dive"></span>
+
+## Analysis
 
 ??? abstract "The general case: teleporting an arbitrary state"
 
@@ -261,7 +271,9 @@ The last bit (Bob's) is always `1`. The first two bits (Alice's) are uniformly r
 
     **Superdense coding** is the flip side: given a shared Bell pair, Alice can transmit **2 classical bits** by sending **1 qubit**. Teleportation trades 1 Bell pair + 2 classical bits for 1 qubit of quantum information. Superdense coding trades 1 Bell pair + 1 qubit for 2 classical bits. They're dual protocols.
 
-## Chef's notes
+<span id="chefs-notes"></span>
+
+## Practical notes
 
 - **Try teleporting different states.** Replace `x q[0]` with `h q[0]` to teleport $|+\rangle = \frac{1}{\sqrt{2}}(|0\rangle + |1\rangle)$. Now Bob's measurement should give 50/50. Or use `ry(0.6) q[0]` for an arbitrary superposition.
 

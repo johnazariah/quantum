@@ -4,6 +4,8 @@ All circuit notes in one place. Each one is self-contained: pick whatever intere
 
 New notes will appear as the workbooks need them. [Watch the repo](https://github.com/johnazariah/quantum) to get notified.
 
+Where a section applies, the notes use a common bench structure: what the circuit does, its components or prerequisites, a circuit walkthrough, the complete circuit, how to run it, and analysis or practical notes. Introductory notes adapt that structure when a rigid template would make the explanation worse.
+
 ---
 
 ## Foundations

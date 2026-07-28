@@ -1,12 +1,16 @@
 # Circuit Bench 12: Quantum Counting
 
-## What are we making?
+<span id="what-are-we-making"></span>
+
+## What this circuit does
 
 An algorithm that **counts the number of solutions** to a search problem — without finding them. Given the same oracle from Grover's search (Circuit Bench 06), quantum counting tells you *how many* items match, using QPE (Circuit Bench 10) on the Grover operator.
 
-This is the grand finale of the cookbook: it combines everything we've built. Grover's oracle defines the problem. The Grover operator encodes the answer in its eigenvalues. QPE extracts the eigenvalue. And the QFT (inside QPE) provides the precision.
+This is the capstone of the Circuit Bench sequence: it combines everything we've built. Grover's oracle defines the problem. The Grover operator encodes the answer in its eigenvalues. QPE extracts the eigenvalue. And the QFT (inside QPE) provides the precision.
 
-## Ingredients
+<span id="ingredients"></span>
+
+## Circuit components
 
 - 4 qubits (2 counting + 2 search)
 - Hadamard gates (`h`)
@@ -52,7 +56,9 @@ Apply quantum phase estimation with:
 
 The counting register will encode $\theta/\pi$, from which we extract $M$.
 
-## Method
+<span id="method"></span>
+
+## Circuit walkthrough
 
 We'll count the number of solutions to a 2-qubit search with oracle marking $|11\rangle$. So $N = 4$ and $M = 1$.
 
@@ -98,11 +104,13 @@ Read the counting register and compute $\hat{\theta} = \pi \cdot (\text{result})
 
 ## The complete circuit
 
-Available as [`quantum_counting.qasm`](quantum_counting.qasm). The circuit is the longest in the cookbook — it combines QPE's structure with Grover's oracle and diffusion as the controlled unitary.
+Available as [`quantum_counting.qasm`](quantum_counting.qasm). The circuit is the longest on the Circuit Bench — it combines QPE's structure with Grover's oracle and diffusion as the controlled unitary.
 
 ![Quantum Counting circuit](circuit.png)
 
-## Taste test
+<span id="taste-test"></span>
+
+## Run it
 
 Paste `quantum_counting.qasm` into your Quokka. With 2 counting qubits, the resolution is coarse:
 
@@ -123,7 +131,9 @@ This isn't exact ($M = 1$, not 2) — we only have 2 counting qubits! With 3 cou
     - $t = 8$ qubits: resolve $M$ to about $N/256$
     - $t = \lceil\log_2 N\rceil + 4$: typically sufficient for good estimates
 
-## Deep dive
+<span id="deep-dive"></span>
+
+## Analysis
 
 ??? abstract "Eigenvalues of the Grover operator"
 
@@ -155,7 +165,7 @@ This isn't exact ($M = 1$, not 2) — we only have 2 counting qubits! With 3 cou
 
     $$t \geq \lceil\log_2(2\pi N)\rceil$$
 
-    For $N = 4$: $t \geq 5$ for exact counting. Our 2-qubit demo is deliberately coarse to stay within the cookbook's qubit budget.
+    For $N = 4$: $t \geq 5$ for exact counting. Our 2-qubit demo is deliberately coarse to keep the circuit small enough to inspect.
 
     In practice, you often don't need exact $M$ — an estimate within a constant factor suffices to choose the right number of Grover iterations. Even $t = \lceil\log_2\sqrt{N}\rceil$ extra qubits gives useful information.
 
@@ -185,9 +195,9 @@ This isn't exact ($M = 1$, not 2) — we only have 2 counting qubits! With 3 cou
 
     While this doesn't make #SAT easy (it's #P-hard classically, and the quantum speedup is "only" quadratic), it's significant for approximate counting. Many practical problems — estimating partition functions, counting independent sets, computing volumes — benefit from even a quadratic improvement.
 
-??? abstract "The full picture: recipes 06 + 09 + 10 + 12"
+??? abstract "The full picture: Circuit Bench 06 + 09 + 10 + 12"
 
-    Quantum counting is the capstone that ties together three earlier recipes:
+    Quantum counting is the capstone that ties together three earlier Circuit Bench notes:
 
     | Component | Circuit Bench | Role in Quantum Counting |
     |:---|:---|:---|
@@ -200,12 +210,14 @@ This isn't exact ($M = 1$, not 2) — we only have 2 counting qubits! With 3 cou
 
     This is the hidden subgroup / phase estimation paradigm at its most general. The same architecture — controlled unitary + inverse QFT — appears in Shor's algorithm (with modular exponentiation instead of Grover), quantum chemistry (with Hamiltonian simulation instead of Grover), and quantum simulation (with time-evolution operators).
 
-## Chef's notes
+<span id="chefs-notes"></span>
 
-- **This is the most complex circuit in the cookbook.** It combines controlled Grover iterations (oracle + diffusion) with QPE infrastructure (Hadamards, controlled powers, inverse QFT). The qubit count is small but the gate depth is significant.
+## Practical notes
+
+- **This is the most complex circuit on the Circuit Bench.** It combines controlled Grover iterations (oracle + diffusion) with QPE infrastructure (Hadamards, controlled powers, inverse QFT). The qubit count is small but the gate depth is significant.
 
 - **2 counting qubits is coarse.** Our demo uses $t = 2$ to keep the circuit manageable. The estimate of $M$ is approximate. In practice, you'd use more counting qubits (and more search qubits for a bigger search space).
 
 - **The connection to Shor.** Replace the Grover operator with modular exponentiation, and quantum counting becomes order-finding — the core of Shor's factoring algorithm. Same QPE wrapper, different unitary.
 
-- **Congratulations — you've completed the cookbook!** You now understand entanglement (Bell state), quantum communication (teleportation), quantum speedups (Deutsch-Jozsa through Simon), search (Grover), optimization (QAOA, VQE), the Fourier transform (QFT), eigenvalue estimation (QPE), noise mitigation (ZNE), and counting. These are the building blocks of all quantum algorithms.
+- **Congratulations — you've completed the Circuit Bench sequence!** You now understand entanglement (Bell state), quantum communication (teleportation), quantum speedups (Deutsch-Jozsa through Simon), search (Grover), optimization (QAOA, VQE), the Fourier transform (QFT), eigenvalue estimation (QPE), noise mitigation (ZNE), and counting. These are the building blocks of all quantum algorithms.

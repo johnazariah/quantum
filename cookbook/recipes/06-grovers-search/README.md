@@ -1,6 +1,8 @@
 # Circuit Bench 06: Grover's Search
 
-## What are we making?
+<span id="what-are-we-making"></span>
+
+## What this circuit does
 
 An algorithm that finds a needle in a haystack — quadratically faster than checking every straw. Given a list of $N = 2^n$ items and a black-box function that recognises the target, Grover's algorithm finds it in $O(\sqrt{N})$ queries instead of the classical $O(N)$.
 
@@ -8,7 +10,9 @@ For 3 qubits ($N = 8$), a classical search needs up to 8 guesses. Grover's needs
 
 This isn't an exponential speedup (that was Simon's), but it's **universal** — it applies to *any* search problem, with no structural assumptions about the function. And it's provably optimal: no quantum algorithm can do unstructured search faster than $O(\sqrt{N})$.
 
-## Ingredients
+<span id="ingredients"></span>
+
+## Circuit components
 
 - 3 qubits
 - Hadamard gates (`h`)
@@ -20,7 +24,7 @@ This isn't an exponential speedup (that was Simon's), but it's **universal** —
 
 ## Background: searching without structure
 
-All previous recipes exploited *structure* in the oracle — linearity (Bernstein-Vazirani), periodicity (Simon). Grover's algorithm assumes nothing. The oracle is a black box:
+The earlier Circuit Bench notes exploited *structure* in the oracle — linearity (Bernstein-Vazirani), periodicity (Simon). Grover's algorithm assumes nothing. The oracle is a black box:
 
 $$O|x\rangle = (-1)^{f(x)}|x\rangle$$
 
@@ -30,7 +34,9 @@ The classical approach is brute force: check items one by one. On average, you n
 
 Grover's approach: start in a uniform superposition, then repeatedly **amplify** the amplitude of the correct answer while **suppressing** the wrong ones. After about $\frac{\pi}{4}\sqrt{N}$ iterations, the target has nearly all the probability.
 
-## Method
+<span id="method"></span>
+
+## Circuit walkthrough
 
 ### Step 1: Create uniform superposition
 
@@ -60,7 +66,7 @@ h q[2];
 x q[1];              // unflip q[1]
 ```
 
-The Toffoli (CCX) gate flips q[2] when both q[0] and q[1] are 1. By flipping q[1] first (so $0 \to 1$), we make it trigger on the pattern $q[0]=1, q[1]=0, q[2]=$ anything. The H-CCX-H sandwich on q[2] converts the bit-flip to a phase-flip (same phase kickback trick from earlier recipes).
+The Toffoli (CCX) gate flips q[2] when both q[0] and q[1] are 1. By flipping q[1] first (so $0 \to 1$), we make it trigger on the pattern $q[0]=1, q[1]=0, q[2]=$ anything. The H-CCX-H sandwich on q[2] converts the bit-flip to a phase-flip (the same phase kickback trick from the earlier notes).
 
 After the oracle, the state is the same as before except $|101\rangle$ has a negative sign.
 
@@ -158,7 +164,9 @@ The full circuit with both iterations and labeled Oracle/Diffusion sections:
 
 ![Grover's Search circuit](circuit.png)
 
-## Taste test
+<span id="taste-test"></span>
+
+## Run it
 
 Paste `grovers.qasm` into your Quokka. You should see something like:
 
@@ -177,7 +185,9 @@ The target $|101\rangle$ dominates with ~94.5% of the shots. The other 7 states 
 
     The diffusion operator stays the same regardless of the target.
 
-## Deep dive
+<span id="deep-dive"></span>
+
+## Analysis
 
 ??? abstract "Geometric interpretation: rotations in a 2D plane"
 
@@ -275,7 +285,9 @@ The target $|101\rangle$ dominates with ~94.5% of the shots. The other 7 states 
 
     In each case, building the oracle circuit is the hard part; Grover's amplification machinery is the same regardless.
 
-## Chef's notes
+<span id="chefs-notes"></span>
+
+## Practical notes
 
 - **Quadratic, not exponential.** Grover gives $\sqrt{N}$ instead of $N$ — a square root speedup. For $N = 10^6$, that's 1000 vs. 500,000. Significant, but not the same league as Simon/Shor's exponential speedups.
 

@@ -1,6 +1,8 @@
 # Circuit Bench 01: The Bell State
 
-## What are we making?
+<span id="what-are-we-making"></span>
+
+## What this circuit does
 
 Two qubits whose measurement results are correlated because they share one quantum state.
 
@@ -21,7 +23,9 @@ If you measure both qubits in the usual computational basis, you should see only
 
 It is not the whole story. A classical shared random bit can also produce matching `00`/`11` outcomes. The quantum content of the Bell state is the **coherence** between the two branches, and you see that by changing basis before measurement. This circuit note shows both pieces carefully.
 
-## What you need
+<span id="what-you-need"></span>
+
+## Circuit components
 
 - 2 qubits
 - 1 Hadamard gate (`h`)
@@ -157,7 +161,9 @@ Real shot counts vary, but `01` and `10` should be absent or very rare in a nois
 
 Then try the X-basis version by inserting two Hadamards before measurement. You should again see matching outcomes. That second basis is what tells you there is more here than a copied classical bit.
 
-## Deep dive
+<span id="deep-dive"></span>
+
+## Analysis
 
 ### Gate matrices and state evolution
 
@@ -264,7 +270,9 @@ Classical local-hidden-variable theories obey a bound. Quantum mechanics predict
 
 This note stops earlier: it prepares a Bell state, shows the obvious Z-basis correlation, and then uses an X-basis check to reveal coherence.
 
-## Notes
+<span id="notes"></span>
+
+## Practical notes
 
 - **Do not over-read the first histogram.** Seeing only `00` and `11` is the start of the story, not the proof of entanglement.
 - **Basis matters.** Relative phase is invisible in the computational basis but visible after a basis change.
