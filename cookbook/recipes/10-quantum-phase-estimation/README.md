@@ -56,6 +56,16 @@ If the inverse QFT step feels mysterious, read [Circuit Bench 09: Quantum Fourie
 
 OpenQASM 2.0 writes the controlled phase operation as `cu1(theta) control, target;`.
 
+## Files on the bench
+
+[Open the source directory on GitHub](https://github.com/johnazariah/quantum/tree/main/cookbook/recipes/10-quantum-phase-estimation).
+
+| File | Purpose |
+|---|---|
+| [`qpe.qasm`](qpe.qasm) | Estimate the $T$-gate eigenphase $\varphi=1/8$ |
+| [`expected.txt`](expected.txt) | Expected three-bit phase estimate |
+| [`circuit.png`](circuit.png) | QPE circuit diagram |
+
 ## Circuit walkthrough
 
 ### 1. Prepare the eigenstate
@@ -176,6 +186,12 @@ With 1024 shots, the expected result is approximately:
 ```
 
 That bit string means integer 1 out of 8 possible three-bit values, so the recovered phase is $1/8$.
+
+## Extend and experiment
+
+1. **Use the zero-phase eigenstate.** Remove `x q[3];`, leaving the target in $|0\rangle$. Since $T|0\rangle=|0\rangle$, the eigenphase is 0 and the counting register should return `000` ideally.
+2. **Estimate an exactly representable quarter phase.** Keep the target in $|1\rangle$ and replace the three controlled-phase angles, from least to most significant counting qubit, with `1.5708`, `3.1416`, and `6.2832`. These are the controlled powers of a phase gate with $\varphi=1/4$; the ideal output is `010`, or 2 out of 8.
+3. **Try a phase between grid points.** Use controlled-power angles `1.0472`, `2.0944`, and `4.1888`, corresponding to $\varphi=1/6$. The result is no longer deterministic: probability spreads over nearby three-bit estimates, especially `001` and `010`. More shots estimate that distribution more accurately, but only more counting qubits refine the phase grid.
 
 ## What this shows
 

@@ -23,6 +23,16 @@ This is the capstone of the Circuit Bench sequence: it combines everything we've
 
 **Prerequisites:** [Circuit Bench 06 — Grover's Search](../06-grovers-search/README.md) and [Circuit Bench 10 — QPE](../10-quantum-phase-estimation/README.md).
 
+## Files on the bench
+
+[Open the source directory on GitHub](https://github.com/johnazariah/quantum/tree/main/cookbook/recipes/12-quantum-counting).
+
+| File | Purpose |
+|---|---|
+| [`quantum_counting.qasm`](quantum_counting.qasm) | Estimate the number of marked states with two counting qubits |
+| [`expected.txt`](expected.txt) | Expected coarse phase distribution and inferred count |
+| [`circuit.png`](circuit.png) | Controlled-Grover and inverse-QFT circuit diagram |
+
 ## Background: why count instead of search?
 
 Grover's search finds a solution in $O(\sqrt{N/M})$ queries — but you need to know $M$ (the number of solutions) to choose the right number of iterations. Too few and you haven't amplified enough; too many and you overshoot.
@@ -130,6 +140,12 @@ This isn't exact ($M = 1$, not 2) — we only have 2 counting qubits! With 3 cou
     - $t = 4$ qubits: resolve $M$ to about $N/16$
     - $t = 8$ qubits: resolve $M$ to about $N/256$
     - $t = \lceil\log_2 N\rceil + 4$: typically sufficient for good estimates
+
+## Extend and experiment
+
+1. **Change the shot count.** Run 128, 1024, and 8192 shots. The sampled frequencies become more stable, but the two-qubit phase grid remains spaced by $1/4$. Shots reduce sampling error; they do not improve phase resolution.
+2. **Remove the inverse-QFT phase gate.** Delete `cp(-1.5708) q[1], q[0];` and compare the counting-register distribution. The remaining Hadamards no longer decode the phase with the same two-bit QFT, so the usual mapping from bit string to $\hat M$ is no longer valid.
+3. **Design a three-bit counter.** Add a third counting qubit, a controlled-$G^4$ block, and a three-qubit inverse QFT. The phase grid becomes twice as fine, but the largest controlled power doubles the Grover work and makes the circuit deeper. Record both the improved ideal estimate and the extra noise on hardware; this is the precision-cost tradeoff that the four-qubit demonstration omits.
 
 <span id="deep-dive"></span>
 

@@ -22,6 +22,16 @@ This isn't an exponential speedup (that was Simon's), but it's **universal** —
 
 **Prerequisites:** [Circuit Bench 03 — Deutsch-Jozsa](../03-deutsch-jozsa/README.md) for phase kickback, and comfort with multi-qubit gates.
 
+## Files on the bench
+
+[Open the source directory on GitHub](https://github.com/johnazariah/quantum/tree/main/cookbook/recipes/06-grovers-search).
+
+| File | Purpose |
+|---|---|
+| [`grovers.qasm`](grovers.qasm) | Run two Grover iterations for target $\lvert101\rangle$ |
+| [`expected.txt`](expected.txt) | Expected target probability and shot counts |
+| [`circuit.png`](circuit.png) | Full oracle-and-diffusion circuit diagram |
+
 ## Background: searching without structure
 
 The earlier Circuit Bench notes exploited *structure* in the oracle — linearity (Bernstein-Vazirani), periodicity (Simon). Grover's algorithm assumes nothing. The oracle is a black box:
@@ -184,6 +194,12 @@ The target $|101\rangle$ dominates with ~94.5% of the shots. The other 7 states 
     - **$|011\rangle$:** Apply X to q[0] instead of q[1] before/after the Toffoli
 
     The diffusion operator stays the same regardless of the target.
+
+## Extend and experiment
+
+1. **Compare iteration counts.** Delete the second Grover iteration to run one iteration, then make another copy with a third iteration. For this $N=8$, one-target problem, the ideal target probabilities are about 78%, 95%, and 33% after one, two, and three iterations. More iterations are not always better.
+2. **Change the marked state.** To mark $|111\rangle$, remove the `x q[1];` gates around both oracle Toffolis and leave the diffusion operators unchanged. The dominant output should move from `101` to `111`.
+3. **Disable amplitude amplification.** Keep the oracle but remove the diffusion block from each iteration. A phase flip alone does not change Z-basis probabilities, so the target no longer dominates. This isolates the interference step from the marking step.
 
 <span id="deep-dive"></span>
 

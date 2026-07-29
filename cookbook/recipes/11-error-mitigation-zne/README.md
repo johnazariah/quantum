@@ -20,6 +20,18 @@ This isn't error *correction* (which requires massive overhead). It's error *mit
 
 **Prerequisites:** Any earlier Circuit Bench note. This technique applies to any quantum circuit.
 
+## Files on the bench
+
+[Open the source directory on GitHub](https://github.com/johnazariah/quantum/tree/main/cookbook/recipes/11-error-mitigation-zne).
+
+| File | Purpose |
+|---|---|
+| [`zne_scale1.qasm`](zne_scale1.qasm) | Run the base circuit at $\lambda=1$ |
+| [`zne_scale3.qasm`](zne_scale3.qasm) | Add two logically cancelling CNOT pairs |
+| [`zne_scale5.qasm`](zne_scale5.qasm) | Add four logically cancelling CNOT pairs |
+| [`expected.txt`](expected.txt) | Simulator behavior, example noisy results, and extrapolation |
+| [`circuit.png`](circuit.png) | Noise-scaled circuit diagram |
+
 ## Background: the noise problem
 
 Real quantum hardware is noisy. Every gate has a small probability of error — a bit flip, a phase flip, or a more complex decoherency. After a circuit with $d$ gates, each with error rate $\epsilon$, the output is corrupted by roughly $d\epsilon$ total error.
@@ -134,6 +146,12 @@ Both are closer to the ideal ($1.0$) than the raw $0.89$. Not perfect — but yo
 
 !!! tip "Apply this to any circuit note"
     ZNE works on any circuit. To mitigate Circuit Bench 01 (Bell State), for example, replace the CNOT with three CNOTs (CX·CX·CX = CX) for $\lambda = 3$, and five for $\lambda = 5$. Then extrapolate the correlation measurement.
+
+## Extend and experiment
+
+1. **Separate logic from noise.** Run all three files on an ideal simulator first: each should return `0` every time. Then run the same files on noisy hardware. Only the noisy results should form a decay trend; if the ideal outputs differ, the scaled circuits are not logically equivalent.
+2. **Add a fourth noise scale.** Copy `zne_scale5.qasm` and add two more CNOT pairs, giving six pairs in total for a nominal $\lambda=7$ point. Refit with and without the new point. A longer fit is useful only while a measurable signal remains.
+3. **Break an identity pair deliberately.** Remove one CNOT from a pair and run on an ideal simulator. The output changes because the circuit logic has changed, so extrapolating that point would be invalid. This negative control tests the central ZNE assumption rather than the fitting formula.
 
 <span id="deep-dive"></span>
 

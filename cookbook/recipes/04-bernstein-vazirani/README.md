@@ -20,6 +20,16 @@ Classically, you need $n$ queries (one per bit — feed in $100\ldots0$, $010\ld
 
 **Prerequisites:** [Circuit Bench 03 — Deutsch-Jozsa](../03-deutsch-jozsa/README.md). You should understand phase kickback and the role of the $|{-}\rangle$ ancilla.
 
+## Files on the bench
+
+[Open the source directory on GitHub](https://github.com/johnazariah/quantum/tree/main/cookbook/recipes/04-bernstein-vazirani).
+
+| File | Purpose |
+|---|---|
+| [`bernstein_vazirani.qasm`](bernstein_vazirani.qasm) | Recover the hidden string $s=101$ |
+| [`expected.txt`](expected.txt) | Deterministic ideal output |
+| [`circuit.png`](circuit.png) | Circuit diagram |
+
 ## Background: the hidden string problem
 
 Imagine a friend picks a secret binary string — say, $s = 101$. They build a machine: you feed in any 3-bit string $x$, and it returns $s \cdot x \mod 2$:
@@ -160,6 +170,12 @@ The hidden string $s = 101$ is recovered with certainty in one query.
     - **$s = 011$:** Use `cx q[1], q[3]` and `cx q[2], q[3]` (skip q[0])
     - **$s = 111$:** Use all three CNOTs
     - **$s = 000$:** No CNOTs at all → output is $|000\rangle$ (like Deutsch-Jozsa constant)
+
+## Extend and experiment
+
+1. **Choose a new hidden string.** Copy the QASM file and include an oracle CNOT from `q[i]` to `q[3]` exactly where the new string has a 1. Try `110`, `011`, and `111`; in the notes' displayed `q[0] q[1] q[2]` order, the ideal measurement changes to that same string. Some runners print the highest-index bit first, so `110` and `011` may appear reversed; check the bit-order guidance on the Circuit Bench index.
+2. **Test the zero string.** Remove both oracle CNOTs. The circuit returns `000` deterministically, confirming that an empty oracle encodes $s=000$ rather than causing the algorithm to fail.
+3. **Break one decoding path.** Restore $s=101$, then remove the final Hadamard from one input qubit whose hidden bit is 1. That measured bit becomes random while the other decoded bits remain fixed. The experiment isolates the role of the second Hadamard layer.
 
 <span id="deep-dive"></span>
 

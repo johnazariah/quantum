@@ -42,6 +42,16 @@ For this note, you only need three circuit ideas:
 
 OpenQASM 2.0 names the controlled phase gate `cu1(theta) control, target;`. In newer SDKs you may also see the same idea written as `cp(theta)`.
 
+## Files on the bench
+
+[Open the source directory on GitHub](https://github.com/johnazariah/quantum/tree/main/cookbook/recipes/09-quantum-fourier-transform).
+
+| File | Purpose |
+|---|---|
+| [`qft.qasm`](qft.qasm) | Apply a three-qubit QFT to the basis state $\lvert101\rangle$ |
+| [`expected.txt`](expected.txt) | Expected uniform Z-basis counts and their interpretation |
+| [`circuit.png`](circuit.png) | QFT circuit diagram |
+
 ## Circuit walkthrough
 
 ### 1. Prepare the input
@@ -150,6 +160,12 @@ Paste `qft.qasm` into Quokka. With 1024 shots, you should see all eight bit stri
 ```
 
 Do not read that as "the QFT lost the information." The information is in phase. A computational-basis measurement is simply the wrong instrument for seeing it directly.
+
+## Extend and experiment
+
+1. **Change the basis-state input.** Move or remove the two preparation X gates to try `000` or `001`; to prepare `111`, keep both existing X gates and add `x q[1];`. Every computational-basis input still produces a uniform Z-basis distribution after the QFT. The inputs differ in phase, which these counts do not reveal.
+2. **Remove the final swap.** The measured distribution remains uniform. This shows that Z-basis counts cannot validate the output ordering of a standalone QFT on a basis state, even though that ordering matters when the QFT is used inside another algorithm.
+3. **Append the inverse QFT.** Before measurement, add the inverse sequence: `swap q[0], q[2]`, then `h q[2]`, controlled phases `-pi/2` from `q[2]` to `q[1]`, `h q[1]`, controlled phases `-pi/4` from `q[2]` to `q[0]` and `-pi/2` from `q[1]` to `q[0]`, then `h q[0]`. The QFT followed by its inverse should recover `101` deterministically in an ideal run.
 
 ## What this shows
 

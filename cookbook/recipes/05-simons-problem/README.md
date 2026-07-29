@@ -19,6 +19,16 @@ Classically, this requires $\Omega(2^{n/2})$ queries (birthday paradox). Simon's
 
 **Prerequisites:** [Circuit Bench 04 — Bernstein-Vazirani](../04-bernstein-vazirani/README.md). You should understand Fourier sampling and the inner-product oracle.
 
+## Files on the bench
+
+[Open the source directory on GitHub](https://github.com/johnazariah/quantum/tree/main/cookbook/recipes/05-simons-problem).
+
+| File | Purpose |
+|---|---|
+| [`simons.qasm`](simons.qasm) | Sample equations orthogonal to the hidden period $s=11$ |
+| [`expected.txt`](expected.txt) | Expected subspace and classical solve |
+| [`circuit.png`](circuit.png) | Circuit diagram |
+
 ## Background: hidden periods
 
 Imagine a function that takes 2-bit inputs and produces 2-bit outputs, with a twist: every output value appears exactly twice, and the two inputs that produce the same output always differ by the same secret string $s$.
@@ -155,6 +165,12 @@ Paste `simons.qasm` into your Quokka. You should see:
 Only $00$ and $11$ appear — both satisfy $s \cdot z = 0$ for $s = 11$. You never see $01$ or $10$.
 
 From the non-trivial sample $z = 11$: $s_0 \oplus s_1 = 0 \Rightarrow s = 11$. ✓
+
+## Extend and experiment
+
+1. **Change the hidden period.** Replace the oracle block with only `cx q[1], q[3];`. The output now ignores `q[0]`, so flipping that input bit is the hidden period. The measured samples move to the corresponding orthogonal subspace; one measured bit stays fixed at 0. Check your runner's bit order before naming the displayed string.
+2. **Remove the final Hadamards.** Delete the Hadamards after the oracle. The four input strings become approximately uniform because the period relation has not been converted into the Fourier-basis constraint $s\cdot z=0$.
+3. **Track useful equations, not just shots.** Run the reference circuit in small batches and record how many non-zero, linearly independent equations you collect. For this two-bit example, `00` contributes no information and one `11` sample is enough. At larger $n$, extra shots help only when they increase the rank of the classical system.
 
 <span id="deep-dive"></span>
 
