@@ -21,11 +21,19 @@ social:
     A drug-relevant calculation brings back the pieces this notebook leaves out: molecular integrals, active-space selection, an expressive trial state, a large measurement budget, and the classical chemistry workflow around the quantum solver.
 
 
+    This post is dedicated to Prof Robert Ditchfield: https://faculty-directory.dartmouth.edu/robert-ditchfield
+
+
+    You taught us Quantum Chemistry (Chem 81) in the fall of 1991, and ignited a spark that still burns today! Thank you for being one of my most memorable teachers at Dartmouth!
+
+
     #QuantumComputing #DrugDiscovery'
   bluesky: 'I use H2 at one bond length because two qubits expose VQE''s measurement loop. It is not a drug simulation; molecular integrals, active-space choice, measurement cost, and the classical chemistry around the solver still matter.'
 ---
 
 # The $2B Molecule
+
+*To [Prof Robert Ditchfield](https://faculty-directory.dartmouth.edu/robert-ditchfield), who taught us Quantum Chemistry (Chem 81) in the fall of 1991, and ignited a spark that still burns today! Thank you for being one of my most memorable teachers at Dartmouth!*
 
 Published estimates of developing a new medicine span hundreds of millions to several billion US dollars once failed programmes and financing costs are included.[^drug-cost] That bill is not a quantum-chemistry budget; clinical trials, manufacturing, regulation, and failure account for much of it. Early decisions nevertheless depend on questions about molecular energies, bonding, and reaction pathways.
 

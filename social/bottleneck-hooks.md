@@ -53,6 +53,10 @@ I use H2 at one bond length because it is the smallest molecule that keeps the c
 
 A drug-relevant calculation brings back the pieces this notebook leaves out: molecular integrals, active-space selection, an expressive trial state, a large measurement budget, and the classical chemistry workflow around the quantum solver.
 
+This post is dedicated to Prof Robert Ditchfield: https://faculty-directory.dartmouth.edu/robert-ditchfield
+
+You taught us Quantum Chemistry (Chem 81) in the fall of 1991, and ignited a spark that still burns today! Thank you for being one of my most memorable teachers at Dartmouth!
+
 #QuantumComputing #DrugDiscovery
 
 ### Bluesky
