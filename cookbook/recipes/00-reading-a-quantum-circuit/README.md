@@ -13,6 +13,17 @@ You do not need a quantum mechanics course before reading the workbooks. You do 
 
 The Bloch sphere is the quickest honest picture for a single qubit.
 
+## Files on the bench
+
+[Open the source directory on GitHub](https://github.com/johnazariah/quantum/tree/main/cookbook/recipes/00-reading-a-quantum-circuit).
+
+| File | Purpose |
+|---|---|
+| [`z-basis-of-plus.qasm`](z-basis-of-plus.qasm) | Prepare $\lvert+\rangle$ and measure it in the Z basis |
+| [`x-basis-of-plus.qasm`](x-basis-of-plus.qasm) | Prepare the same state and measure it in the X basis |
+| [`phase-becomes-visible.qasm`](phase-becomes-visible.qasm) | Turn a relative phase into a deterministic measurement |
+| [`expected.txt`](expected.txt) | Expected results for all three circuits |
+
 ## The Bloch sphere picture
 
 A single qubit state can be pictured as an arrow on a sphere.
@@ -170,6 +181,23 @@ Expected result: `1` every time in an ideal noiseless run.
 
 This is the seed of a pattern that appears throughout quantum algorithms: write information into phase, then use later gates to turn phase into measurement probabilities.
 
+## Run it
+
+Run each `.qasm` file for 1024 shots and compare the three output patterns:
+
+```text
+z-basis-of-plus.qasm       -> about half 0, half 1
+x-basis-of-plus.qasm       -> 0 every time, ideally
+phase-becomes-visible.qasm -> 1 every time, ideally
+```
+
+The first two programs prepare the same state. Their different results come only from the measurement basis. The third program shows that a phase which is invisible in direct Z-basis measurement can become visible after a basis change.
+
+## Extend and experiment
+
+1. **Sweep the phase angle.** Copy `phase-becomes-visible.qasm` and try `rz(0)`, `rz(1.570796)`, and `rz(3.141593)`. The ideal probability of measuring `1` after the final Hadamard is $\sin^2(\theta/2)$, so the three cases give 0%, 50%, and 100%.
+2. **Remove the final Hadamard.** Repeat the same angle sweep without the last `h q[0]`. The Z-basis counts stay near 50/50 for every angle because `rz` changes the relative phase while leaving the amplitude magnitudes unchanged. This is the control experiment that shows why the basis change matters.
+
 ## What this shows
 
 - A gate changes the quantum state before measurement.
@@ -184,4 +212,3 @@ This is the seed of a pattern that appears throughout quantum algorithms: write 
 The Bloch sphere is not a full model of many-qubit computation. It is a reliable single-qubit compass, not the whole map. Entanglement, multi-qubit interference, and algorithmic speedups need larger state spaces.
 
 For the next concrete step, read [Circuit Bench 01: The Bell State](../01-bell-state/README.md). That is where one-qubit circuit literacy becomes a two-qubit quantum effect.
-

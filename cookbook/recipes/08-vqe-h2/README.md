@@ -28,6 +28,16 @@ $$
 
 That means one circuit run is not enough. The $Z$ terms, $X_0X_1$ term, and $Y_0Y_1$ term are estimated with different measurement bases and then combined with the coefficients.
 
+## Files on the bench
+
+[Open the source directory on GitHub](https://github.com/johnazariah/quantum/tree/main/cookbook/recipes/08-vqe-h2).
+
+| File | Purpose |
+|---|---|
+| [`vqe_h2_zz.qasm`](vqe_h2_zz.qasm) | Prepare one trial state and measure its Z-basis terms |
+| [`expected.txt`](expected.txt) | Expected occupation patterns and measurement limits |
+| [`circuit.png`](circuit.png) | Trial-state circuit diagram |
+
 ## Circuit walkthrough
 
 The public QASM file, [`vqe_h2_zz.qasm`](vqe_h2_zz.qasm), shows the $Z$-basis measurement circuit for one trial angle.
@@ -74,6 +84,12 @@ For 1024 ideal shots, a typical result is approximately:
 ```
 
 Shot noise will move the counts around. The important feature is that the circuit is no longer a single Hartree-Fock bit string; the ansatz has created a superposition that can be tested in several measurement bases.
+
+## Extend and experiment
+
+1. **Sweep the ansatz angle.** Replace `ry(1.570796)` with 0, $\pi/2$, and $\pi$. In displayed `q[0] q[1]` order, the ideal Z-basis result moves from `01`, through an equal `01`/`10` mixture, to `10`. This exposes how the parameter moves weight between the two occupation patterns.
+2. **Remove the entangler.** Delete the CNOT while keeping the $\pi/2$ rotation. The outcomes become `01` and `11` instead of `01` and `10`: the second qubit remains fixed, so the ansatz is a product state rather than a correlated trial state.
+3. **Build the other measurement circuits.** Make two copies of the file. For $X_0X_1$, insert `h` on both qubits before measurement. For $Y_0Y_1$, insert `sdg` followed by `h` on both. Those counts estimate different Pauli correlations; they are not a complete energy until a classical calculation combines them with the Hamiltonian coefficients.
 
 ## What this shows
 

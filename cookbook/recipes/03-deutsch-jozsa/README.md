@@ -22,6 +22,18 @@ Classically, you might need to check just over half the inputs before you know. 
 
 **Prerequisites:** [Circuit Bench 01 — Bell State](../01-bell-state/README.md). You should be comfortable with superposition and the Hadamard gate.
 
+## Files on the bench
+
+[Open the source directory on GitHub](https://github.com/johnazariah/quantum/tree/main/cookbook/recipes/03-deutsch-jozsa).
+
+| File | Purpose |
+|---|---|
+| [`deutsch_jozsa_constant.qasm`](deutsch_jozsa_constant.qasm) | Run the algorithm with a constant-zero oracle |
+| [`deutsch_jozsa_balanced.qasm`](deutsch_jozsa_balanced.qasm) | Run it with the balanced oracle $f(x)=x_0\oplus x_1$ |
+| [`expected.txt`](expected.txt) | Expected result and the constant/balanced decision rule |
+| [`circuit_constant.png`](circuit_constant.png) | Constant-oracle circuit diagram |
+| [`circuit_balanced.png`](circuit_balanced.png) | Balanced-oracle circuit diagram |
+
 ## Background: constant vs. balanced
 
 Suppose $f$ takes 2-bit inputs. There are $2^2 = 4$ possible inputs: `00`, `01`, `10`, `11`.
@@ -243,6 +255,12 @@ Always `00`. The function is constant. ✓
 Always `11` — not `00`, so the function is balanced. ✓
 
 **Try it:** Modify the balanced oracle. Replace `cx q[0], q[2]; cx q[1], q[2];` with just `cx q[0], q[2];` (implementing $f(x) = x_0$). This is also balanced. What do you get? (Spoiler: `10` — still not `00`, so the algorithm correctly identifies it.)
+
+## Extend and experiment
+
+1. **Build the other constant oracle.** Add `x q[2];` in the oracle section of `deutsch_jozsa_constant.qasm`. This implements $f(x)=1$. The input register still measures `00` because constant zero and constant one differ only by a global phase in this algorithm.
+2. **Use a one-bit balanced oracle.** In the balanced file, keep only one oracle CNOT. The exact non-zero output changes with the chosen input bit, but it is still never `00`; the algorithm still classifies the function as balanced.
+3. **Remove the decoding Hadamards.** Delete the two Hadamards after the oracle. All four input strings become approximately equally likely because the function is still encoded in phase and has not been converted into a measurement pattern.
 
 <span id="deep-dive"></span>
 

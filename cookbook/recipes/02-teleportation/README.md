@@ -22,6 +22,16 @@ This isn't science fiction — it's the backbone of quantum networking, quantum 
 
 **Prerequisites:** [Circuit Bench 01 — Bell State](../01-bell-state/README.md). You should understand entanglement and the Bell state $|\Phi^+\rangle$.
 
+## Files on the bench
+
+[Open the source directory on GitHub](https://github.com/johnazariah/quantum/tree/main/cookbook/recipes/02-teleportation).
+
+| File | Purpose |
+|---|---|
+| [`teleport.qasm`](teleport.qasm) | Teleport $\lvert1\rangle$ and apply classically controlled corrections |
+| [`expected.txt`](expected.txt) | Expected Alice and Bob measurement patterns |
+| [`circuit.png`](circuit.png) | Circuit diagram, including the classical feed-forward |
+
 ## Background: why can't Alice just copy the qubit?
 
 You might think: if Alice knows the state $|\psi\rangle$, can't she just tell Bob what it is? Or make a copy and send that?
@@ -192,6 +202,12 @@ You should see Bob's qubit (`c2`) always measure `1`, regardless of what Alice's
 The last bit (Bob's) is always `1`. The first two bits (Alice's) are uniformly random. This is the hallmark of teleportation: **the message always arrives, regardless of the random measurement outcome**.
 
 **Try it:** Change `x q[0]` to just remove it entirely (teleporting $|0\rangle$ instead). Now Bob should always measure `0`.
+
+## Extend and experiment
+
+1. **Teleport $|0\rangle$.** Remove `x q[0];` and leave the rest of the circuit unchanged. Alice's two bits remain uniformly random, while Bob's final bit is always `0` ideally.
+2. **Teleport and verify $|+\rangle$.** Replace `x q[0];` with `h q[0];`, then add `h q[2];` immediately before Bob's final measurement. The extra Hadamard measures Bob in the X basis, where a correctly teleported $|+\rangle$ gives `0` every time ideally.
+3. **Remove the classical corrections.** Comment out both `if` lines and return to the original $|1\rangle$ input. Bob's bit is no longer fixed: it depends on Alice's random Bell-measurement result. This is the negative control showing that entanglement alone does not complete the protocol.
 
 <span id="deep-dive"></span>
 

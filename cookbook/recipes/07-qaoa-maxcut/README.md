@@ -24,6 +24,16 @@ QAOA is a **variational quantum algorithm**. A quantum circuit prepares a probab
 
 Useful side paths: [Circuit Bench 00 — Reading a Quantum Circuit](../00-reading-a-quantum-circuit/README.md) covers gates, unitary rotations, and measurement bases; [Circuit Bench 01 — Bell State](../01-bell-state/README.md) covers Hadamard, CNOT, and measurement correlation in the first two-qubit example.
 
+## Files on the bench
+
+[Open the source directory on GitHub](https://github.com/johnazariah/quantum/tree/main/cookbook/recipes/07-qaoa-maxcut).
+
+| File | Purpose |
+|---|---|
+| [`qaoa_maxcut.qasm`](qaoa_maxcut.qasm) | Run the tuned depth-1 triangle MaxCut circuit |
+| [`expected.txt`](expected.txt) | Expected concentration on the six optimal cuts |
+| [`circuit.png`](circuit.png) | Circuit diagram with problem and mixer layers |
+
 ## The graph
 
 We use the smallest graph that still shows the QAOA mechanism:
@@ -199,6 +209,12 @@ In an ideal simulation with the fixed angles above, the six optimal bit strings 
 ```
 
 Shot noise means your exact counts will vary. The important thing to check is not the order of the bit strings; it is whether the samples are concentrated on cuts with value 2.
+
+## Extend and experiment
+
+1. **Set every rotation angle to zero.** Replace all `rz` and `rx` angles with 0. The CNOT pairs cancel, the mixer is the identity, and the output returns to the uniform distribution: each string has probability $1/8$, so the six optimal cuts receive 75% in total.
+2. **Remove only the mixer.** Keep the three cost-phase blocks but set the `rx` angles to 0. The Z-basis distribution is still uniform because diagonal phase gates alone cannot change computational-basis probabilities. This is the clean control for the mixer's role.
+3. **Sweep the QASM angles.** Vary the three `rz` values together around `2.528982` and the three `rx` values together around `0.612611`. For each pair, record the fraction of shots with cut value 2. Remember that the file stores $2\gamma$ and $2\beta$, not $\gamma$ and $\beta$ themselves.
 
 <span id="deep-dive"></span>
 

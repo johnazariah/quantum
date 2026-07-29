@@ -36,6 +36,16 @@ It is not the whole story. A classical shared random bit can also produce matchi
 
 If terms like gate, basis, and measurement are new, start with [Circuit Bench 00: Reading a Quantum Circuit](../00-reading-a-quantum-circuit/README.md). Otherwise, this note is self-contained.
 
+## Files on the bench
+
+[Open the source directory on GitHub](https://github.com/johnazariah/quantum/tree/main/cookbook/recipes/01-bell-state).
+
+| File | Purpose |
+|---|---|
+| [`bell.qasm`](bell.qasm) | Prepare $\lvert\Phi^+\rangle$ and measure it in the Z basis |
+| [`expected.txt`](expected.txt) | Ideal probabilities and approximate 1024-shot counts |
+| [`circuit.png`](circuit.png) | Circuit diagram |
+
 ## Step 1: Declare qubits and classical bits
 
 ```qasm
@@ -160,6 +170,12 @@ Run `bell.qasm` on Quokka. You should see counts concentrated on `00` and `11`:
 Real shot counts vary, but `01` and `10` should be absent or very rare in a noiseless simulator.
 
 Then try the X-basis version by inserting two Hadamards before measurement. You should again see matching outcomes. That second basis is what tells you there is more here than a copied classical bit.
+
+## Extend and experiment
+
+1. **Check coherence in the X basis.** Copy `bell.qasm` and insert `h q[0]; h q[1];` immediately before measurement. The outcomes should still match: only `00` and `11` ideally. A classical 50/50 mixture of `00` and `11` would instead produce all four outcomes in this test.
+2. **Remove the entangler.** Delete the CNOT and run the original Z-basis measurement. One qubit remains fixed at 0 while the other varies, so the matching Bell correlation disappears.
+3. **Make the relative phase visible.** Add `z q[0];` after the CNOT. Z-basis counts remain `00`/`11`, because that basis cannot see the sign change. Then add the two X-basis Hadamards: the outcomes become anti-correlated (`01`/`10` ideally), distinguishing $|\Phi^-\rangle$ from $|\Phi^+\rangle$.
 
 <span id="deep-dive"></span>
 

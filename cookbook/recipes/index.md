@@ -4,7 +4,49 @@ All circuit notes in one place. Each one is self-contained: pick whatever intere
 
 New notes will appear as the workbooks need them. [Watch the repo](https://github.com/johnazariah/quantum) to get notified.
 
-Where a section applies, the notes use a common bench structure: what the circuit does, its components or prerequisites, a circuit walkthrough, the complete circuit, how to run it, and analysis or practical notes. Introductory notes adapt that structure when a rigid template would make the explanation worse.
+## Find the circuit files
+
+Every note has a **Files on the bench** section with direct links to its runnable OpenQASM 2.0 program, expected output, and circuit diagram where one is available.
+
+In the repository, those files live together under [`cookbook/recipes/`](https://github.com/johnazariah/quantum/tree/main/cookbook/recipes):
+
+```text
+cookbook/recipes/01-bell-state/
+├── README.md       # the circuit note
+├── bell.qasm       # the runnable circuit
+├── expected.txt    # the result to compare against
+└── circuit.png     # the circuit diagram
+```
+
+Some notes need more than one circuit. Circuit Bench 00 compares three one-qubit programs, Circuit Bench 03 has constant and balanced oracles, and Circuit Bench 11 has three noise scales. Their file lists make those roles explicit.
+
+## Run a circuit
+
+1. Open a circuit note and choose a `.qasm` file from **Files on the bench**.
+2. Load or paste it into the [Quokka](https://www.quokkacomputing.com/) app or cloud notebook, or another runner that accepts OpenQASM 2.0.
+3. Start with 1024 shots unless the note says otherwise. Deterministic circuits should concentrate on one result; probabilistic circuits should approach the stated distribution.
+4. Compare the result with `expected.txt` and the note's **Run it** section. Compare the pattern, not exact shot counts.
+5. Check the runner's bit-string convention before interpreting a result. Some tools print the highest-index classical bit first; the notes state the register order when it matters.
+
+The [Getting Started](https://johnazariah.github.io/quantum/getting-started/) page walks through the Quokka setup and a first Bell-state run.
+
+## Extend and experiment
+
+Treat each committed `.qasm` file as a reference circuit. Copy it before changing it, then use the same loop for every experiment:
+
+1. **Predict** what should change in the output and why.
+2. **Change one thing**: one gate, angle, oracle term, measurement basis, or repetition count.
+3. **Run under the same conditions**, including the same number of shots.
+4. **Compare** with the reference output.
+5. **Explain** the difference in terms of state preparation, phase, interference, or measurement.
+
+A small record is enough:
+
+| Change | Prediction | Observed result | Explanation |
+|---|---|---|---|
+| One controlled modification | What should move or stay fixed? | Counts or probabilities | Which circuit mechanism caused it? |
+
+Each note ends with experiments chosen for that circuit. They are deliberately small: the point is to isolate a mechanism, not to turn a teaching circuit into an advantage claim.
 
 ---
 
