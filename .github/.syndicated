@@ -1,9 +1,11 @@
+bs-ann:circuit-bench-launch
 bs:bottleneck-01-logistics
 bs:bottleneck-02-cryptography
 bs:how-to-raise-e-to-a-matrix
 bs:the-eigensolver-zoo
 bs:what-a-difference-i-makes
 bs:where-eigenvalues-pay-rent
+li-ann:circuit-bench-launch
 li:bottleneck-01-logistics
 li:bottleneck-02-cryptography
 li:what-a-difference-i-makes
