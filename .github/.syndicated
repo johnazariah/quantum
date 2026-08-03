@@ -1,6 +1,7 @@
 bs-ann:circuit-bench-launch
 bs:bottleneck-01-logistics
 bs:bottleneck-02-cryptography
+bs:bottleneck-03-drug-discovery
 bs:how-to-raise-e-to-a-matrix
 bs:the-eigensolver-zoo
 bs:what-a-difference-i-makes
@@ -8,4 +9,5 @@ bs:where-eigenvalues-pay-rent
 li-ann:circuit-bench-launch
 li:bottleneck-01-logistics
 li:bottleneck-02-cryptography
+li:bottleneck-03-drug-discovery
 li:what-a-difference-i-makes
