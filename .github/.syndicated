@@ -4,6 +4,7 @@ bs:bottleneck-02-cryptography
 bs:bottleneck-03-drug-discovery
 bs:bottleneck-04-machine-learning
 bs:bottleneck-05-finance
+bs:bottleneck-06-supply-chains
 bs:how-to-raise-e-to-a-matrix
 bs:the-eigensolver-zoo
 bs:what-a-difference-i-makes
@@ -14,4 +15,5 @@ li:bottleneck-02-cryptography
 li:bottleneck-03-drug-discovery
 li:bottleneck-04-machine-learning
 li:bottleneck-05-finance
+li:bottleneck-06-supply-chains
 li:what-a-difference-i-makes
