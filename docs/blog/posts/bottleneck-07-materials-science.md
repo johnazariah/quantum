@@ -1,5 +1,9 @@
 ---
 date: 2026-08-17
+slug: the-materials-maze
+landing_summary: >-
+  A two-site Hubbard benchmark is followed by a deliberately visible handoff
+  from classical diagonalisation into compiled quantum phase estimation.
 notebook: https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/07-materials-science.ipynb
 categories:
 - The Quantum Bottleneck

@@ -1,5 +1,9 @@
 ---
 date: 2026-08-12
+slug: the-scheduling-nightmare
+landing_summary: >-
+  Two binary decisions are enough to inspect the QUBO-to-Ising-to-QAOA
+  pipeline and see how faithfully a circuit can optimise the wrong model.
 notebook: https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/06-supply-chains.ipynb
 categories:
 - The Quantum Bottleneck

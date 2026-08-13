@@ -1,5 +1,10 @@
 ---
 date: 2026-07-29
+slug: the-trapdoor
+landing_summary: >-
+  Shor's algorithm does not search for factors. A compiled phase-estimation
+  example exposes a period, then ordinary number theory turns that period into
+  3 and 5.
 notebook: https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/02-cryptography.ipynb
 categories:
 - The Quantum Bottleneck

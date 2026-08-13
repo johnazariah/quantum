@@ -1,5 +1,9 @@
 ---
 date: 2026-08-03
+slug: the-2b-molecule
+landing_summary: >-
+  A two-qubit H2 example keeps the complete VQE measurement loop visible
+  without pretending to be a drug-discovery platform.
 notebook: https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/03-drug-discovery.ipynb
 categories:
 - The Quantum Bottleneck

@@ -1,5 +1,10 @@
 ---
 date: 2026-08-10
+slug: the-convergence-wall
+landing_summary: >-
+  Classical Monte Carlo prices the option; a compiled quantum circuit shows
+  the phase-readout mechanism behind amplitude estimation, with the unbuilt
+  oracles left visible.
 notebook: https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/05-finance.ipynb
 categories:
 - The Quantum Bottleneck

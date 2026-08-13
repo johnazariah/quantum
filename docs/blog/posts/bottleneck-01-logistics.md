@@ -1,5 +1,10 @@
 ---
 date: 2026-07-27
+slug: the-50m-delivery-route
+landing_summary: >-
+  UPS can save up to $50 million a year by removing one mile from each
+  driver's daily route. We use a three-node MaxCut problem to inspect the
+  complete QAOA loop before putting the trucks back in.
 notebook: https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/01-logistics.ipynb
 categories:
 - The Quantum Bottleneck

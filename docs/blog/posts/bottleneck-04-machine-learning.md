@@ -1,5 +1,9 @@
 ---
 date: 2026-08-05
+slug: the-feature-explosion
+landing_summary: >-
+  A quantum overlap kernel and a classical radial-basis-function kernel tie at
+  11/12 on the same small dataset. The negative result is the useful result.
 notebook: https://github.com/johnazariah/quantum/blob/main/bottleneck/notebooks/04-machine-learning.ipynb
 categories:
 - The Quantum Bottleneck
