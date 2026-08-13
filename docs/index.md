@@ -29,10 +29,15 @@ The linear algebra behind quantum computing and machine learning. Each post buil
 In *The Quantum Bottleneck*, I begin with problems that already cost industries real money, then follow each one down to the mathematical obstruction and the circuit proposed to address it. Every post has a runnable notebook and a reality check against the classical methods and hardware limits that remain.
 
 - [The $50M Delivery Route](blog/2026/07/27/the-50m-delivery-route/) — UPS can save up to $50 million a year by removing one mile from each driver's daily route. We use a three-node MaxCut problem to inspect the complete QAOA loop before putting the trucks back in.
+- [The Trapdoor](blog/2026/07/29/the-trapdoor/) — Shor's algorithm does not search for factors. A compiled phase-estimation example exposes a period, then ordinary number theory turns that period into 3 and 5.
+- [The $2B Molecule](blog/2026/08/03/the-2b-molecule/) — a two-qubit H₂ example keeps the complete VQE measurement loop visible without pretending to be a drug-discovery platform.
+- [The Feature Explosion](blog/2026/08/05/the-feature-explosion/) — a quantum overlap kernel and a classical radial-basis-function kernel tie at 11/12 on the same small dataset. The negative result is the useful result.
+- [The Convergence Wall](blog/2026/08/10/the-convergence-wall/) — classical Monte Carlo prices the option; a compiled quantum circuit shows the phase-readout mechanism behind amplitude estimation, with the unbuilt oracles left visible.
+- [The Scheduling Nightmare](blog/2026/08/12/the-scheduling-nightmare/) — two binary decisions are enough to inspect the QUBO-to-Ising-to-QAOA pipeline and see how faithfully a circuit can optimise the wrong model.
 - [Series overview and companion notebooks](bottleneck/) — the full eight-part path, publishing every Monday and Wednesday through 19 August.
 - [Circuit Bench](circuit-bench/) — thirteen circuit notes with diagrams, OpenQASM, expected output, and gate-by-gate explanations for the machinery used throughout the series.
 
-Next up: **The Trapdoor** on 29 July — Shor's algorithm viewed as period-finding rather than a black-box factoring trick.
+Next up: **The Materials Maze** on 17 August — a two-site Hubbard benchmark, followed by a deliberately visible handoff into compiled quantum phase estimation.
 
 ### From Saturday to Co-Author
 
