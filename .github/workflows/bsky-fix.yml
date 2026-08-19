@@ -10,6 +10,7 @@ on:
         options:
           - repost-part1
           - delete-duplicates
+          - repost-bottleneck-final
 
 jobs:
   fix:
@@ -27,7 +28,7 @@ jobs:
         run: |
           pip install pyyaml -q
           python3 << 'SCRIPT'
-          import json, os, urllib.request, yaml, re
+          import json, os, urllib.parse, urllib.request, yaml, re
           from datetime import datetime, timezone
 
           handle = os.environ["BLUESKY_HANDLE"]
@@ -54,7 +55,7 @@ jobs:
               urllib.request.urlopen(req)
               print(f"  Deleted: {rkey}")
 
-          def create_post(text, url, title):
+          def create_post(text, url, title, reply=None):
               full_text = f"{text}\n\n{url}"
               url_start = len(full_text.encode("utf-8")) - len(url.encode("utf-8"))
               url_end = len(full_text.encode("utf-8"))
@@ -68,6 +69,8 @@ jobs:
                   "embed": {"$type": "app.bsky.embed.external",
                             "external": {"uri": url, "title": title, "description": text[:200]}}
               }
+              if reply:
+                  record["reply"] = reply
               data = json.dumps({"repo": did, "collection": "app.bsky.feed.post", "record": record}).encode()
               req = urllib.request.Request(
                   "https://bsky.social/xrpc/com.atproto.repo.createRecord",
@@ -112,10 +115,61 @@ jobs:
               with open(threads_file, "w") as f:
                   json.dump(threads, f, indent=2)
               print(f"Thread root updated: {result['uri']}")
+
+          elif action == "repost-bottleneck-final":
+              threads_file = ".github/.bsky-threads.json"
+              threads = json.loads(open(threads_file).read())
+              thread = threads["The Quantum Bottleneck"]
+              old_uri = thread["latest"]["uri"]
+              old_rkey = old_uri.rsplit("/", 1)[-1]
+
+              get_url = (
+                  "https://bsky.social/xrpc/com.atproto.repo.getRecord?"
+                  + urllib.parse.urlencode({
+                      "repo": did,
+                      "collection": "app.bsky.feed.post",
+                      "rkey": old_rkey,
+                  })
+              )
+              get_req = urllib.request.Request(
+                  get_url, headers={"Authorization": f"Bearer {token}"}
+              )
+              old_record = json.loads(urllib.request.urlopen(get_req).read())
+              reply = old_record["value"]["reply"]
+
+              post_text = open(
+                  "docs/blog/posts/bottleneck-08-climate-energy.md"
+              ).read()
+              front_matter, body = post_text.split("---", 2)[1:]
+              metadata = yaml.safe_load(front_matter)
+              hook = metadata["social"]["bluesky"].strip()
+              post_date = metadata["date"]
+              if hasattr(post_date, "strftime"):
+                  date_path = post_date.strftime("%Y/%m/%d")
+              else:
+                  date_path = str(post_date).replace("-", "/")
+              url = (
+                  f"https://johnazariah.github.io/quantum/blog/"
+                  f"{date_path}/{metadata['slug']}/"
+              )
+              title_match = re.search(r"^#\s+(.+)$", body, re.MULTILINE)
+              title = re.sub(r"[`*_]", "", title_match.group(1))
+
+              print(f"Deleting bad final post: {old_rkey}")
+              delete_record(old_rkey)
+              print(f"Creating corrected final post: {url}")
+              result = create_post(hook, url, title, reply=reply)
+              thread["latest"] = {
+                  "uri": result["uri"],
+                  "cid": result["cid"],
+              }
+              with open(threads_file, "w") as f:
+                  json.dump(threads, f, indent=2)
+              print(f"Thread latest updated: {result['uri']}")
           SCRIPT
 
       - name: Commit state
-        if: ${{ github.event.inputs.action == 'repost-part1' }}
+        if: ${{ github.event.inputs.action == 'repost-part1' || github.event.inputs.action == 'repost-bottleneck-final' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"

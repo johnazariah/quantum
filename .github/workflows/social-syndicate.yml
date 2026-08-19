@@ -144,48 +144,93 @@ jobs:
           def _fetch_sitemap():
               for _a in range(3):
                   try:
-                      return urllib.request.urlopen("https://johnazariah.github.io/quantum/sitemap.xml", timeout=20).read().decode()
+                      sitemap_url = (
+                          "https://johnazariah.github.io/quantum/sitemap.xml"
+                          f"?bust={time.time_ns()}"
+                      )
+                      req = urllib.request.Request(
+                          sitemap_url,
+                          headers={
+                              "Cache-Control": "no-cache",
+                              "User-Agent": "johnazariah-quantum-syndication/1.0",
+                          },
+                      )
+                      return urllib.request.urlopen(req, timeout=20).read().decode()
                   except Exception as _e:
                       print(f"  sitemap fetch attempt {_a+1} failed: {_e}")
                       time.sleep(3)
               return ""
-          def real_url(year, month, day, fallback, _retried=False):
-              # MkDocs derives the post slug from the TITLE, not the filename, so the
-              # only reliable link is the one actually deployed. Read it from the live
-              # sitemap by date (one post per date on our schedule); fall back to the
-              # constructed URL only if the sitemap has no entry after a retry.
-              if _sitemap["text"] is None:
+
+          def _url_is_live(url):
+              try:
+                  req = urllib.request.Request(
+                      f"{url}?ready={time.time_ns()}",
+                      headers={
+                          "Cache-Control": "no-cache",
+                          "User-Agent": "johnazariah-quantum-syndication/1.0",
+                      },
+                  )
+                  with urllib.request.urlopen(req, timeout=20) as resp:
+                      return resp.status == 200
+              except Exception:
+                  return False
+
+          def real_url(year, month, day, candidate):
+              # GitHub Pages and its sitemap can lag behind the successful deploy
+              # event. Never publish an unverified filename-derived fallback: wait
+              # until either the explicit-slug candidate is live or the deployed
+              # sitemap identifies the real URL. If neither becomes ready, fail the
+              # workflow before anything reaches social media.
+              pattern = re.compile(
+                  r"https://johnazariah\.github\.io/quantum/blog/"
+                  rf"{year}/{month}/{day}/[a-z0-9-]+/"
+              )
+              for attempt in range(12):
                   _sitemap["text"] = _fetch_sitemap()
-              pat = re.compile(r"https://johnazariah\.github\.io/quantum/blog/%s/%s/%s/[a-z0-9-]+/" % (year, month, day))
-              hits = sorted(set(pat.findall(_sitemap["text"] or "")))
-              if len(hits) == 1:
-                  return hits[0]
-              if len(hits) == 0 and not _retried:
-                  print(f"  no sitemap URL for {year}/{month}/{day} yet; retrying in 10s")
-                  _sitemap["text"] = None
-                  time.sleep(10)
-                  return real_url(year, month, day, fallback, _retried=True)
-              print(f"  WARN sitemap gave {len(hits)} URLs for {year}/{month}/{day}; using fallback {fallback}")
-              return fallback
+                  hits = sorted(set(pattern.findall(_sitemap["text"] or "")))
+                  if candidate in hits and _url_is_live(candidate):
+                      return candidate
+                  if len(hits) == 1 and _url_is_live(hits[0]):
+                      return hits[0]
+                  if _url_is_live(candidate):
+                      return candidate
+                  if attempt < 11:
+                      print(
+                          f"  URL not live for {year}/{month}/{day}; "
+                          f"waiting 10s ({attempt + 1}/12)"
+                      )
+                      time.sleep(10)
+              raise RuntimeError(
+                  f"Refusing to syndicate: no verified live URL for "
+                  f"{year}/{month}/{day}; candidate was {candidate}"
+              )
 
           def get_post_meta(post_path, fm, body):
               """Extract slug, title, and URL from a post."""
               filename = os.path.basename(post_path).replace(".md", "")
               if re.match(r"\d{4}-\d{2}-\d{2}-", filename):
-                  slug = filename[11:]
+                  state_slug = filename[11:]
               else:
-                  slug = filename
+                  state_slug = filename
+              url_slug = str(fm.get("slug") or state_slug)
               title_match = re.search(r"^#\s+(.+)$", body, re.MULTILINE)
-              title = title_match.group(1).strip() if title_match else slug.replace("-", " ").title()
+              title = (
+                  title_match.group(1).strip()
+                  if title_match
+                  else url_slug.replace("-", " ").title()
+              )
               title = re.sub(r"[`*_]", "", title)
               post_date = fm.get("date", "")
               if hasattr(post_date, "strftime"):
                   year, month, day = post_date.strftime("%Y"), post_date.strftime("%m"), post_date.strftime("%d")
               else:
                   year, month, day = str(post_date).split("-")
-              fallback = f"https://johnazariah.github.io/quantum/blog/{year}/{month}/{day}/{slug}/"
-              url = real_url(year, month, day, fallback)
-              return slug, title, url
+              candidate = (
+                  f"https://johnazariah.github.io/quantum/blog/"
+                  f"{year}/{month}/{day}/{url_slug}/"
+              )
+              url = real_url(year, month, day, candidate)
+              return state_slug, title, url
 
           # --- LinkedIn ---
           if do_linkedin:
@@ -232,8 +277,17 @@ jobs:
                       method="POST"
                   )
                   try:
-                      urllib.request.urlopen(req)
+                      resp = urllib.request.urlopen(req)
+                      post_id = (
+                          resp.headers.get("x-restli-id")
+                          or resp.headers.get("x-linkedin-id")
+                      )
                       print(f"✅ {title}")
+                      if post_id:
+                          print(
+                              "   LinkedIn: "
+                              f"https://www.linkedin.com/feed/update/{post_id}"
+                          )
                       syndicated.add(key)
                   except urllib.error.HTTPError as e:
                       print(f"❌ {slug}: {e.code} {e.read().decode()}")
