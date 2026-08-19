@@ -1,5 +1,8 @@
 ---
 date: 2026-07-14
+slug: how-to-raise-e-to-a-matrix-and-why-youd-want-to
+redirect_from:
+  - blog/2026/07/14/how-to-raise-e-to-a-matrix/
 categories:
   - Linear Algebra for Fun and Profit
 tags:

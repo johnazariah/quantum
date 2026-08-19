@@ -49,6 +49,7 @@ plugins:
 
 hooks:
   - hooks/landing_series.py
+  - hooks/post_redirects.py
 
 nav:
   - Home: index.md

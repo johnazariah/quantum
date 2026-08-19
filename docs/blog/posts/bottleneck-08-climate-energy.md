@@ -1,6 +1,8 @@
 ---
 date: 2026-08-19
 slug: the-catalyst-bottleneck
+redirect_from:
+  - blog/2026/08/19/bottleneck-08-climate-energy/
 landing_summary: >-
   Quantum embedding gives the quantum solver a bounded job inside a larger
   catalyst-screening workflow, rather than asking one device to solve the
