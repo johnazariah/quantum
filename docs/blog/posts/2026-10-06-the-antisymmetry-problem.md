@@ -34,7 +34,7 @@ social:
 
 Here is the smallest interesting molecule in quantum chemistry: H₂. Two hydrogen atoms, bonded. Two electrons sharing four spin-orbitals — two spatial orbitals (call them $\sigma$ and $\sigma^*$, the bonding and antibonding orbitals), each available in spin-up and spin-down flavours.
 
-The question a quantum chemist asks is: *what is the ground-state energy of this system?* Electronic energies underpin bond lengths, reaction pathways, and material properties; much of computational chemistry begins here. For H₂ we can solve this classically — it is a $16 \times 16$ matrix problem — but H₂ lets us build and check the encoding machinery before scale defeats exact classical methods.
+The question a quantum chemist asks is: *what is the ground-state energy of this system?* Electronic energies underpin bond lengths, reaction pathways, and material properties; much of computational chemistry begins here. The full Fock space on four modes has dimension $2^4 = 16$, though number conservation restricts the physical two-electron sector to $\binom{4}{2} = 6$ states. For H₂ we can diagonalise this classically, but H₂ lets us build and check the encoding machinery before scale defeats exact classical methods.
 
 In the language of second quantisation, the electronic Hamiltonian is
 
@@ -68,7 +68,7 @@ The state vanishes. Two electrons *cannot* occupy the same spin-orbital. That is
 
 ### Why this is a problem for simulation
 
-A qubit register is *symmetric*. Flipping qubit 3 from $\lvert 0\rangle$ to $\lvert 1\rangle$ is a local operation: it does not know or care what qubits 0, 1, and 2 are doing. But creating an electron in mode 3 — where each spin-orbital is one *mode* of the fermionic system — must apply a phase that depends on *how many of the lower modes are already occupied*. The encoding's job is to build that non-local sign structure into the qubit operators.
+A qubit register has distinguishable tensor factors, and local operators on different qubits *commute*: flipping qubit 3 from $\lvert 0\rangle$ to $\lvert 1\rangle$ is a local operation that does not know or care what qubits 0, 1, and 2 are doing. Fermionic creation operators, by contrast, *anticommute*. Creating an electron in mode 3 — where each spin-orbital is one *mode* of the fermionic system — must apply a phase that depends on *how many of the lower modes are already occupied*. The encoding's job is to build that non-local sign structure into the qubit operators.
 
 ---
 
@@ -106,7 +106,7 @@ The CAR is the contract. An encoding that satisfies it simulates fermions correc
 
 ---
 
-## One qubit per electron — what could go wrong?
+## One qubit per mode — what could go wrong?
 
 The occupation-number basis looks identical to a qubit computational basis: $\lvert 1, 0, 1, 0\rangle$ in Fock space maps to $\lvert 1010\rangle$ on a qubit register. So let qubit $j$ store the occupation of mode $j$. Easy!
 
@@ -153,7 +153,7 @@ For our 4-mode hydrogen molecule, the four creation operators under JW are:
 | 2 | $\frac{1}{2}(X_2 - iY_2) \otimes Z_1 \otimes Z_0$ | 3 |
 | 3 | $\frac{1}{2}(X_3 - iY_3) \otimes Z_2 \otimes Z_1 \otimes Z_0$ | 4 |
 
-The *Pauli weight* of an operator is the number of qubits it acts on non-trivially (anything other than identity). It determines circuit depth: each non-identity Pauli in the string costs roughly one two-qubit gate to implement. Mode 3 already touches all 4 qubits.
+The *Pauli weight* of an operator is the number of qubits it acts on non-trivially (anything other than identity). Weight is a proxy for circuit cost: exponentiating a weight-$w$ Pauli string in a typical parity-ladder implementation requires $O(w)$ entangling gates (roughly $2(w-1)$ CNOTs plus single-qubit basis changes and the rotation). Mode 3 already touches all 4 qubits.
 
 ### The cost, honestly
 
@@ -166,7 +166,7 @@ For $N$ modes, the creation operator for mode $j$ has Pauli weight $j + 1$. The 
 | FeMoCo (active space) | 108 | 108 | Deep circuits |
 | Large active space | 200 | 200 | Impractical |
 
-The weight never shrinks relative to $N$. Jordan-Wigner's parity chain scales with the total number of modes, regardless of the molecule's local structure. For large systems, this linear overhead dominates the circuit depth.
+The weight never shrinks relative to $N$. Jordan-Wigner's parity chain scales with the total number of modes, regardless of the molecule's local structure. For large systems, this linear overhead can become a significant fraction of the total circuit depth.
 
 ---
 
@@ -203,9 +203,9 @@ Both are single Pauli strings with weight $j + 1$. The encoding problem, restate
 
 The parity $\bigoplus_{k<j} n_k$ is a single bit. It depends on the joint state of $j$ qubits, but it is still just one bit of information. Must we really read all $j$ qubits to extract it?
 
-Consider a *binary tree* on $N$ nodes. Any leaf-to-root path has length $O(\log N)$. If intermediate nodes store *partial parities* — say, node $k$ stores the parity of its subtree — then the parity of any prefix can be assembled by reading $O(\log N)$ nodes along one root-to-leaf path. The same bit of information, recovered from fewer lookups.
+Consider a *balanced* binary tree on $N$ nodes, where every root-to-leaf path has length $O(\log N)$. If intermediate nodes store *partial parities* — say, node $k$ stores the parity of its subtree — then the parity of any prefix can be assembled by reading $O(\log N)$ stored values along a path through the hierarchy. The same bit of information, recovered from fewer lookups.
 
-This is the intuition behind the *Fenwick tree* (Fenwick, 1994) — a data structure from competitive programming that computes prefix sums in $O(\log N)$ operations. And it is the structure that Seeley, Richard, and Love (2012) connected to quantum chemistry, giving us the Bravyi-Kitaev encoding.
+This is the intuition behind the *Fenwick tree* (Fenwick, 1994) — a data structure from competitive programming that computes prefix sums in $O(\log N)$ operations using least-significant-bit arithmetic to navigate the hierarchy. And it is the structure that Seeley, Richard, and Love (2012) connected to quantum chemistry, giving us the Bravyi-Kitaev encoding.
 
 ### What Bravyi and Kitaev proved
 
@@ -228,3 +228,12 @@ We have established five things:
 The molecule on the bench is the same — H₂, four spin-orbitals, two electrons. But next time, we will organise those four qubits into a tree, and watch the operator weights shrink.
 
 *Keep encoding!*
+
+---
+
+## References
+
+- P. Jordan and E. Wigner, "Über das Paulische Äquivalenzverbot," *Zeitschrift für Physik* **47**, 631–651 (1928). [doi:10.1007/BF01331938](https://doi.org/10.1007/BF01331938)
+- S. B. Bravyi and A. Yu. Kitaev, "Fermionic quantum computation," *Annals of Physics* **298**, 210–226 (2002). [arXiv:quant-ph/0003137](https://arxiv.org/abs/quant-ph/0003137)
+- P. M. Fenwick, "A new data structure for cumulative frequency tables," *Software: Practice and Experience* **24**, 327–336 (1994). [doi:10.1002/spe.4380240306](https://doi.org/10.1002/spe.4380240306)
+- J. T. Seeley, M. J. Richard, and P. J. Love, "The Bravyi-Kitaev transformation for quantum computation of electronic structure," *Journal of Chemical Physics* **137**, 224109 (2012). [arXiv:1208.5986](https://arxiv.org/abs/1208.5986)
