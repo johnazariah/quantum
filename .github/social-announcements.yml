@@ -17,3 +17,44 @@ announcements:
       #QuantumComputing #Education
     bluesky: >-
       The Bottleneck posts keep reaching a point where I want to stop and explain three gates. Circuit Bench is where I do it: 13 self-contained notes with diagrams, OpenQASM, expected output, and a gate-by-gate explanation.
+
+  - id: quantum-bottleneck-roundup
+    date: 2026-08-21
+    title: The Quantum Bottleneck
+    url: https://johnazariah.github.io/quantum/bottleneck/
+    linkedin: |
+      The Quantum Bottleneck is complete.
+
+      I began with a delivery route because it made the stakes obvious, and a three-node triangle because it kept QAOA small enough to inspect. Since then, the series has factored 15 without pretending we built Shor at scale; run VQE on H2 without calling it drug discovery; watched a quantum kernel tie its classical rival; kept option pricing classical; built a tiny nurse roster; separated Hubbard diagonalisation from compiled phase readout; and ended by giving quantum embedding a bounded job in catalyst modelling.
+
+      Every post has a runnable notebook. Circuit Bench sits beside the series when you want to stop at the gates.
+
+      All eight posts:
+
+      1. The $50M Delivery Route
+      https://johnazariah.github.io/quantum/blog/2026/07/27/the-50m-delivery-route/
+
+      2. The Trapdoor
+      https://johnazariah.github.io/quantum/blog/2026/07/29/the-trapdoor/
+
+      3. The $2B Molecule
+      https://johnazariah.github.io/quantum/blog/2026/08/03/the-2b-molecule/
+
+      4. The Feature Explosion
+      https://johnazariah.github.io/quantum/blog/2026/08/05/the-feature-explosion/
+
+      5. The Convergence Wall
+      https://johnazariah.github.io/quantum/blog/2026/08/10/the-convergence-wall/
+
+      6. The Scheduling Nightmare
+      https://johnazariah.github.io/quantum/blog/2026/08/12/the-scheduling-nightmare/
+
+      7. The Materials Maze
+      https://johnazariah.github.io/quantum/blog/2026/08/17/the-materials-maze/
+
+      8. The Catalyst Bottleneck
+      https://johnazariah.github.io/quantum/blog/2026/08/19/the-catalyst-bottleneck/
+
+      This was never a tour of miraculous speedups. It was an attempt to say exactly what each small computation teaches us, what it leaves out, and what would have to change before the quantum step mattered at industrial scale.
+
+      #QuantumComputing #QuantumAlgorithms
