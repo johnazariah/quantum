@@ -159,14 +159,14 @@ The *Pauli weight* of an operator is the number of qubits it acts on non-trivial
 
 For $N$ modes, the creation operator for mode $j$ has Pauli weight $j + 1$. The worst case is mode $N - 1$, with weight $N$. The average across all modes is $(N + 1) / 2$.
 
-| System | Modes $N$ | Max JW weight | What that means |
-|--------|:---------:|:-------------:|----------------|
-| H₂ (minimal basis) | 4 | 4 | Fine — toy problem |
-| H₂O (STO-3G basis) | 14 | 14 | Starting to hurt |
-| FeMoCo (active space) | 108 | 108 | Deep circuits |
-| Large active space | 200 | 200 | Impractical |
+| System | Modes $N$ | Max JW weight | Worst-case JW string |
+|--------|:---------:|:-------------:|----------------------|
+| H₂ (minimal basis) | 4 | 4 | Weight-4 Pauli string |
+| H₂O (STO-3G basis) | 14 | 14 | Weight-14 Pauli string |
+| FeMoCo (Reiher et al. active space) | 108 | 108 | Weight-108 Pauli string |
+| Large active space | 200 | 200 | Weight-200 Pauli string |
 
-The worst-case weight grows linearly with $N$: mode $N-1$ always touches all $N$ qubits, regardless of the molecule's local structure. Low-index modes remain light — mode 0 has weight 1 — but the heaviest operators set the circuit-depth floor. For large systems, this linear overhead can become a significant fraction of the total circuit depth.
+The worst-case weight grows linearly with $N$: mode $N-1$ touches all $N$ qubits, while low-index modes remain lighter. In a straightforward parity-ladder compilation, exponentiating such a string uses $O(N)$ entangling gates. Actual Hamiltonian terms can simplify when Jordan-Wigner strings multiply, and realised depth also depends on compilation, connectivity, scheduling, and ancillas.
 
 ---
 
@@ -205,7 +205,7 @@ The parity $\bigoplus_{k<j} n_k$ is a single bit. It depends on the joint state 
 
 Not if we change what the qubits *store*. Instead of raw occupations, suppose each qubit stores a selected partial parity — the XOR of a specific subset of mode occupations. If those subsets are chosen so that any prefix parity can be reconstructed by combining $O(\log N)$ disjoint stored blocks, we can read the parity without touching every lower qubit.
 
-This is the idea behind the *Fenwick tree* (Fenwick, 1994) — a data structure from competitive programming that computes prefix sums in $O(\log N)$ operations. Each node stores the partial sum of a block whose size is determined by least-significant-bit arithmetic; prefix queries walk down the tree, and point updates walk up. Bravyi and Kitaev's encoding applies the same storage-query trade-off to fermionic parity.
+This is the idea behind the *Fenwick tree*, introduced by Peter Fenwick in 1994 for cumulative-frequency tables and now familiar from competitive programming. Each node stores the partial sum of a block whose size is determined by its least-significant set bit. Prefix queries repeatedly clear that bit; point updates repeatedly add it. Bravyi and Kitaev's encoding applies the same storage-query trade-off to fermionic parity.
 
 ### What Bravyi and Kitaev proved
 
@@ -238,3 +238,4 @@ The molecule on the bench is the same — H₂, four spin-orbitals, two electron
 - P. M. Fenwick, "A new data structure for cumulative frequency tables," *Software: Practice and Experience* **24**, 327–336 (1994). [doi:10.1002/spe.4380240306](https://doi.org/10.1002/spe.4380240306)
 - J. T. Seeley, M. J. Richard, and P. J. Love, "The Bravyi-Kitaev transformation for quantum computation of electronic structure," *Journal of Chemical Physics* **137**, 224109 (2012). [doi:10.1063/1.4768229](https://doi.org/10.1063/1.4768229), [arXiv:1208.5986](https://arxiv.org/abs/1208.5986)
 - V. Havlíček, M. Troyer, and J. D. Whitfield, "Operator locality in the quantum simulation of fermionic models," *Physical Review A* **95**, 032332 (2017). [doi:10.1103/PhysRevA.95.032332](https://doi.org/10.1103/PhysRevA.95.032332), [arXiv:1701.07072](https://arxiv.org/abs/1701.07072)
+- M. Reiher, N. Wiebe, K. M. Svore, D. Wecker, and M. Troyer, "Elucidating reaction mechanisms on quantum computers," *Proceedings of the National Academy of Sciences* **114**, 7555–7560 (2017). [doi:10.1073/pnas.1619152114](https://doi.org/10.1073/pnas.1619152114)
