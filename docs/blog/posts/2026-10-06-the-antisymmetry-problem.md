@@ -102,7 +102,7 @@ $$\{a_i,\, a_j\} = \{a^\dagger_i,\, a^\dagger_j\} = 0.$$
 
 Here $\delta_{ij}$ is the Kronecker delta (1 if $i = j$, 0 otherwise) and $\{A, B\} = AB + BA$ is the *anticommutator*. These relations encode everything: the exclusion principle ($a^\dagger_j a^\dagger_j = 0$), the correct counting statistics, and the sign structure under exchange.
 
-The CAR is the contract. An encoding that satisfies it simulates fermions correctly. An encoding that violates it — even at a single pair $(i, j)$ — simulates something else entirely, and every energy eigenvalue it produces is wrong.
+The CAR is the contract. An encoding that satisfies it is a faithful representation of the fermionic operator algebra. An encoding that violates it — even at a single pair $(i, j)$ — is not: spectra computed from Hamiltonians built with the defective operators are no longer guaranteed to match the fermionic problem, even if some eigenvalues may coincidentally agree.
 
 ---
 
@@ -166,7 +166,7 @@ For $N$ modes, the creation operator for mode $j$ has Pauli weight $j + 1$. The 
 | FeMoCo (active space) | 108 | 108 | Deep circuits |
 | Large active space | 200 | 200 | Impractical |
 
-The weight never shrinks relative to $N$. Jordan-Wigner's parity chain scales with the total number of modes, regardless of the molecule's local structure. For large systems, this linear overhead can become a significant fraction of the total circuit depth.
+The worst-case weight grows linearly with $N$: mode $N-1$ always touches all $N$ qubits, regardless of the molecule's local structure. Low-index modes remain light — mode 0 has weight 1 — but the heaviest operators set the circuit-depth floor. For large systems, this linear overhead can become a significant fraction of the total circuit depth.
 
 ---
 
@@ -184,7 +184,7 @@ where $c_j$ and $d_j$ are the *Majorana operators* for mode $j$. They are their 
 
 $$\{c_j,\, c_k\} = 2\delta_{jk}, \qquad \{d_j,\, d_k\} = 2\delta_{jk}, \qquad \{c_j,\, d_k\} = 0.$$
 
-In words: $2N$ Hermitian operators that pairwise anticommute (except with themselves, where they give $2I$). Any encoding is fully specified by its Majorana operators.
+In words: $2N$ Hermitian operators that pairwise anticommute (except with themselves, where they give $2I$). In the one-qubit-per-mode linear encoding family used in this series, an encoding is fully specified by the images of these $2N$ Majorana generators.
 
 ### What JW gives us
 
@@ -193,23 +193,23 @@ Under Jordan-Wigner, the Majorana operators are:
 $$c_j = X_j \otimes Z_{j-1} \otimes \cdots \otimes Z_0,$$
 $$d_j = Y_j \otimes Z_{j-1} \otimes \cdots \otimes Z_0.$$
 
-Both are single Pauli strings with weight $j + 1$. The encoding problem, restated: *find $2N$ Pauli strings satisfying the Majorana anticommutation relations, with the lowest possible weight.* JW achieves weight $O(N)$. Can we do $O(\log N)$?
+Both are single Pauli strings with weight $j + 1$. Within this Pauli-string family, the encoding problem becomes: *find $2N$ Pauli strings satisfying the Majorana anticommutation relations, with the lowest possible weight.* JW achieves weight $O(N)$. Can we do $O(\log N)$?
 
 ---
 
 ## The logarithmic promise
 
-### An information-theoretic hint
+### A storage-query trade-off
 
 The parity $\bigoplus_{k<j} n_k$ is a single bit. It depends on the joint state of $j$ qubits, but it is still just one bit of information. Must we really read all $j$ qubits to extract it?
 
-Consider a *balanced* binary tree on $N$ nodes, where every root-to-leaf path has length $O(\log N)$. If intermediate nodes store *partial parities* — say, node $k$ stores the parity of its subtree — then the parity of any prefix can be assembled by reading $O(\log N)$ stored values along a path through the hierarchy. The same bit of information, recovered from fewer lookups.
+Not if we change what the qubits *store*. Instead of raw occupations, suppose each qubit stores a selected partial parity — the XOR of a specific subset of mode occupations. If those subsets are chosen so that any prefix parity can be reconstructed by combining $O(\log N)$ disjoint stored blocks, we can read the parity without touching every lower qubit.
 
-This is the intuition behind the *Fenwick tree* (Fenwick, 1994) — a data structure from competitive programming that computes prefix sums in $O(\log N)$ operations using least-significant-bit arithmetic to navigate the hierarchy. And it is the structure that Seeley, Richard, and Love (2012) connected to quantum chemistry, giving us the Bravyi-Kitaev encoding.
+This is the idea behind the *Fenwick tree* (Fenwick, 1994) — a data structure from competitive programming that computes prefix sums in $O(\log N)$ operations. Each node stores the partial sum of a block whose size is determined by least-significant-bit arithmetic; prefix queries walk down the tree, and point updates walk up. Bravyi and Kitaev's encoding applies the same storage-query trade-off to fermionic parity.
 
 ### What Bravyi and Kitaev proved
 
-In 2002, Bravyi and Kitaev showed that a fermion-to-qubit encoding with $O(\log N)$ Pauli weight *exists*. The proof was abstract and hard to implement directly. It took a decade for Seeley, Richard, and Love (SRL, 2012) to turn the existence proof into an explicit, algorithmic construction based on the Fenwick tree.
+In 2002, Bravyi and Kitaev introduced an explicit encoding using a binary partial-sum structure that achieves $O(\log N)$ Pauli weight. Their construction was later recast for electronic-structure work by Seeley, Richard, and Love (SRL, 2012), who expressed it via recursive $\beta$-matrices and the update/parity/flip/remainder index sets ($U$, $P$, $F$, $R$). Havlíček, Troyer, and Whitfield (2017) then made the Fenwick-tree formulation explicit, connecting the lsb-based tree arithmetic directly to the index sets.
 
 That construction — how a data structure from 1994 solves a physics problem from 1928 — is the subject of the next post.
 
@@ -234,6 +234,7 @@ The molecule on the bench is the same — H₂, four spin-orbitals, two electron
 ## References
 
 - P. Jordan and E. Wigner, "Über das Paulische Äquivalenzverbot," *Zeitschrift für Physik* **47**, 631–651 (1928). [doi:10.1007/BF01331938](https://doi.org/10.1007/BF01331938)
-- S. B. Bravyi and A. Yu. Kitaev, "Fermionic quantum computation," *Annals of Physics* **298**, 210–226 (2002). [arXiv:quant-ph/0003137](https://arxiv.org/abs/quant-ph/0003137)
+- S. B. Bravyi and A. Yu. Kitaev, "Fermionic quantum computation," *Annals of Physics* **298**, 210–226 (2002). [doi:10.1006/aphy.2002.6254](https://doi.org/10.1006/aphy.2002.6254), [arXiv:quant-ph/0003137](https://arxiv.org/abs/quant-ph/0003137)
 - P. M. Fenwick, "A new data structure for cumulative frequency tables," *Software: Practice and Experience* **24**, 327–336 (1994). [doi:10.1002/spe.4380240306](https://doi.org/10.1002/spe.4380240306)
-- J. T. Seeley, M. J. Richard, and P. J. Love, "The Bravyi-Kitaev transformation for quantum computation of electronic structure," *Journal of Chemical Physics* **137**, 224109 (2012). [arXiv:1208.5986](https://arxiv.org/abs/1208.5986)
+- J. T. Seeley, M. J. Richard, and P. J. Love, "The Bravyi-Kitaev transformation for quantum computation of electronic structure," *Journal of Chemical Physics* **137**, 224109 (2012). [doi:10.1063/1.4768229](https://doi.org/10.1063/1.4768229), [arXiv:1208.5986](https://arxiv.org/abs/1208.5986)
+- V. Havlíček, M. Troyer, and J. D. Whitfield, "Operator locality in the quantum simulation of fermionic models," *Physical Review A* **95**, 032332 (2017). [doi:10.1103/PhysRevA.95.032332](https://doi.org/10.1103/PhysRevA.95.032332), [arXiv:1701.07072](https://arxiv.org/abs/1701.07072)
