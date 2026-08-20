@@ -223,7 +223,7 @@ We have established five things:
 2. **The algebra.** The canonical anticommutation relations (the CAR) encode the full sign structure. Any encoding must satisfy them exactly.
 3. **The naive attempt.** Mapping occupation numbers directly to qubit states works for the *basis* but fails for the *operators* — you lose the parity phase.
 4. **The JW solution.** A Z-chain computes parity by reading every lower qubit. Correct, simple, but $O(N)$ weight per operator.
-5. **The gap.** Parity is one bit distributed across many qubits. Tree structures can recover it in $O(\log N)$ lookups. The Bravyi-Kitaev encoding exploits this.
+5. **The scaling problem.** Parity is one bit distributed across many qubits. Tree structures can recover it in $O(\log N)$ lookups. The Bravyi-Kitaev encoding exploits this.
 
 The molecule on the bench is the same — H₂, four spin-orbitals, two electrons. But next time, we will organise those four qubits into a tree, and watch the operator weights shrink.
 
