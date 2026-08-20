@@ -55,6 +55,6 @@ announcements:
       8. The Catalyst Bottleneck
       https://johnazariah.github.io/quantum/blog/2026/08/19/the-catalyst-bottleneck/
 
-      This was never a tour of miraculous speedups. It was an attempt to say exactly what each small computation teaches us, what it leaves out, and what would have to change before the quantum step mattered at industrial scale.
+      I wanted each toy result to keep its boundary visible. A small circuit should teach us something useful without pretending that the industrial problem has vanished.
 
       #QuantumComputing #QuantumAlgorithms
